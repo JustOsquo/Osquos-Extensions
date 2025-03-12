@@ -117,7 +117,7 @@ SMODS.Joker{ --Cryptic Joker
     cost = 6,
     config = { extra = {}},
     calculate = function(self,card,context)
-        if context.after then --DEV NOTE: CHANGE TO FIRST HAND PLAYED ONLY
+        if context.after and G.GAME.current_round.hands_played == 0 then
             for k, v in ipairs(context.full_hand) do
                 local rngsuit = pseudorandom_element(SMODS.Suits, pseudoseed('crypticjoker')).key --This shit is also haunted man. Wtf
                 local rngrank = pseudorandom_element(SMODS.Ranks, pseudoseed('crypticjoker')).key
@@ -901,15 +901,12 @@ SMODS.Joker{ --Reaper
     pos = {x = 2, y = 0},
     rarity = 3,
     cost = 8,
-    config = { extra = {used = false, debugcounter = 0}}, --This one needed a lot of debugging
-    loc_vars = function(self, info_queue, card)
-        return {vars = {card.ability.extra.used}} --Does nothing, was used for debugging
-    end,
+    config = { extra = {}},
     calculate = function(self, card, context)
         local eval = function() return card.ability.extra.used == true end
         juice_card_until(self, eval, true)
         local handlist = G.hand.cards --shorthand
-        if context.before and card.ability.extra.used == false and not context.blueprint then --Before scoring, only if it's not been used already
+        if context.before and G.GAME.current_round.hands_played == 0 and not context.blueprint then --Before scoring, only if it's not been used already
             if #handlist >= 2 then
                 local rightmost = handlist[#handlist] --#x = length of x
                 local leftmost = handlist[1]
@@ -925,7 +922,6 @@ SMODS.Joker{ --Reaper
                 delay(0.2)
                 G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.1, func = function() --SAY THE LINE, BART!!!
                     copy_card(rightmost, leftmost) --CONVERT THE LEFT CARD INTO THE RIGHT CARD
-                    card.ability.extra.used = true --Only once though
                     return true end }))
                 for i=1, #affected do --Flip them back
                     local percent = 0.85 + (i-0.999)/(#affected-0.998)*0.3
@@ -933,9 +929,6 @@ SMODS.Joker{ --Reaper
                 end
                 delay(0.25)
             end
-        end
-        if context.end_of_round then
-            card.ability.extra.used = false --You can use it again next round
         end
     end
 } --Yes, you can technically use this on hands other than the first under special circumstances but shhhhhh dont tell anyone

@@ -4,7 +4,8 @@
 --[[
 Convert all Played Cards
 to a random Rank and
-Suit after hand is played
+Suit after first hand of
+round is played
 ]]
 
 return {
@@ -15,7 +16,8 @@ return {
                 text = {
                     'Convert all {C:attention}Played Cards{}',
                     'to a {C:green}random{} {C:attention}Rank{} and',
-                    '{C:attention}Suit{} after hand is played',
+                    '{C:attention}Suit{} after first hand of',
+                    'round is played'
                 }
             },
             j_osquo_ext_ritualist = {
