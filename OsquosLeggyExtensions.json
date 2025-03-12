@@ -1,0 +1,16 @@
+{
+	"id": "OSQUOLEGGYEXTENSIONS",
+	"name": "Osquo's Extensions",
+	"display_name": "Osquo's Extensions",
+	"author": ["Osquo"],
+	"description": "A fun-focused and (hopefully) (mostly) balanced content extension.",
+	"prefix": "osquo_lgnext",
+	"main_file": "OsquosLeggyExtensions.lua",
+	"priority": 0,
+	"badge_colour": "770077",
+	"badge_text_colour": "BB55BB",
+	"version": "1.0.0~ALPHA",
+	"dependencies": [
+        "Steamodded (>=1.0.0~ALPHA-1416a)",
+    ],
+}
