@@ -15,6 +15,8 @@ SMODS.current_mod.optional_features = function() --of course i needed to do this
     }
 end
 
+SMODS.load_file('hookers.lua')()
+
 --Loading JokerDisplay Compatability (if it's detected)
 if JokerDisplay then
     SMODS.load_file("JokerDisplayComp.lua")()
@@ -100,12 +102,34 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 }
 ]]
 --[[ ORDINARY JOKERS ]]--
---[[
+
 SMODS.Joker{ --Bumper Joker
     key = 'bumperjoker',
-    --+1000 Raw Score
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_bumperjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 5, y = 2},
+    rarity = 1,
+    cost = 3,
+    config = {extra = {
+        rscore = 1000
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.rscore
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return {
+                rscore = card.ability.extra.rscore
+            }
+        end
+    end
+
 }
-]]
+
 SMODS.Joker{ --Cryptic Joker
     key = 'crypticjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_crypticjoker'},

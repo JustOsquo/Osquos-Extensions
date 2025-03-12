@@ -18,3 +18,16 @@ for i=1, #G.jokers.cards do
     eval_card(G.jokers.cards[i], {cardarea = G.jokers, full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, before_but_not_as_much = true})
 end
 '''
+
+#New 
+[[patches]]
+[[patches.pattern]]
+target = "src/utils.lua"
+match_indent = true
+pattern = '''
+SMODS.calculation_keys = {
+'''
+position = "after"
+payload = '''
+    'rscore',
+'''
