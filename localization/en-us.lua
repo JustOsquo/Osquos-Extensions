@@ -10,7 +10,7 @@ Suit after hand is played
 return {
     descriptions = {
         Joker = {
-            j_osquo_lgnext_crypticjoker = {
+            j_osquo_ext_crypticjoker = {
                 name = 'Cryptic Joker',
                 text = {
                     'Convert all {C:attention}Played Cards{}',
@@ -18,7 +18,7 @@ return {
                     '{C:attention}Suit{} after hand is played',
                 }
             },
-            j_osquo_lgnext_ritualist = {
+            j_osquo_ext_ritualist = {
                 name = 'Ritualist',
                 text = {
                     'Retrigger first scored card',
@@ -27,7 +27,7 @@ return {
                     '{C:red}Destroys{} {C:attention}Unscored Cards{} after scoring'
                 }
             },
-            j_osquo_lgnext_cabinetjoker = {
+            j_osquo_ext_cabinetjoker = {
                 name = 'Cabinet Joker',
                 text = {
                     'Earn {C:money}#1#${} for each hand played',
@@ -37,7 +37,7 @@ return {
                     '{C:inactive}(Currently {}{C:red}X#3#{}{C:red} Blind Size{}{C;inactive}){}'
                 }
             },
-            j_osquo_lgnext_safetynet = {
+            j_osquo_ext_safetynet = {
                 name = 'Safety Net',
                 text = {
                     '{X:mult,C:white}X#1#{} Mult if current',
@@ -45,14 +45,14 @@ return {
                     'defeat the {C:attention}Blind{}'
                 }
             },
-            j_osquo_lgnext_transmutation = {
+            j_osquo_ext_transmutation = {
                 name = 'Transmutation',
                 text = {
                     'Lose {C:attention}#1#%{} of {C:chips}Chips{} and',
                     'gain that amount as {C:mult}Mult{}'
                 }
             },
-            j_osquo_lgnext_bufface = {
+            j_osquo_ext_bufface = {
                 name = 'Buff Ace',
                 text = {
                     'Played {C:attention}Aces{} give',
@@ -61,7 +61,7 @@ return {
                     'an {C:attention}Ace{} is scored'
                 }
             },
-            j_osquo_lgnext_sweetresin = {
+            j_osquo_ext_sweetresin = {
                 name = 'Amber Resin',
                 text = {
                     'One random played',
@@ -70,7 +70,7 @@ return {
                     '{C:inactive}({}{C:attention}#1#{}{C:inactive} conversions left){}'
                 }
             },
-            j_osquo_lgnext_labgrowngem = {
+            j_osquo_ext_labgrowngem = {
                 name = 'Lab-Grown Gem',
                 text = {
                     'Gain {C:money}#1#${} at end of round',
@@ -79,7 +79,7 @@ return {
                     '{C:inactive}(Currently {}{C:money}#2#${}{C:inactive}){}'
                 }
             },
-            j_osquo_lgnext_stellarnursery = {
+            j_osquo_ext_stellarnursery = {
                 name = 'Stellar Nursery',
                 text = {
                     '{C:mult}+#1#{} Base Mult for each',
@@ -87,7 +87,7 @@ return {
                     'other than played {C:attention}Poker Hand{}',
                 }
             },
-            j_osquo_lgnext_backgroundcheck = {
+            j_osquo_ext_backgroundcheck = {
                 name = 'Background Check',
                 text = {
                     'Cards give {X:mult,C:white}X1{} Mult when scored',
@@ -95,7 +95,7 @@ return {
                     'of its {C:attention}Suit{} in played {C:attention}Poker Hand{}'
                 }
             },
-            j_osquo_lgnext_amberjoker = {
+            j_osquo_ext_amberjoker = {
                 name = 'Amber Joker',
                 text = {
                     'Gives {X:mult,C:white}X#1#{} Mult and {X:chips,C:white}X#2#{} Chips',
@@ -103,7 +103,7 @@ return {
                     '{C:inactive}(Currently {}{X:mult,C:white}X#3#{} {C:inactive}Mult and {}{X:chips,C:white}X#4#{} {C:inactive}Chips){}'
                 }
             },
-            j_osquo_lgnext_stargazer = {
+            j_osquo_ext_stargazer = {
                 name = 'Stargazer',
                 text = {
                     'Additionally level up a',
@@ -112,7 +112,7 @@ return {
                     --'{C:inactive}Debugvalue:#4#'
                 }
             },
-            j_osquo_lgnext_earl = {
+            j_osquo_ext_earl = {
                 name = 'Earl',
                 text = {
                     'Each {C:attention}Mult Card{}',
@@ -120,7 +120,7 @@ return {
                     'gives {C:mult}+#1#{} Mult'
                 }
             },
-            j_osquo_lgnext_count = {
+            j_osquo_ext_count = {
                 name = 'Count',
                 text = {
                     'Each {C:attention}Bonus Card{}',
@@ -128,7 +128,7 @@ return {
                     'gives {C:chips}+#1#{} Chips'
                 }
             },
-            j_osquo_lgnext_knave = {
+            j_osquo_ext_knave = {
                 name = 'Knave',
                 text = {
                     'Each {C:attention}Jack{}',
@@ -136,7 +136,7 @@ return {
                     'gives {X:chips,C:white}X#1#{} Chips'
                 }
             },
-            j_osquo_lgnext_theharmony = {
+            j_osquo_ext_theharmony = {
                 name = 'The Harmony',
                 text = {
                     'Played cards give {X:mult,C:white}X#1#{} Mult when',
@@ -145,7 +145,7 @@ return {
                     '{C:hearts}Hearts{}, {C:clubs}Clubs{}, and {C:diamonds}Diamonds'
                 }
             },
-            j_osquo_lgnext_empoweredopal = {
+            j_osquo_ext_empoweredopal = {
                 name = 'Empowered Opal',
                 text = {
                     'Gains {X:mult,C:white}X#2#{} Mult every time',
@@ -153,7 +153,7 @@ return {
                     '{C:inactive}(Currently{} {X:mult,C:white}X#1#{} {C:inactive}Mult)'
                 }
             },
-            j_osquo_lgnext_reaper = {
+            j_osquo_ext_reaper = {
                 name = 'Reaper',
                 text = {
                     'After {C:attention}first{} hand played',
@@ -163,7 +163,7 @@ return {
                     --'{C:inactive,s:0.8}DEBUG: used:#1# counter:#2#' --for debugging only
                 }
             },
-            j_osquo_lgnext_seelie = {
+            j_osquo_ext_seelie = {
                 name = 'Seelie',
                 text = {
                     'Scored cards with a {C:tarot}Purple Seal',
@@ -173,7 +173,7 @@ return {
                     '{C:inactive,s:0.8}(Must have room)'
                 }
             },
-            j_osquo_lgnext_giantjoker = {
+            j_osquo_ext_giantjoker = {
                 name = 'Giant Joker',
                 text = {
                     'Gains {C:attention}+#2#{} hand size every',
@@ -181,7 +181,7 @@ return {
                     '{C:inactive}(currently{} {C:attention}+#1#{} {C:inactive}hand size)'
                 }
             },
-            j_osquo_lgnext_thekhanate = {
+            j_osquo_ext_thekhanate = {
                 name = 'The Khanate',
                 text = {
                     'Retrigger all played',
@@ -190,7 +190,7 @@ return {
                     'contains a {C:attention}Flush'
                 }
             },
-            j_osquo_lgnext_bubbleuniverse = {
+            j_osquo_ext_bubbleuniverse = {
                 name = 'Bubble Universe',
                 text = {
                     '{C:green}#1# in #2#{} chance for one',
@@ -199,21 +199,21 @@ return {
                     'when selecting {C:attention}Blind{}'
                 }
             },
-            j_osquo_lgnext_recursivejoker = {
+            j_osquo_ext_recursivejoker = {
                 name = 'Grand Design',
                 text = {
                     'All {C:attention}Blueprints{} and {C:attention}Brainstorms{}',
                     'trigger an additional time',
                 }
             },
-            j_osquo_lgnext_glassblower = {
+            j_osquo_ext_glassblower = {
                 name = 'Acrylic Bath',
                 text = {
                     'Create a copy of',
                     'destroyed Glass Cards',
                 }
             },
-            j_osquo_lgnext_nichola = {
+            j_osquo_ext_nichola = {
                 name = 'Nichola',
                 text = {
                     'Gains {C:attention}+#1#{} hand size',
@@ -224,7 +224,7 @@ return {
             }
         },
         Back = {
-            b_osquo_lgnext_fragile = {
+            b_osquo_ext_fragile = {
                 name = 'Fragile Deck',
                 text = {
                     'Start run with',
@@ -236,7 +236,7 @@ return {
             },
         },
         Tarot = {
-            c_osquo_lgnext_fox = {
+            c_osquo_ext_fox = {
                 name = 'The Fox',
                 text = {
                     'Enhances {C:attention}#1#{} selected card',
@@ -245,7 +245,7 @@ return {
             }
         },
         Spectral = {
-            c_osquo_lgnext_erudition = {
+            c_osquo_ext_erudition = {
                 name = 'Erudition',
                 text = {
                     'Changes {C:attention}#1#{} selected card',
@@ -273,7 +273,7 @@ return {
             },
         },
         Enhanced = {
-            m_osquo_lgnext_acrylic = {
+            m_osquo_ext_acrylic = {
                 name = 'Acrylic Card',
                 text = {
                     '{X:mult,C:white}X#1#{} Mult',
@@ -282,7 +282,7 @@ return {
                     '({C:attention}#2#{} plays remaining)'
                 }
             },
-            m_osquo_lgnext_amberE = {
+            m_osquo_ext_amberE = {
                 name = 'Amber Card',
                 text = {
                     '{X:mult,C:white}X#1#{} Mult and {X:chips,C:white}X#2#{) Chips',
@@ -294,16 +294,16 @@ return {
     },
     misc = {
         dictionary = {
-            osquo_lgnext_becomeacrylic = 'Acrylic!',
-            osquo_lgnext_acrylicrunningout = 'Running out!',
-            osquo_lgnext_1tarot = '+Tarot!',
-            osquo_lgnext_1planet = '+Planet!',
-            osquo_lgnext_scalereset = 'Reset!',
-            osquo_lgnext_amberconvert = 'Amber!',
-            osquo_lgnext_minusone = '-1',
-            osquo_lgnext_sweetresinlicked = 'Licked!',
-            osquo_lgnext_1handsize = '+1 Hand Size',
-            osquo_lgnext_sacrificed = 'Sacrificed!',
+            osquo_ext_becomeacrylic = 'Acrylic!',
+            osquo_ext_acrylicrunningout = 'Running out!',
+            osquo_ext_1tarot = '+Tarot!',
+            osquo_ext_1planet = '+Planet!',
+            osquo_ext_scalereset = 'Reset!',
+            osquo_ext_amberconvert = 'Amber!',
+            osquo_ext_minusone = '-1',
+            osquo_ext_sweetresinlicked = 'Licked!',
+            osquo_ext_1handsize = '+1 Hand Size',
+            osquo_ext_sacrificed = 'Sacrificed!',
         },
     },
 }

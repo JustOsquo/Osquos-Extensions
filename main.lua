@@ -108,7 +108,7 @@ SMODS.Joker{ --Bumper Joker
 ]]
 SMODS.Joker{ --Cryptic Joker
     key = 'crypticjoker',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_crypticjoker'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_crypticjoker'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -134,7 +134,7 @@ SMODS.Joker{ --Cryptic Joker
 
 SMODS.Joker{ --Ritualist
     key = 'ritualist',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_ritualist'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_ritualist'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -174,7 +174,7 @@ SMODS.Joker{ --Ritualist
         elseif context.destroy_card and not context.blueprint then
             if table_contains(card.ability.extra.die, context.destroy_card) then
                 if card.ability.extra.ritflag == false then --only once per hand
-                    SMODS.calculate_effect({message = localize('osquo_lgnext_sacrificed'), colour = G.C.RED}, card)
+                    SMODS.calculate_effect({message = localize('osquo_ext_sacrificed'), colour = G.C.RED}, card)
                     card.ability.extra.ritflag = true
                 end
                 return {
@@ -187,12 +187,12 @@ SMODS.Joker{ --Ritualist
 
 SMODS.Joker{ --Cabinet Joker
     key = 'cabinetjoker',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_cabinetjoker'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_cabinetjoker'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'cabinetjoker_animated',
     pos = {x = 0, y = 0},
-    AddRunningAnimation({'j_osquo_lgnext_cabinetjoker',0.125,3,4,'loop',0,0,card}), --Animated waow
+    AddRunningAnimation({'j_osquo_ext_cabinetjoker',0.125,3,4,'loop',0,0,card}), --Animated waow
     rarity = 2,
     cost = 5,
     config = {extra = {
@@ -235,7 +235,7 @@ SMODS.Joker{ --Cabinet Joker
 
 SMODS.Joker{ --Safety Net
     key = 'safetynet',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_safetynet'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_safetynet'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -264,7 +264,7 @@ SMODS.Joker{ --Safety Net
 
 SMODS.Joker{ --Transmutation
     key = 'transmutation',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_transmutation'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_transmutation'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -292,7 +292,7 @@ SMODS.Joker{ --Transmutation
 
 SMODS.Joker { --Buff Ace
     key = 'bufface',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_bufface'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_bufface'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -327,7 +327,7 @@ SMODS.Joker { --Buff Ace
 
 SMODS.Joker{ --Lab-Grown Gem
     key = 'labgrowngem',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_labgrowngem'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_labgrowngem'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -364,7 +364,7 @@ SMODS.Joker{ --Lab-Grown Gem
                 card.ability.extra.current = 0
                 card.ability.extra.said = true --only once per round
                 return {
-                    message = localize('osquo_lgnext_scalereset'), --"Reset!"
+                    message = localize('osquo_ext_scalereset'), --"Reset!"
                     card = card
                 }
             end
@@ -385,7 +385,7 @@ SMODS.Joker{ --Lab-Grown Gem
 
 SMODS.Joker{ --Stellar Nursery
     key = 'stellarnursery',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_stellarnursery'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_stellarnursery'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -415,7 +415,7 @@ SMODS.Joker{ --Stellar Nursery
 
 SMODS.Joker{ --Background Check
     key = 'backgroundcheck',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_backgroundcheck'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_backgroundcheck'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -451,7 +451,7 @@ SMODS.Joker{ --Background Check
 
 SMODS.Joker{ --Amber Resin
     key = 'sweetresin',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_sweetresin'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_sweetresin'},
     blueprint_compat = true,
     eternal_compat = false,
     atlas = 'Jokers',
@@ -472,26 +472,26 @@ SMODS.Joker{ --Amber Resin
             local check = false
             eligibleCards = {}
             for k, v in ipairs(context.scoring_hand) do
-                if not SMODS.has_enhancement(v, 'm_osquo_lgnext_amberE') then
+                if not SMODS.has_enhancement(v, 'm_osquo_ext_amberE') then
                     check = true
                     eligibleCards[#eligibleCards+1] = v
                 end
             end
             local toconvert = pseudorandom_element(eligibleCards, pseudoseed('sweetresin'))
             if toconvert then
-                toconvert:set_ability(G.P_CENTERS.m_osquo_lgnext_amberE, nil, true) --Set enhancement to amber
+                toconvert:set_ability(G.P_CENTERS.m_osquo_ext_amberE, nil, true) --Set enhancement to amber
                 G.E_MANAGER:add_event(Event({
                     func = function()
                         toconvert:juice_up() --JUUUUIICEEE
                         return true
                     end}))
-                if check then SMODS.calculate_effect({message = localize('osquo_lgnext_amberconvert'), colour = G.C.ATTENTION}, card) end
+                if check then SMODS.calculate_effect({message = localize('osquo_ext_amberconvert'), colour = G.C.ATTENTION}, card) end
             end
         end
         if context.after then
             card.ability.extra.converts = card.ability.extra.converts - 1
             if card.ability.extra.converts > 0 then
-                message = localize('osquo_lgnext_minusone')
+                message = localize('osquo_ext_minusone')
             else
                 G.E_MANAGER:add_event(Event({
                     func = function()
@@ -515,7 +515,7 @@ SMODS.Joker{ --Amber Resin
                     end
                 }))
                 return {
-                    message = localize('osquo_lgnext_sweetresinlicked')
+                    message = localize('osquo_ext_sweetresinlicked')
                 }
             end
         end
@@ -524,14 +524,14 @@ SMODS.Joker{ --Amber Resin
 
 SMODS.Joker{ --Amber Joker
     key = 'amberjoker',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_amberjoker'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_amberjoker'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
     pos = {x = 0, y = 3},
     rarity = 2,
     cost = 5,
-    enhancement_gate = 'm_osquo_lgnext_amberE',
+    enhancement_gate = 'm_osquo_ext_amberE',
     config = {extra = {
         xmultper = 0.1,
         xchipsper = 0.1,
@@ -560,7 +560,7 @@ SMODS.Joker{ --Amber Joker
         if G.playing_cards then
             card.ability.extra.tally = 0 --reset tally
             for k, v in pairs(G.playing_cards) do --For every playing card in deck
-                if SMODS.has_enhancement(v, 'm_osquo_lgnext_amberE') then --if its an amber card
+                if SMODS.has_enhancement(v, 'm_osquo_ext_amberE') then --if its an amber card
                     card.ability.extra.tally = card.ability.extra.tally + 1 --tally of amber cards plus one
                 end
             end
@@ -570,7 +570,7 @@ SMODS.Joker{ --Amber Joker
 
 SMODS.Joker{ --Stargazer
     key = 'stargazer',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_stargazer'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_stargazer'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -607,7 +607,7 @@ SMODS.Joker{ --Stargazer
 
 SMODS.Joker{ --Earl
     key = 'earl',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_earl'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_earl'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -644,7 +644,7 @@ SMODS.Joker{ --Earl
 
 SMODS.Joker{ --Count
     key = 'count',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_count'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_count'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -681,7 +681,7 @@ SMODS.Joker{ --Count
 
 SMODS.Joker{ --Knave
     key = 'knave',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_knave'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_knave'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -718,7 +718,7 @@ SMODS.Joker{ --Knave
 
 SMODS.Joker{ --The Harmony
     key = 'theharmony',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_theharmony'}, --WHY WONT IT FUCKING WORK THERES NOTHING WRONG WITH IT???? Update: typo'd text as taxt fml
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_theharmony'}, --WHY WONT IT FUCKING WORK THERES NOTHING WRONG WITH IT???? Update: typo'd text as taxt fml
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -768,12 +768,12 @@ SMODS.Joker{ --The Harmony
 
 SMODS.Joker{ --Empowered Opal
     key = 'empoweredopal',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_empoweredopal'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_empoweredopal'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'empoweredopal_animated', --Define correct atlas
     pos = {x = 0, y = 0}, --Starting frame of animation
-    AddRunningAnimation({'j_osquo_lgnext_empoweredopal',0.125,5,5,'loop',0,0,card}), --thanks @bepisfever for the animateObjects code, if you want to use it i made an ELI5 on it's discord post (or check this mod's  animateObjects.lua file where i copied it to)
+    AddRunningAnimation({'j_osquo_ext_empoweredopal',0.125,5,5,'loop',0,0,card}), --thanks @bepisfever for the animateObjects code, if you want to use it i made an ELI5 on it's discord post (or check this mod's  animateObjects.lua file where i copied it to)
     rarity = 2,
     cost = 6,
     enhancement_gate = 'm_wild', --Can only appear if you have any wild cards in your deck
@@ -801,7 +801,7 @@ SMODS.Joker{ --Empowered Opal
 
 SMODS.Joker{ --Giant Joker
     key = 'giantjoker',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_giantjoker'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_giantjoker'},
     blueprint_compat = false, --Because otherwise it'd get real weird with the way hand size actually works, see chicot hand size bug
     eternal_compat = true,
     atlas = 'Jokers',
@@ -839,7 +839,7 @@ SMODS.Joker{ --Giant Joker
 
 SMODS.Joker{ --Seelie
     key = 'seelie',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_seelie'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_seelie'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -865,7 +865,7 @@ SMODS.Joker{ --Seelie
                             return true
                         end)}))
                     return {
-                        message = localize('osquo_lgnext_1tarot'), --Tarot!
+                        message = localize('osquo_ext_1tarot'), --Tarot!
                         card = card
                     }
                 end
@@ -883,7 +883,7 @@ SMODS.Joker{ --Seelie
                             return true
                         end)}))
                     return {
-                        message = localize('osquo_lgnext_1planet'),
+                        message = localize('osquo_ext_1planet'),
                         card = card
                     }
                 end
@@ -894,7 +894,7 @@ SMODS.Joker{ --Seelie
 
 SMODS.Joker{ --Reaper
     key = 'reaper',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_reaper'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_reaper'},
     blueprint_compat = false, --I think it gets copied anyway for some reason but copying it does literally nothing so whatever lmao
     eternal_compat = true,
     atlas = 'Jokers',
@@ -946,7 +946,7 @@ SMODS.Joker{ --Reaper
 --[[
 SMODS.Joker{ --The Khanate
     key = 'thekhanate',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_thekhanate'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_thekhanate'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -967,7 +967,7 @@ SMODS.Joker{ --The Khanate
 ]]
 SMODS.Joker{ --Bubble Universe
     key = 'bubbleuniverse',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_bubbleuniverse'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_bubbleuniverse'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -999,7 +999,7 @@ SMODS.Joker{ --Bubble Universe
 --[[
 SMODS.Joker{ --Grand Design
     key = 'recursivejoker',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_recursivejoker'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_recursivejoker'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -1026,7 +1026,7 @@ SMODS.Joker{ --Grand Design
 --[[
 SMODS.Joker{ --Acrylic Bath / Glassblower V1
     key = 'glassblower',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_glassblower'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_glassblower'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -1047,7 +1047,7 @@ SMODS.Joker{ --Acrylic Bath / Glassblower V1
                     if pseudorandom('seed') < G.GAME.probabilities.normal / card.ability.extra.odds then --1 in 4 normally
                         check = true
                         tcards[#tcards+1] = v
-                        v:set_ability(G.P_CENTERS.m_osquo_lgnext_acrylic, nil, true) --Set enhancement to acrylic
+                        v:set_ability(G.P_CENTERS.m_osquo_ext_acrylic, nil, true) --Set enhancement to acrylic
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 v:juice_up() --JUICE IT UPPPPPPP YYYEAAHHHHHH
@@ -1057,7 +1057,7 @@ SMODS.Joker{ --Acrylic Bath / Glassblower V1
                     end
                 end
             end
-            if check then SMODS.calculate_effect({message = localize('osquo_lgnext_becomeacrylic'), colour = G.C.ATTENTION}, card) end --Acrylic!
+            if check then SMODS.calculate_effect({message = localize('osquo_ext_becomeacrylic'), colour = G.C.ATTENTION}, card) end --Acrylic!
         end
     end
 }
@@ -1065,7 +1065,7 @@ SMODS.Joker{ --Acrylic Bath / Glassblower V1
 --[[
 SMODS.Joker{ --Glassblower V2
     key = 'glassblower',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_glassblower'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_glassblower'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -1118,7 +1118,7 @@ SMODS.Joker{ --Glassblower V2
 ]]
 SMODS.Joker{ --Nichola
     key = 'nichola',
-    loc_txt = {set = 'Joker', key = 'j_osquo_lgnext_nichola'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_nichola'},
     blueprint_compat = false,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -1149,7 +1149,7 @@ SMODS.Joker{ --Nichola
                     card.ability.extra.current = card.ability.extra.current + card.ability.extra.givehsize
                     G.hand:change_size(card.ability.extra.givehsize)
                     return {
-                        message = localize('osquo_lgnext_1handsize'),
+                        message = localize('osquo_ext_1handsize'),
                         card = card
                     }
             end
@@ -1260,7 +1260,7 @@ SMODS.Consumable{ --The Fox
             play_sound('tarot1')
             card:juice_up(0.3,0.5)
             return true end}))
-        conversionTarot(G.hand.highlighted, "m_osquo_lgnext_amberE") --this function is haunted
+        conversionTarot(G.hand.highlighted, "m_osquo_ext_amberE") --this function is haunted
     end,
 }
 
@@ -1303,7 +1303,7 @@ SMODS.Enhancement { --Acrylic Cards
                     end
                 }))
             elseif context.cardarea == G.play then --If it's been played
-                SMODS.calculate_effect({message = localize('osquo_lgnext_acrylicrunningout'), colour = G.C.ATTENTION}, card) --Running out!
+                SMODS.calculate_effect({message = localize('osquo_ext_acrylicrunningout'), colour = G.C.ATTENTION}, card) --Running out!
             end
         end
         if context.destroying_card and card.ability.extra.markedfordeath == true then --When it's shattered
@@ -1365,7 +1365,7 @@ SMODS.Back{ --Fragile Deck
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.8, func = function()
             local card = nil
             play_sound('timpani')
-            card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_osquo_lgnext_glassblower', 'por') --Create the Acrylic bath
+            card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_osquo_ext_glassblower', 'por') --Create the Acrylic bath
             card:add_to_deck() --Add it...
             G.jokers:emplace(card) --...to the joker area
             card:start_materialize() --Waza
