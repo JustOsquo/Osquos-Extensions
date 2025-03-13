@@ -107,7 +107,7 @@ SMODS.Joker{ --Bumper Joker
 }
 ]]
 
-SMODS.Joker{
+SMODS.Joker{ --Illegible Joker
     key = 'illegiblejoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_illegiblejoker'},
     blueprint_compat = true,
