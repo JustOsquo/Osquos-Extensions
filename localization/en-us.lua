@@ -9,7 +9,6 @@ cards 1 additional time
 return {
     descriptions = {
         Joker = {
-         rscore_new
             j_osquo_ext_bumperjoker = {
                 name = 'Bumper Joker',
                 text = {
@@ -265,6 +264,22 @@ return {
                     'Changes {C:attention}#1#{} selected card',
                     'to a random {C:attention}Enhancement{}, {C:attention}Seal{},',
                     'and {C:attention}Edition{}'
+                }
+            },
+        },
+        Voucher = {
+            v_osquo_ext_boosterfeast = {
+                name = 'Booster Feast',
+                text = {
+                    '+#1# Booster Pack',
+                    'available in shop'
+                }
+            },
+            v_osquo_ext_boosterglutton = {
+                name = 'Booster Glutton',
+                text = {
+                    '+#1# Choice in all',
+                    'Booster Packs'
                 }
             },
         },

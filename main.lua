@@ -94,14 +94,14 @@ SMODS.Atlas{ --oh youre never gonna guess
     px = 71,
     py = 95
 }
---[[
+
 SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
     key = 'qle_vouchers',
     path = 'Vouchers.png',
     px = 71,
     py = 95
 }
-]]
+
 --[[ ORDINARY JOKERS ]]--
 
 SMODS.Joker{ --Bumper Joker
@@ -1392,12 +1392,38 @@ SMODS.Enhancement { --Amber Cards
 }
 
 --[[ VOUCHERS ]]--
---[[
+
 SMODS.Voucher{
---Tier 1: +1 Booster Packs Available in each Shop
---Tier 2: +1 Choice in all Booster Packs
+    --Tier 1: +1 Booster Packs Available in each Shop
+    --Tier 2: +1 Choice in all Booster Packs
+    key = 'boosterfeast',
+    loc_txt = {set = 'Voucher', key = 'v_osquo_ext_boosterfeast'},
+    atlas = 'Voucher',
+    pos = {x = 0, y = 0},
+    config = {extra = {
+        bonus = 1
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.bonus
+        }}
+    end,
 }
-]]
+SMODS.Voucher{
+    key = 'boosterglutton'
+    loc_txt = {set = 'Voucher', key = 'v_osquo_ext_boosterglutton'},
+    atlas = 'Voucher',
+    pos = {x = 1, y = 0}.
+    config = {extra = {
+        bonus = 1
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.bonus
+        }}
+    end,
+}
+
 --[[ DECKS ]]--
 
 --Tweaked from Buffoonery mod, get permission before dist
