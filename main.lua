@@ -232,7 +232,7 @@ SMODS.Joker{ --Cabinet Joker
         }}
     end,
     calculate = function(self,card,context)
-        if context.setting_blind and not card.getting_sliced then
+        if context.setting_blind and not card.getting_sliced and not context.blueprint then
             G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.1, func = function() --increasing the required score
                 G.GAME.blind.chips = math.floor(G.GAME.blind.chips*card.ability.extra.currentscale)
                 G.GAME.blind.chip_text = number_format(G.GAME.blind.chips)
@@ -338,8 +338,7 @@ SMODS.Joker { --Buff Ace
             if context.other_card:get_id() == 14 then --if ace
                 if not context.blueprint then
                     card.ability.extra.scaledchips = card.ability.extra.scaledchips + card.ability.extra.scaler
-                    message = localize('k_upgrade_ex') --i dont think this works? idk man
-                    card = self
+                    message = localize('k_upgrade_ex')
                 end
                 return {
                     chips = card.ability.extra.scaledchips

@@ -5,6 +5,7 @@ local _calculate_individual_effect = SMODS.calculate_individual_effect -- save a
 function SMODS.calculate_individual_effect(effect, scored_card, key, amount, from_edition)
     if key == 'osquo_ext_rscore' and amount then
         G.GAME.chips = G.GAME.chips + amount
+        update_hand_text({delay = 0}, {chip_total = G.GAME.chips})
         if not effect.remove_default_message then
             if from_edition then
                 --currently not a thing so no need
