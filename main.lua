@@ -5,7 +5,7 @@ No worries. Whether you're here to just examine it, or to try to learn modding f
 
 See a bit of code you like or think is useful? Feel free to take and use it for yourself, unless that code isn't mine, which will be specified.
 Otherwise, please help yourself. If you do this I would of course appreciate credit for it, but there's no need to come to me for permission.
-The code here should have enough comments that you can piece together what each bit of it does, so feel free to take a read!
+The code here should have enough comments that you can (hopefully) piece together what each bit of it does, so feel free to take a read!
 Happy modding!
 
 ]]
@@ -1394,7 +1394,8 @@ SMODS.Enhancement { --Amber Cards
 --[[ VOUCHERS ]]--
 --[[
 SMODS.Voucher{
-
+--Tier 1: +1 Booster Packs Available in each Shop
+--Tier 2: +1 Choice in all Booster Packs
 }
 ]]
 --[[ DECKS ]]--

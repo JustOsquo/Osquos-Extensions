@@ -1,3 +1,2 @@
-# Osquo-s-Legendary-Extensions
-A fun-focused extension to vanilla's Legendary Jokers
-<b/> Note: Requires Steammodded 1.0.0+ to function.
+# Osquo's Extensions
+A fun-focused and (hopefully) balanced Extension to the vanilla game
