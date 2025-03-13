@@ -9,6 +9,13 @@ cards 1 additional time
 return {
     descriptions = {
         Joker = {
+         rscore_new
+            j_osquo_ext_bumperjoker = {
+                name = 'Bumper Joker',
+                text = {
+                    '{C:green}+1000{} Score',
+                }
+            },
             j_osquo_ext_illegiblejoker = {
                 name = 'Illegible Joker',
                 text = {
@@ -311,6 +318,9 @@ return {
             osquo_ext_sweetresinlicked = 'Licked!',
             osquo_ext_1handsize = '+1 Hand Size',
             osquo_ext_sacrificed = 'Sacrificed!',
+        },
+        v_dictionary = {
+            osquo_ext_a_rscore = "+#1# Score"
         },
     },
 }

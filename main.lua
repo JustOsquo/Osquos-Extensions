@@ -15,6 +15,9 @@ SMODS.current_mod.optional_features = function() --of course i needed to do this
     }
 end
 
+--Loading Hooks
+SMODS.load_file('hookers.lua')()
+
 --Loading JokerDisplay Compatability (if it's detected)
 if JokerDisplay then
     SMODS.load_file("JokerDisplayComp.lua")()
@@ -100,12 +103,32 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 }
 ]]
 --[[ ORDINARY JOKERS ]]--
---[[
+
 SMODS.Joker{ --Bumper Joker
     key = 'bumperjoker',
-    --+1000 Raw Score
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_bumperjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 5, y = 2},
+    rarity = 1,
+    cost = 3,
+    config = {extra = {
+        rscore = 1000
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.rscore
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.final_scoring_step then
+            return {
+                osquo_ext_rscore = card.ability.extra.rscore --see hookers.lua
+            }
+        end
+    end
 }
-]]
 
 SMODS.Joker{ --Illegible Joker
     key = 'illegiblejoker',
@@ -239,7 +262,7 @@ SMODS.Joker{ --Cabinet Joker
         }}
     end,
     calculate = function(self,card,context)
-        if context.setting_blind and not card.getting_sliced then
+        if context.setting_blind and not card.getting_sliced and not context.blueprint then
             G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.1, func = function() --increasing the required score
                 G.GAME.blind.chips = math.floor(G.GAME.blind.chips*card.ability.extra.currentscale)
                 G.GAME.blind.chip_text = number_format(G.GAME.blind.chips)
@@ -345,8 +368,7 @@ SMODS.Joker { --Buff Ace
             if context.other_card:get_id() == 14 then --if ace
                 if not context.blueprint then
                     card.ability.extra.scaledchips = card.ability.extra.scaledchips + card.ability.extra.scaler
-                    message = localize('k_upgrade_ex') --i dont think this works? idk man
-                    card = self
+                    message = localize('k_upgrade_ex')
                 end
                 return {
                     chips = card.ability.extra.scaledchips
