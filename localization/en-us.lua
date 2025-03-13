@@ -9,7 +9,6 @@ cards 1 additional time
 return {
     descriptions = {
         Joker = {
-         rscore_new
             j_osquo_ext_bumperjoker = {
                 name = 'Bumper Joker',
                 text = {
