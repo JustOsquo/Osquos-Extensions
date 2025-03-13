@@ -11,6 +11,12 @@ round is played
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_bumperjoker = {
+                name = 'Bumper Joker',
+                text = {
+                    '{C:green}+1000{} Score',
+                }
+            },
             j_osquo_ext_crypticjoker = {
                 name = 'Cryptic Joker',
                 text = {
@@ -306,6 +312,9 @@ return {
             osquo_ext_sweetresinlicked = 'Licked!',
             osquo_ext_1handsize = '+1 Hand Size',
             osquo_ext_sacrificed = 'Sacrificed!',
+        },
+        v_dictionary = {
+            osquo_ext_a_rscore = "+#1# Score"
         },
     },
 }

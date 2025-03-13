@@ -15,6 +15,7 @@ SMODS.current_mod.optional_features = function() --of course i needed to do this
     }
 end
 
+--Loading Hooks
 SMODS.load_file('hookers.lua')()
 
 --Loading JokerDisplay Compatability (if it's detected)
@@ -121,13 +122,12 @@ SMODS.Joker{ --Bumper Joker
         }}
     end,
     calculate = function(self,card,context)
-        if context.joker_main then
+        if context.final_scoring_step then
             return {
-                rscore = card.ability.extra.rscore
+                osquo_ext_rscore = card.ability.extra.rscore --see hookers.lua
             }
         end
     end
-
 }
 
 SMODS.Joker{ --Cryptic Joker
