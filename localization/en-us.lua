@@ -2,15 +2,20 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Convert all Played Cards
-to a random Rank and
-Suit after first hand of
-round is played
+Retrigger all Rankless
+cards 1 additional time
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_illegiblejoker = {
+                name = 'Illegible Joker',
+                text = {
+                    '{C:attention}Retrigger{} all {C:attention}Rankless{}',
+                    'cards {C:attention}#1#{} additional time'
+                }
+            },
             j_osquo_ext_crypticjoker = {
                 name = 'Cryptic Joker',
                 text = {

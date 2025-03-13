@@ -106,6 +106,37 @@ SMODS.Joker{ --Bumper Joker
     --+1000 Raw Score
 }
 ]]
+
+SMODS.Joker{
+    key = 'illegiblejoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_illegiblejoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 5, y = 3},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        retrig = 1
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.retrig,
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.repetition and context.cardarea == (G.play or G.hand) then
+            if context.other_card:get_id() < 0 then
+                return {
+                    repetitions = card.ability.extra.retrig,
+                    message = localize('k_again_ex'),
+                    card = card
+                }
+            end
+        end
+    end
+}
+
 SMODS.Joker{ --Cryptic Joker
     key = 'crypticjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_crypticjoker'},
