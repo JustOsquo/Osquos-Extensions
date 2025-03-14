@@ -171,6 +171,8 @@ SMODS.Joker{ --Cryptic Joker
     cost = 6,
     config = { extra = {}},
     calculate = function(self,card,context)
+        local eval = function() return G.GAME.current_round.hands_played == 0 end
+        juice_card_until(card, eval, true)
         if context.after and G.GAME.current_round.hands_played == 0 then
             for k, v in ipairs(context.full_hand) do
                 local rngsuit = pseudorandom_element(SMODS.Suits, pseudoseed('crypticjoker')).key --This shit is also haunted man. Wtf
@@ -956,8 +958,8 @@ SMODS.Joker{ --Reaper
     cost = 8,
     config = { extra = {}},
     calculate = function(self, card, context)
-        local eval = function() return card.ability.extra.used == true end
-        juice_card_until(self, eval, true)
+        local eval = function() return G.GAME.current_round.hands_played == 0 end
+        juice_card_until(card, eval, true)
         local handlist = G.hand.cards --shorthand
         if context.before and G.GAME.current_round.hands_played == 0 and not context.blueprint then --Before scoring, only if it's not been used already
             if #handlist >= 2 then
@@ -1408,9 +1410,6 @@ SMODS.Voucher{ --Booster Feast +1 Pack in shop
     end,
     redeem = function(self,card)
         SMODS.change_booster_limit(card.ability.extra.bonus)
-        for i = 1, card.ability.extra.bonus do
-            SMODS.add_booster_to_shop()
-        end
     end,
 }
 
