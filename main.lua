@@ -106,7 +106,7 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 SMODS.Joker{ --Western Joker
     key = 'westernjoker',
-    loc_txt = {set = 'Joker', key = 'j_oqsuo_ext_westernjoker'},
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_westernjoker'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -146,21 +146,21 @@ SMODS.Joker{ --Western Joker
                         extra = {message = localize('osquo_ext_chipsupg'), colour = G.C.CHIPS},
                         card = card
                 }   
-                elseif chosen up == 'pmult'
+                elseif chosenup == 'pmult' then
                     context.other_card.ability.perma_mult = context.other_card.ability.perma_mult or 0
                     context.other_card.ability.perma_mult = context.other_card.ability.perma_mult + card.ability.extra.amounts.pmult
                     return {
                         extra = {message = localize('osquo_ext_multupg'), colour = G.C.MULT},
                         card = card
                     }
-                elseif chosen up == 'pxmult'
+                elseif chosenup == 'pxmult' then
                     context.other_card.ability.perma_x_mult = context.other_card.ability.perma_x_mult or 1
                     context.other_card.ability.perma_x_mult = context.other_card.ability.perma_x_mult + card.ability.extra.amounts.pxmult
                     return {
                         extra = {message = localize('osquo_ext_xmultupg'), colour = G.C.MULT},
                         card = card
                     }
-                elseif chosen up == 'pdollar'
+                elseif chosenup == 'pdollar' then
                     context.other_card.ability.perma_p_dollars = context.other_card.ability.perma_p_dollars or 0
                     context.other_card.ability.perma_p_dollars = context.other_card.ability.perma_p_dollars + card.ability.extra.amounts.pdollar
                     return {
@@ -1464,7 +1464,7 @@ SMODS.Enhancement { --Amber Cards
 
 --[[ VOUCHERS ]]--
 
-SMODS.Voucher{ --Booster Feast +1 Pack in shop
+SMODS.Voucher{ --Booster Feast
     key = 'boosterfeast',
     loc_txt = {set = 'Voucher', key = 'v_osquo_ext_boosterfeast'},
     atlas = 'qle_vouchers',
@@ -1482,7 +1482,7 @@ SMODS.Voucher{ --Booster Feast +1 Pack in shop
     end,
 }
 
-SMODS.Voucher{ --Booster Glutton +1 Choice in packs
+SMODS.Voucher{ --Booster Glutton
     key = 'boosterglutton',
     loc_txt = {set = 'Voucher', key = 'v_osquo_ext_boosterglutton'},
     atlas = 'qle_vouchers',
@@ -1496,6 +1496,9 @@ SMODS.Voucher{ --Booster Glutton +1 Choice in packs
             card.ability.extra.bonus
         }}
     end,
+    redeem = function(self,card)
+        G.GAME.osquo_ext_pack_choice_mod = G.GAME.osquo_ext_pack_choice_mod + 1
+    end
 }
 
 --[[ DECKS ]]--

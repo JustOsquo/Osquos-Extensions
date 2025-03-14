@@ -53,3 +53,30 @@ elseif eval_type == 'osquo_ext_rscore' then
         config.type = 'fade'
         config.scale = 0.7
 '''
+
+
+
+# New variable to allow for extra booster pack choices
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/game_object.lua"]'''
+match_indent = true
+position = 'at'
+pattern = '''
+vars = { cfg.choose, cfg.extra },
+'''
+payload = '''
+vars = { math.min(cfg.choose + G.GAME.osquo_ext_pack_choice_mod, cfg.extra), cfg.extra },
+'''
+
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+position = 'after'
+pattern = '''
+G.GAME.pack_choices = self.ability.choose or self.config.center.config.choose or 1'''
+payload = '''
+G.GAME.pack_choices = math.min(G.GAME.pack_choices + G.GAME.osquo_ext_pack_choice_mod, self.config.center.config.extra)
+'''

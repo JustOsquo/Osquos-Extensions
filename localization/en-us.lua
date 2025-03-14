@@ -5,19 +5,19 @@
 Played Wild Cards are
 permenantly upgraded with
 either +7 Chips, +1 Mult,
-X0.05 Mult, or $1
+X0.05 Mult, or $1 when scored
 ]]
 
 return {
     descriptions = {
         Joker = {
-            j_oqsuo_ext_westernjoker = {
+            j_osquo_ext_westernjoker = {
                 name = 'Western Joker',
                 text = {
                     'Played {C:attention}Wild Cards{} are',
-                    'permenantly upgraded with',
-                    'either {C:chips}+#1#{} Chips, {C:mult}+#2# Mult,',
-                    '{X:mult,C:white}X#3#{} Mult, or {C:money}$#4#{}'
+                    'permanantly upgraded with',
+                    'either {C:chips}+#1#{} Chips, {C:mult}+#2#{} Mult,',
+                    '{X:mult,C:white}X#3#{} Mult, or {C:money}$#4#{} when scored'
                 }
             },
             j_osquo_ext_bumperjoker = {
