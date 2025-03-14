@@ -104,6 +104,75 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Western Joker
+    key = 'westernjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_westernjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 5, y = 3},
+    rarity = 3,
+    cost = 5,
+    config = {extra = {
+        options = { --Weighted Table for getRandomIndexWeighted()
+            {4, 'pchips'},
+            {2, 'pmult'},
+            {1, 'pxmult'},
+            {1, 'pdollar'},
+        },
+        amounts = {
+            pchips = 7,
+            pmult = 1,
+            pxmult = 0.05,
+            pdollar = 1,
+        },
+    }},
+    loc_vars = function(self,info_queue,card)
+        return {vars = {
+            card.ability.extra.amounts.pchips,
+            card.ability.extra.amounts.pmult,
+            card.ability.extra.amounts.pxmult,
+            card.ability.extra.amounts.pdollar,
+        }}
+    end,
+    calculate = function(self,card,context) --There was probably a better way to do this
+        if context.individual and context.cardarea == G.play then
+            if context.other_card.ability.name == 'Wild Card' then
+                local chosenup = getRandomElementWeighted(card.ability.extra.options)
+                if chosenup == 'pchips' then
+                    context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
+                    context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + card.ability.extra.amounts.pchips
+                    return {
+                        extra = {message = localize('osquo_ext_chipsupg'), colour = G.C.CHIPS},
+                        card = card
+                }   
+                elseif chosenup == 'pmult' then
+                    context.other_card.ability.perma_mult = context.other_card.ability.perma_mult or 0
+                    context.other_card.ability.perma_mult = context.other_card.ability.perma_mult + card.ability.extra.amounts.pmult
+                    return {
+                        extra = {message = localize('osquo_ext_multupg'), colour = G.C.MULT},
+                        card = card
+                    }
+                elseif chosenup == 'pxmult' then
+                    context.other_card.ability.perma_x_mult = context.other_card.ability.perma_x_mult or 1
+                    context.other_card.ability.perma_x_mult = context.other_card.ability.perma_x_mult + card.ability.extra.amounts.pxmult
+                    return {
+                        extra = {message = localize('osquo_ext_xmultupg'), colour = G.C.MULT},
+                        card = card
+                    }
+                elseif chosenup == 'pdollar' then
+                    context.other_card.ability.perma_p_dollars = context.other_card.ability.perma_p_dollars or 0
+                    context.other_card.ability.perma_p_dollars = context.other_card.ability.perma_p_dollars + card.ability.extra.amounts.pdollar
+                    return {
+                        extra = {message = localize('osquo_ext_dollarupg'), colour = G.C.MONEY},
+                        card = card
+                    }
+                end
+            end
+        end
+    end
+}
+
 SMODS.Joker{ --Bumper Joker
     key = 'bumperjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_bumperjoker'},
@@ -1395,7 +1464,7 @@ SMODS.Enhancement { --Amber Cards
 
 --[[ VOUCHERS ]]--
 
-SMODS.Voucher{ --Booster Feast +1 Pack in shop
+SMODS.Voucher{ --Booster Feast
     key = 'boosterfeast',
     loc_txt = {set = 'Voucher', key = 'v_osquo_ext_boosterfeast'},
     atlas = 'qle_vouchers',
@@ -1413,7 +1482,7 @@ SMODS.Voucher{ --Booster Feast +1 Pack in shop
     end,
 }
 
-SMODS.Voucher{ --Booster Glutton +1 Choice in packs
+SMODS.Voucher{ --Booster Glutton
     key = 'boosterglutton',
     loc_txt = {set = 'Voucher', key = 'v_osquo_ext_boosterglutton'},
     atlas = 'qle_vouchers',
@@ -1427,6 +1496,9 @@ SMODS.Voucher{ --Booster Glutton +1 Choice in packs
             card.ability.extra.bonus
         }}
     end,
+    redeem = function(self,card)
+        G.GAME.osquo_ext_pack_choice_mod = G.GAME.osquo_ext_pack_choice_mod + 1
+    end
 }
 
 --[[ DECKS ]]--

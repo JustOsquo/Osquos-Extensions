@@ -2,13 +2,24 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Retrigger all Rankless
-cards 1 additional time
+Played Wild Cards are
+permenantly upgraded with
+either +7 Chips, +1 Mult,
+X0.05 Mult, or $1 when scored
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_westernjoker = {
+                name = 'Western Joker',
+                text = {
+                    'Played {C:attention}Wild Cards{} are',
+                    'permanantly upgraded with',
+                    'either {C:chips}+#1#{} Chips, {C:mult}+#2#{} Mult,',
+                    '{X:mult,C:white}X#3#{} Mult, or {C:money}$#4#{} when scored'
+                }
+            },
             j_osquo_ext_bumperjoker = {
                 name = 'Bumper Joker',
                 text = {
@@ -333,6 +344,10 @@ return {
             osquo_ext_sweetresinlicked = 'Licked!',
             osquo_ext_1handsize = '+1 Hand Size',
             osquo_ext_sacrificed = 'Sacrificed!',
+            osquo_ext_chipsupg = '+Chips!',
+            osquo_ext_multupg = '+Mult!',
+            osquo_ext_xmultupg = '+XMult!',
+            osquo_ext_dollarupg = '+Money',
         },
         v_dictionary = {
             osquo_ext_a_rscore = "+#1# Score"
