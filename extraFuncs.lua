@@ -118,3 +118,17 @@ function table_contains(table, content) --obvious
 	end
 	return false
 end
+
+function getRandomElementWeighted(table) --Allows for assigning weights to a table and pulling a weightedly random index from it
+	local total = 0
+	for k, v in pairs(table) do
+		total = total + v[1]
+	end
+	local selected = math.random(total)
+	for k, v in pairs(table) do
+		selected = selected - v[1]
+		if (selected <= 0) then
+			return v[2]
+		end
+	end
+end
