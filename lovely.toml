@@ -35,29 +35,6 @@ payload = '''
 
 
 # New card_eval_status_text key
-#[[patches]]
-#[patches.pattern]
-#target = "functions/common_events.lua"
-#match_indent = true
-#pattern = '''
-#    elseif eval_type == 'h_mult' then 
-#        sound = 'multhit1'
-#        amt = amt
-#        text = localize{type='variable',key='a_mult',vars={amt}}
-#        colour = G.C.MULT
-#        config.type = 'fade'
-#        config.scale = 0.7
-#'''
-#position = "after"
-#payload = '''
-#    elseif eval_type == 'osquo_ext_rscore' then 
-#        sound = 'osquo_ext_rscore'
-#        amt = amt
-#        text = localize{type='variable',key='osquo_ext_a_rscore',vars={amt}}
-#        colour = G.C.GREEN
-#        config.type = 'fade'
-#        config.scale = 0.7
-#'''
 [[patches]]
 [patches.pattern]
 target = 'functions/common_events.lua'
@@ -75,4 +52,35 @@ elseif eval_type == 'osquo_ext_rscore' then
         colour = G.C.GREEN
         config.type = 'fade'
         config.scale = 0.7
+'''
+
+
+
+# New variable for booster pack slots
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+match_indent = true
+position = 'after'
+pattern = '''
+        shop = {
+            joker_max = 2,
+'''
+payload = '''
+        osquo_ext_booster_max = 3,
+'''
+# Patch to change shop to use new variable
+# It doesnt actually work but I'm leaving it in anyway in case it becomes useful
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+match_indent = true
+position = 'at'
+pattern = '''
+                                    else
+                                        for i = 1, 2 do
+'''
+payload = '''
+                                    else
+                                        for i = 1, G.GAME.shop.osquo_ext_booster_max - #G.shop_booster.cards do
 '''

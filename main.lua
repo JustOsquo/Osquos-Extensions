@@ -1393,12 +1393,10 @@ SMODS.Enhancement { --Amber Cards
 
 --[[ VOUCHERS ]]--
 
-SMODS.Voucher{
-    --Tier 1: +1 Booster Packs Available in each Shop
-    --Tier 2: +1 Choice in all Booster Packs
+SMODS.Voucher{ --Booster Feast +1 Pack in shop
     key = 'boosterfeast',
     loc_txt = {set = 'Voucher', key = 'v_osquo_ext_boosterfeast'},
-    atlas = 'Voucher',
+    atlas = 'qle_vouchers',
     pos = {x = 0, y = 0},
     config = {extra = {
         bonus = 1
@@ -1408,12 +1406,24 @@ SMODS.Voucher{
             card.ability.extra.bonus
         }}
     end,
+    redeem = function(self,card)
+        G.E_MANAGER:add_event(Event({func = function()
+            change_booster_shop_size(card.ability.extra.bonus)
+            return true end }))
+    end,
+    calculate = function(self,card,context)
+        if context.starting_shop then
+            SMODS.add_booster_to_shop(get_pack('shop_pack').key)
+        end
+    end
 }
-SMODS.Voucher{
-    key = 'boosterglutton'
+
+SMODS.Voucher{ --Booster Glutton +1 Choice in packs
+    key = 'boosterglutton',
     loc_txt = {set = 'Voucher', key = 'v_osquo_ext_boosterglutton'},
-    atlas = 'Voucher',
-    pos = {x = 1, y = 0}.
+    atlas = 'qle_vouchers',
+    pos = {x = 1, y = 0},
+    requires = {'v_osquo_ext_boosterfeast'},
     config = {extra = {
         bonus = 1
     }},
