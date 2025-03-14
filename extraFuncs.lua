@@ -118,38 +118,3 @@ function table_contains(table, content) --obvious
 	end
 	return false
 end
-
-function change_booster_shop_size(mod) --like change_shop_size() but for booster packs
-	if not G.GAME.shop then return end
-	G.GAME.shop.osquo_ext_booster_max = G.GAME.shop.osquo_ext_booster_max + mod
-	if G.shop_booster and G.shop_booster.cards then
-		if mod < 0 then
-			--Remove packs in shop
-			for i = #G.shop_booster.cards, G.GAME.shop.osquo_ext_booster_max + 1, -1 do
-				if G.shop_booster.cards[i] then
-					G.shop_booster.cards[i]:remove()
-				end
-			end
-		end
-		G.shop_booster.config.card_limit = G.GAME.shop.osquo_ext_booster_max
-		G.shop_booster.T.w = G.GAME.shop.osquo_ext_booster_max * 1.01*G.CARD_W
-		G.shop:recalculate()
-		if mod > 0 then
-			for i = 1, G.GAME.shop.osquo_ext_booster_max - #G.shop_booster.cards do
-				G.GAME.current_round.used_packs = G.GAME.current_round.used_packs or {}
-				if not G.GAME.current_round.used_packs[i] then
-					G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key
-				end
-
-				if G.GAME.current_round.used_packs[i] ~= 'USED' then 
-					local card = Card(G.shop_booster.T.x + G.shop_booster.T.w/2,
-					G.shop_booster.T.y, G.CARD_W*1.27, G.CARD_H*1.27, G.P_CARDS.empty, G.P_CENTERS[G.GAME.current_round.used_packs[i]], {bypass_discovery_center = true, bypass_discovery_ui = true})
-					create_shop_card_ui(card, 'Booster', G.shop_booster)
-					card.ability.booster_pos = i
-					card:start_materialize()
-					G.shop_booster:emplace(card)
-				end
-			end
-		end
-	end
-end

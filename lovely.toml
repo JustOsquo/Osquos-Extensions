@@ -53,34 +53,3 @@ elseif eval_type == 'osquo_ext_rscore' then
         config.type = 'fade'
         config.scale = 0.7
 '''
-
-
-
-# New variable for booster pack slots
-[[patches]]
-[patches.pattern]
-target = 'game.lua'
-match_indent = true
-position = 'after'
-pattern = '''
-        shop = {
-            joker_max = 2,
-'''
-payload = '''
-        osquo_ext_booster_max = 3,
-'''
-# Patch to change shop to use new variable
-# It doesnt actually work but I'm leaving it in anyway in case it becomes useful
-[[patches]]
-[patches.pattern]
-target = 'game.lua'
-match_indent = true
-position = 'at'
-pattern = '''
-                                    else
-                                        for i = 1, 2 do
-'''
-payload = '''
-                                    else
-                                        for i = 1, G.GAME.shop.osquo_ext_booster_max - #G.shop_booster.cards do
-'''

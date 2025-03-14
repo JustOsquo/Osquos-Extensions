@@ -1407,15 +1407,11 @@ SMODS.Voucher{ --Booster Feast +1 Pack in shop
         }}
     end,
     redeem = function(self,card)
-        G.E_MANAGER:add_event(Event({func = function()
-            change_booster_shop_size(card.ability.extra.bonus)
-            return true end }))
-    end,
-    calculate = function(self,card,context)
-        if context.starting_shop then
-            SMODS.add_booster_to_shop(get_pack('shop_pack').key)
+        SMODS.change_booster_limit(card.ability.extra.bonus)
+        for i = 1, card.ability.extra.bonus do
+            SMODS.add_booster_to_shop()
         end
-    end
+    end,
 }
 
 SMODS.Voucher{ --Booster Glutton +1 Choice in packs
