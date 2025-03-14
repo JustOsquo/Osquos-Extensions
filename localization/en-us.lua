@@ -267,6 +267,22 @@ return {
                 }
             },
         },
+        Voucher = {
+            v_osquo_ext_boosterfeast = {
+                name = 'Booster Feast',
+                text = {
+                    '{C:attention}+#1#{} Booster Pack',
+                    'available in shop'
+                }
+            },
+            v_osquo_ext_boosterglutton = {
+                name = 'Booster Glutton',
+                text = {
+                    '{C:attention}+#1#{} Choice in all',
+                    'Booster Packs'
+                }
+            },
+        },
         Other = {
             acrylic_info = {
                 name = 'Acrylic Card',

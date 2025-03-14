@@ -1,2 +1,2 @@
 # Osquo's Extensions
-A fun-focused and (hopefully) balanced Extension to the vanilla game
+A fun-focused and (hopefully) balanced extension to the vanilla game

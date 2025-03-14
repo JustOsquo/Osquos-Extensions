@@ -110,7 +110,7 @@ use = function(self,card)
 end
 ]]
 
-function table_contains(table, content)
+function table_contains(table, content) --obvious
 	for k, v in pairs(table) do
 		if v == content then
 			return true

@@ -35,29 +35,6 @@ payload = '''
 
 
 # New card_eval_status_text key
-#[[patches]]
-#[patches.pattern]
-#target = "functions/common_events.lua"
-#match_indent = true
-#pattern = '''
-#    elseif eval_type == 'h_mult' then 
-#        sound = 'multhit1'
-#        amt = amt
-#        text = localize{type='variable',key='a_mult',vars={amt}}
-#        colour = G.C.MULT
-#        config.type = 'fade'
-#        config.scale = 0.7
-#'''
-#position = "after"
-#payload = '''
-#    elseif eval_type == 'osquo_ext_rscore' then 
-#        sound = 'osquo_ext_rscore'
-#        amt = amt
-#        text = localize{type='variable',key='osquo_ext_a_rscore',vars={amt}}
-#        colour = G.C.GREEN
-#        config.type = 'fade'
-#        config.scale = 0.7
-#'''
 [[patches]]
 [patches.pattern]
 target = 'functions/common_events.lua'
