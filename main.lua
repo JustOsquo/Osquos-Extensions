@@ -866,7 +866,7 @@ SMODS.Joker{ --The Harmony
             ['Clubs'] = 0
             }
             for i = 1, #context.scoring_hand do --for every card in scoring hand
-                if context.scoring_hand[i].ability.name ~= 'Wild Card' then --if not a wild card, check suit and add 1 to the suit count
+                if context.scoring_hand[i].ability.name ~= 'Wild Card' and not SMODS.has_no_suit(context.scoring_hand[i]) then --if not a wild card, check suit and add 1 to the suit count
                     if context.scoring_hand[i]:is_suit('Hearts', true) then suits["Hearts"] = suits["Hearts"] + 1
                     elseif context.scoring_hand[i]:is_suit('Diamonds', true)  then suits["Diamonds"] = suits["Diamonds"] + 1
                     elseif context.scoring_hand[i]:is_suit('Spades', true)  then suits["Spades"] = suits["Spades"] + 1
@@ -874,11 +874,16 @@ SMODS.Joker{ --The Harmony
                 end
             end
             for i = 1, #context.scoring_hand do
-                if context.scoring_hand[i].ability.name == 'Wild Card' then --if it's a wild card, add 1 to every suit count
+                if context.scoring_hand[i].ability.name == 'Wild Card' and not SMODS.has_no_suit(context.scoring_hand[i]) then --if it's a wild card, add 1 to every suit count
                     suits["Hearts"] = suits["Hearts"] + 1
                     suits["Diamonds"] = suits["Diamonds"] + 1
                     suits["Spades"] = suits["Spades"] + 1
                     suits["Clubs"] = suits["Clubs"] + 1
+                end
+            end
+            for i = 1, #context.scoring_hand do
+                if SMODS.has_no_suit(context.scoring_hand[i]) then
+                    -- no suit lmao
                 end
             end
             if suits['Hearts'] == suits['Diamonds'] and suits['Diamonds'] == suits['Spades'] and suits['Spades'] == suits['Clubs'] then --if all suit counts are co-equal
