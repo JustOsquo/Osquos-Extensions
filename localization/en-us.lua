@@ -21,7 +21,7 @@ return {
                 }
             },
             j_osquo_ext_bumperjoker = {
-                name = 'Bumper Joker',
+                name = 'Bumper',
                 text = {
                     '{C:green}+1000{} Score',
                 }
@@ -215,7 +215,7 @@ return {
                 }
             },
             j_osquo_ext_bubbleuniverse = {
-                name = 'Bubble Universe',
+                name = 'Stańczyk',
                 text = {
                     '{C:green}#1# in #2#{} chance for one',
                     'random {C:attention}Joker{} to become',

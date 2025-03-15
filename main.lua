@@ -53,6 +53,13 @@ SMODS.Sound{ --Raw Score Sound
 
 --[[ ATLASES ]]--
 
+SMODS.Atlas {
+    key = 'modicon',
+    path = 'icon.png',
+    px = 32,
+    py = 32
+}
+
 SMODS.Atlas{ --defining the joker atlas
     key = 'Jokers',
     path = 'Jokers.png',
@@ -103,14 +110,20 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 }
 
 --[[ ORDINARY JOKERS ]]--
+--[[
+SMODS.Joker{
+    key = 'shareholder',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_shareholder'},
 
+}
+]]
 SMODS.Joker{ --Western Joker
     key = 'westernjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_westernjoker'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 5, y = 3},
+    pos = {x = 4, y = 2},
     rarity = 3,
     cost = 5,
     config = {extra = {
@@ -191,7 +204,7 @@ SMODS.Joker{ --Bumper Joker
         }}
     end,
     calculate = function(self,card,context)
-        if context.final_scoring_step then
+        if context.before then
             return {
                 osquo_ext_rscore = card.ability.extra.rscore --see hookers.lua
             }
@@ -393,7 +406,7 @@ SMODS.Joker{ --Transmutation
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 4, y = 2},
+    pos = {x = 0, y = 0},
     rarity = 3,
     cost = 8,
     config = {extra = {
@@ -1093,7 +1106,8 @@ SMODS.Joker{ --Bubble Universe
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 1, y = 0},
+    pos = {x = 2, y = 4},
+    soul_pos = {x = 3, y = 4},
     rarity = 4,
     cost = 20,
     config = {extra = {odds = 9}},
