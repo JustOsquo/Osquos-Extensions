@@ -357,7 +357,7 @@ SMODS.Joker{ --Cabinet Joker
                 if not silent then play_sound('chips2') end
             return true end}))
         elseif context.after then
-            local checkscore = to_number((to_number(G.GAME.chips)) + (to_number(hand_chips)*to_number(mult))) --i love/hate talisman
+            local checkscore = to_number((to_number(G.GAME.chips)) + (to_number(hand_chips)*(to_number(mult)))) --i love/hate talisman
             if to_number(checkscore) < to_number(G.GAME.blind.chips) then --idk if half this to_number() bullshit is even necessary
                 return {
                     dollars = card.ability.extra.givedollar*(G.GAME.current_round.hands_played+1),

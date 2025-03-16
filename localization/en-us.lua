@@ -2,7 +2,7 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Played Wild Cards are
+Played Wild Cards aremmmmmm
 permenantly upgraded with
 either +7 Chips, +1 Mult,
 X0.05 Mult, or $1 when scored
