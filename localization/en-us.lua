@@ -61,12 +61,12 @@ return {
                     '{C:inactive}(Currently {}{C:red}X#3#{}{C:red} Blind Size{}{C;inactive}){}'
                 }
             },
-            j_osquo_ext_safetynet = {
-                name = 'Safety Net',
+            j_osquo_ext_temperatejoker = {
+                name = 'Temperate Joker',
                 text = {
-                    '{X:mult,C:white}X#1#{} Mult if current',
-                    '{C:attention}Score{} would not',
-                    'defeat the {C:attention}Blind{}'
+                    '{X:mult,C:white}X#1#{} Mult',
+                    'Loses {X:mult,C:white}X#2#{} Mult per',
+                    '{C:attention}reroll{} in the shop'
                 }
             },
             j_osquo_ext_transmutation = {
@@ -347,10 +347,11 @@ return {
             osquo_ext_chipsupg = '+Chips!',
             osquo_ext_multupg = '+Mult!',
             osquo_ext_xmultupg = '+XMult!',
-            osquo_ext_dollarupg = '+Money',
+            osquo_ext_dollarupg = '+Money!',
+            osquo_ext_temperategone = 'Lost!',
         },
         v_dictionary = {
-            osquo_ext_a_rscore = "+#1# Score"
+            osquo_ext_a_rscore = "+#1# Score",
         },
     },
 }

@@ -371,30 +371,59 @@ SMODS.Joker{ --Cabinet Joker
     end
 }
 
-SMODS.Joker{ --Safety Net
-    key = 'safetynet',
-    loc_txt = {set = 'Joker', key = 'j_osquo_ext_safetynet'},
+SMODS.Joker{ --Temperate Joker
+    key = 'temperatejoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_temperatejoker'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
     pos = {x = 4, y = 3},
-    rarity = 2,
+    rarity = 1,
     cost = 4,
     config = {extra = {
-        givexmult = 3
+        givexmult = 2,
+        losexmult = 0.1
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
             card.ability.extra.givexmult,
+            card.ability.extra.losexmult
         }}
     end,
     calculate = function(self,card,context)
-        if context.joker_main then
-            local checkscore = to_number(hand_chips)*mult or hand_chips*mult --check current score
-            if checkscore <= G.GAME.blind.chips then --if hand would not win
+        if context.reroll_shop and not context.blueprint then
+            card.ability.extra.givexmult = card.ability.extra.givexmult - card.ability.extra.losexmult
+            if card.ability.extra.givexmult <= 1 then
                 return {
-                    xmult = card.ability.extra.givexmult
+                    message = localize{type='variable',key='a_mult',vars={(card.ability.extra.losexmult * -1)}},
+                    colour = G.C.RED
                 }
+            else
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        play_sound('tarot1')
+                        self.T.r = -0.2
+                        self:juice_up(0.3, 0.4)
+                        self.states.drag.is = true
+                        self.children.center.pinch.x = true
+                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                            func = function()
+                                    G.jokers:remove_card(self)
+                                    self:remove()
+                                    self = nil
+                                return true; end}))
+                        return true
+                    end
+                }))
+                return {
+                    message = localize('osquo_ext_temperategone'),
+                    colour = G.C.FILTER
+                }
+            end
+        if context.joker_main then
+            return {
+                xmult = card.ability.extra.givexmult
+            }
             end
         end
     end
