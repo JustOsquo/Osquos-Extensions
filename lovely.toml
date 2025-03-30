@@ -1,0 +1,82 @@
+
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# Context for adding chips/mult before card scoring
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+match_indent = true
+pattern = '''
+if modded then update_hand_text({sound = 'chips2', modded = modded}, {chips = hand_chips, mult = mult}) end
+'''
+position = "after"
+payload = '''
+for i=1, #G.jokers.cards do
+    eval_card(G.jokers.cards[i], {cardarea = G.jokers, full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, prescoring = true})
+end
+'''
+
+# New calc key
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+match_indent = true
+pattern = '''
+SMODS.calculation_keys = {
+'''
+position = "after"
+payload = '''
+    'osquo_ext_rscore',
+'''
+
+
+
+# New card_eval_status_text key
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+position = 'before'
+pattern = '''
+elseif (eval_type == 'x_mult') or (eval_type == 'h_x_mult') then
+'''
+payload = '''
+elseif eval_type == 'osquo_ext_rscore' then
+        sound = 'osquo_ext_rscore'
+        volume = 3.0
+        amt = amt
+        text = localize{type='variable',key='osquo_ext_a_rscore',vars={amt}}
+        colour = G.C.GREEN
+        config.type = 'fade'
+        config.scale = 0.7
+'''
+
+
+
+# New variable to allow for extra booster pack choices
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/game_object.lua"]'''
+match_indent = true
+position = 'at'
+pattern = '''
+vars = { cfg.choose, cfg.extra },
+'''
+payload = '''
+vars = { math.min(cfg.choose + G.GAME.osquo_ext_pack_choice_mod, cfg.extra), cfg.extra },
+'''
+
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+position = 'after'
+pattern = '''
+G.GAME.pack_choices = self.ability.choose or self.config.center.config.choose or 1'''
+payload = '''
+G.GAME.pack_choices = math.min(G.GAME.pack_choices + G.GAME.osquo_ext_pack_choice_mod, self.config.center.config.extra)
+'''
