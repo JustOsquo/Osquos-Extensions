@@ -9,7 +9,7 @@
 	"priority": 0,
 	"badge_colour": "770077",
 	"badge_text_colour": "BB55BB",
-	"version": "0.9.4~BETA-0330a",
+	"version": "0.9.4~BETA-0331a",
 	"dependencies": [
         "Steamodded (>=1.0.0~BETA-0314a)"
     ],

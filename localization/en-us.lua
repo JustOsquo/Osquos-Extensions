@@ -2,15 +2,25 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Earn $3 every 5 [5]
-cards discarded
+1 in 4 chance to
+create a spectral card
+when using a spectral card
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_ghostjoker = {
+                name = 'Ghost Joker',
+                text = {
+                    '{C:green}#1# in #2#{} chance to',
+                    'create a {C:spectral}Spectral{} card',
+                    'when using a {C:spectral}Spectral{} card',
+                    '{C:inactive}(Must have room)'
+                }
+            },
             j_osquo_ext_pickyjoker = {
-                name = 'Picky Joker',
+                name = 'Junk Joker',
                 text = {
                     'Earn {C:money}$#1#{} every {C:attention}#2#{} {C:inactive}[#3#]{}',
                     'cards discarded'
@@ -43,7 +53,7 @@ return {
                 }
             },
             j_osquo_ext_delljoker = {
-                name = 'Joker in the dell',
+                name = 'Joker-in-the-dell',
                 text = {
                     '{C:attention}Destroy{} fifth played',
                     'card after first hand',

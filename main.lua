@@ -111,16 +111,55 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{
+    key = 'ghostjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_ghostjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 7, y = 2},
+    soul_pos = {x = 7, y = 3},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        odds = 4
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            (G.GAME.probabilities.normal or 1),
+            card.ability.extra.odds
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.using_consumeable and context.consumeable.ability.set == 'Spectral' then
+            if pseudorandom('ghostjoker') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+                    G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'before',
+                        delay = 0.0,
+                        func = (function()
+                            local _card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'sixth')
+                            _card:add_to_deck()
+                            G.consumeables:emplace(_card)
+                            G.GAME.consumeable_buffer = 0
+                            return true
+                        end)}))
+                    card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_plus_spectral'), colour = G.C.SECONDARY_SET.Spectral})
+                end
+            end
+        end
+    end
+}
 --Ghost Joker (Invisible soul so its just the shadow effect)
 
-SMODS.Joker{ --Picky Joker
+SMODS.Joker{ --Junk Joker
     key = 'pickyjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_pickyjoker'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
-    --pos = {x = 7, y = 1},
+    pos = {x = 7, y = 1},
     rarity = 2,
     cost = 4,
     config = {extra = {
@@ -154,8 +193,7 @@ SMODS.Joker{ --Hermit Joker
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
-    --pos = {x = 7, y = 0}
+    pos = {x = 7, y = 0},
     rarity = 3,
     cost = 1,
     config = {extra = {
