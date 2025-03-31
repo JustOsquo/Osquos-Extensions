@@ -111,7 +111,7 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
-SMODS.Joker{
+SMODS.Joker{ --Ghost Joker
     key = 'ghostjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_ghostjoker'},
     blueprint_compat = true,
@@ -151,7 +151,6 @@ SMODS.Joker{
         end
     end
 }
---Ghost Joker (Invisible soul so its just the shadow effect)
 
 SMODS.Joker{ --Junk Joker
     key = 'pickyjoker',
@@ -245,8 +244,6 @@ SMODS.Joker{ --Helping Hand
     end
 }
 
---Joker that comes after fraudjoker is busted? like cavendish? mafia joker?
-
 SMODS.Joker{ --Fraudulent Joker
     key = 'fraudjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_fraudjoker'},
@@ -256,6 +253,7 @@ SMODS.Joker{ --Fraudulent Joker
     pos = {x = 6, y = 3},
     rarity = 2,
     cost = 4,
+    no_pool_flag = 'osquo_ext_fraudjokerbusted',
     config = {extra = {
         odds = 5,
         givexmult = 1.5,
@@ -297,6 +295,7 @@ SMODS.Joker{ --Fraudulent Joker
                     return true
                     end
                 }))
+                G.GAME.pool_flags.osquo_ext_fraudjokerbusted = true
                 return {
                     message = localize('osquo_ext_fraudjokerbusted')
                 }
@@ -306,6 +305,52 @@ SMODS.Joker{ --Fraudulent Joker
                     message = localize{type='variable',key='a_xmult',vars={(card.ability.extra.givexmult)}},
                 }
             end
+        end
+    end
+}
+
+SMODS.Joker{ --Corrupt Joker
+    key = 'corruptjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_corruptjoker'},
+    blueprint_compat = true,
+    eternal_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    --pos = {x = 7, y = 4},
+    rarity = 2,
+    cost = 4,
+    yes_pool_flag = 'osquo_ext_fraudjokerbusted',
+    config = {extra = {
+        xmultgain = 0.2,
+        xmultloss = 0.5,
+        xmultnow = 1
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.xmultgain,
+            card.ability.extra.xmultloss,
+            card.ability.extra.xmultnow
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.reroll_shop then
+            card.ability.extra.xmultnow = card.ability.extra.xmultnow + card.ability.extra.xmultgain
+            return {
+                message = localize{type='variable',key='a_xmult',vars={(card.ability.extra.xmultnow)}}
+            }
+        elseif context.buying_card and context.card.ability.set == 'Joker' then
+            if (card.ability.extra.xmultnow - card.ability.extra.xmultloss) < 1 then
+                card.ability.extra.xmultnow = 1
+            else
+                card.ability.extra.xmultnow = card.ability.extra.xmultnow - card.ability.extra.xmultloss
+            end
+            return {
+                message = localize{type='variable',key='a_xmult',vars={(card.ability.extra.xmultnow)}}
+            }
+        elseif context.joker_main then
+            return {
+                xmult = card.ability.extra.xmultnow
+            }
         end
     end
 }
@@ -1033,7 +1078,7 @@ SMODS.Joker{ --Background Check
     rarity = 2,
     cost = 5,
     config = {extra = {
-        xmulteach = 0.1,
+        xmulteach = 0.08,
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {

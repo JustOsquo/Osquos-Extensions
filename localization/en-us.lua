@@ -1,12 +1,6 @@
 
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
---[[
-1 in 4 chance to
-create a spectral card
-when using a spectral card
-]]
-
 return {
     descriptions = {
         Joker = {
@@ -50,6 +44,16 @@ return {
                     '{C:green}#1# in #2#{} chance this card',
                     'is {C:red}destroyed{} at',
                     'the end of round'
+                }
+            },
+            j_osquo_ext_corruptjoker = {
+                name = 'Corrupt Joker',
+                text = {
+                    'Gains {X:mult,C:white}X#1#{} Mult',
+                    'when rerolling',
+                    'Loses {X:mult,C:white}X#2#{} Mult',
+                    'When buying a {C:attention}Joker{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#3#{} {C:inactive}Mult){}'
                 }
             },
             j_osquo_ext_delljoker = {
