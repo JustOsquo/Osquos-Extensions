@@ -132,3 +132,43 @@ function getRandomTag(ignore, seed) --get a random tag
 	end
 	return chosen
 end
+
+function getRandomJokerKey(ignore, myrarity, seed) --get a random joker key with rarity
+	--ignore: joker keys to ignore
+	--rarity: rarity to choose, random 1-3 if nil
+	--seed: rng
+	ignore = ignore or {}
+	myrarity = myrarity or pseudorandom('getRandomJokerKey', 1, 3)
+	seed = seed or 'seed'
+	local num = 0
+	local chosen = nil
+	while true do
+		chosen = pseudorandom_element(G.P_CENTER_POOLS.Joker, pseudoseed(seed..num))
+		if not table_contains(ignore, chosen.key) and (chosen.rarity == myrarity) then
+			break
+		end
+		num = num + 1
+	end
+	return chosen.key
+end
+
+function JokerConvert(toConvert, newKey)
+	for i=1, #toConvert do
+		local percent = 1.15 - (i-0.999)/(#toConvert-0.998)*0.3
+		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() toConvert[i]:flip();play_sound('card1', percent);toConvert[i]:juice_up(0.3, 0.3);return true end }))
+	end
+	delay(0.2)
+	for i=1, #toConvert do
+    local thiskey = nil
+	if type(newKey) == 'table' then thiskey = newKey[i] else thiskey = newKey end
+	G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+		toConvert[i]:set_ability(thiskey)
+		return true end }))
+	end
+	for i=1, #toConvert do
+		local percent = 0.85 + (i-0.999)/(#toConvert-0.998)*0.3
+		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() toConvert[i]:flip();play_sound('tarot2', percent, 0.6);toConvert[i]:juice_up(0.3, 0.3);return true end }))
+	end
+	G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end })) --unselect cards
+	delay(0.5)
+end
