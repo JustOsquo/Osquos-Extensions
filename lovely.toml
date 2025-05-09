@@ -80,3 +80,29 @@ G.GAME.pack_choices = self.ability.choose or self.config.center.config.choose or
 payload = '''
 G.GAME.pack_choices = math.min(G.GAME.pack_choices + G.GAME.osquo_ext_pack_choice_mod, self.config.center.config.extra)
 '''
+
+
+# fixes an oversight where jokers with a unique card size would retain their card size when becoming a different joker. doesnt happen in vanilla so its understandable
+# fixed by setting jokers to the default base H and W values before checking if the new joker should have a unique size
+
+[[patches]]
+[patches.pattern]
+target = '''card.lua'''
+match_indent = true
+position = 'after'
+pattern = '''
+    if self.params.discover and not center.discovered then
+        unlock_card(center)
+        discover_card(center)
+    end
+'''
+payload = '''
+
+    if center.set == 'Joker' then
+        H = 2.4*47/41
+        W = 2.4*35/41
+        self.T.h = H
+        self.T.w = W
+    end
+
+'''

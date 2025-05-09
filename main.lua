@@ -111,6 +111,140 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Algebra
+    key = 'algebra',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_algebra'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 8, y = 1},
+    rarity = 2,
+    cost = 6,
+    config = {extra = {
+        givexmult = 3
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.givexmult
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            local ace = false
+            local numbered = false
+            for i = 1, #context.scoring_hand do
+                if context.scoring_hand[i]:get_id() == 14 then ace = true end
+                if context.scoring_hand[i]:get_id() < 11 then numbered = true end
+            end
+            if ace == true and numbered == true then
+                return {
+                    xmult = card.ability.extra.givexmult
+                }
+            end
+        end
+    end
+}
+
+SMODS.Joker{ --Mathematics
+    key = 'mathematics',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_mathematics_unsolved'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 8, y = 0},
+    rarity = 2,
+    cost = 4,
+    config = {extra = {
+        reqsum = 0,
+        givexmult = 1,
+        xmultscale = 0.75,
+        solved = false,
+        token_name = 'j_osquo_ext_mathematics_unsolved'
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { key = card.ability.extra.token_name, vars = {
+            card.ability.extra.reqsum,
+            card.ability.extra.givexmult,
+            card.ability.extra.xmultscale
+        }}
+    end,
+    set_ability = function(self,card,initial,delay_sprites)
+        card.ability.extra.reqsum = pseudorandom('mathematics'..G.GAME.round_resets.ante, 11, 50)
+        card.children.center:set_sprite_pos({x = 8, y = 0})
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return {
+                xmult = card.ability.extra.givexmult
+            }
+        elseif context.end_of_round and G.GAME.blind.boss and not context.repetition and not context.individual and not context.blueprint then
+            card.ability.extra.reqsum = pseudorandom('mathematics'..G.GAME.round_resets.ante, 11, 50)
+            card.ability.extra.solved = false
+            card.ability.extra.token_name = 'j_osquo_ext_mathematics_unsolved'
+            card.children.center:set_sprite_pos({x = 8, y = 0})
+            return {
+                message = localize('osquo_ext_refreshed'),
+                card = card
+            }
+        elseif context.before and (card.ability.extra.solved == false) and not context.blueprint then
+            local handsum = 0
+            for i = 1, #context.full_hand do
+                if context.full_hand[i]:get_id() < 11 then
+                    handsum = handsum + context.full_hand[i]:get_id()
+                end
+            end
+            if handsum == card.ability.extra.reqsum then
+                card.ability.extra.givexmult = card.ability.extra.givexmult + card.ability.extra.xmultscale
+                card.ability.extra.solved = true
+                card.ability.extra.token_name = 'j_osquo_ext_mathematics_solved'
+                card.children.center:set_sprite_pos({x = 9, y = 0})
+                return {
+                    message = localize('osquo_ext_solved'),
+                    card = card
+                }
+            end
+        end
+    end
+}
+
+SMODS.Joker{ --Compensation
+    key = 'compensation',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_compensation'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 9, y = 1},
+    rarity = 2,
+    cost = 1,
+    config = {extra = {
+        givexmult = 1,
+        xmultper = 1
+    }},
+    in_pool = function(self, args)
+        for i = 1, #G.jokers.cards do
+            if G.jokers.cards[i].ability.rental then return true end
+        end
+        return false
+    end,
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.givexmult,
+            card.ability.extra.xmultper
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            local rentals = 0
+            for i = 1, #G.jokers.cards do
+                if G.jokers.cards[i].ability.rental then rentals = rentals + 1 end
+            end
+            return {
+                xmult = 1 + (card.ability.extra.givexmult * rentals)
+            }
+        end
+    end
+}
+
 SMODS.Joker{ --Ghost Joker
     key = 'ghostjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_ghostjoker'},
@@ -207,8 +341,8 @@ SMODS.Joker{ --Hermit Joker
     end,
     calculate = function(self,card,context)
         if context.joker_main then
-            local debtmult = math.floor(G.GAME.dollars / card.ability.extra.debtreq) * -1
-            if debtmult > 0 then
+            local debtmult = math.floor(G.GAME.dollars / card.ability.extra.debtreq) * -1 * card.ability.extra.xmultper
+            if debtmult > 1 then
                 return {
                     xmult = debtmult
                 }
@@ -315,14 +449,13 @@ SMODS.Joker{ --Corrupt Joker
     blueprint_compat = true,
     eternal_compat = false,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
-    --pos = {x = 7, y = 4},
+    pos = {x = 7, y = 4},
     rarity = 2,
     cost = 4,
     yes_pool_flag = 'osquo_ext_fraudjokerbusted',
     config = {extra = {
-        xmultgain = 0.2,
-        xmultloss = 0.5,
+        xmultgain = 0.25,
+        xmultloss = 1,
         xmultnow = 1
     }},
     loc_vars = function(self,info_queue,card)
@@ -333,12 +466,12 @@ SMODS.Joker{ --Corrupt Joker
         }}
     end,
     calculate = function(self,card,context)
-        if context.reroll_shop then
+        if context.reroll_shop and not context.blueprint then
             card.ability.extra.xmultnow = card.ability.extra.xmultnow + card.ability.extra.xmultgain
             return {
                 message = localize{type='variable',key='a_xmult',vars={(card.ability.extra.xmultnow)}}
             }
-        elseif context.buying_card and context.card.ability.set == 'Joker' then
+        elseif context.buying_card and context.card.ability.set == 'Joker' and not context.blueprint then
             if (card.ability.extra.xmultnow - card.ability.extra.xmultloss) < 1 then
                 card.ability.extra.xmultnow = 1
             else
@@ -612,15 +745,15 @@ SMODS.Joker{ --Western Joker
     cost = 5,
     config = {extra = {
         options = { --Weighted Table for getRandomIndexWeighted()
-            {4, 'pchips'},
-            {2, 'pmult'},
-            {1, 'pxmult'},
+            {8, 'pchips'},
+            {4, 'pmult'},
+            {2, 'pxmult'},
             {1, 'pdollar'},
         },
         amounts = {
-            pchips = 7,
+            pchips = 3,
             pmult = 1,
-            pxmult = 0.05,
+            pxmult = 0.02,
             pdollar = 1,
         },
     }},
@@ -1078,7 +1211,7 @@ SMODS.Joker{ --Background Check
     rarity = 2,
     cost = 5,
     config = {extra = {
-        xmulteach = 0.08,
+        xmulteach = 0.05,
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -1187,7 +1320,7 @@ SMODS.Joker{ --Idolatry
     rarity = 1,
     cost = 5,
     config = {extra = {
-        retrig = 1
+        retrig = 2
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -1729,6 +1862,36 @@ SMODS.Consumable{ --Erudition
         end
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
         delay(0.5)
+    end
+}
+
+SMODS.Consumable{ --Nescience
+    set = 'Spectral',
+    atlas = 'qle_tarot',
+    pos = {x = 0, y = 1},
+    key = 'nescience',
+    config = {extra = {
+        newkeys = {},
+        eligibleJokers = {}
+    }},
+    can_use = function(self,card)
+        card.ability.extra.eligibleJokers = {}
+        for i = 1, #G.jokers.cards do
+            if not G.jokers.cards[i].ability.eternal then
+                card.ability.extra.eligibleJokers[#card.ability.extra.eligibleJokers+1] = G.jokers.cards[i]
+            end
+        end
+        if #card.ability.extra.eligibleJokers >= 1 then
+            return true
+        end
+        return false
+    end,
+    use = function(self,card)
+        for i = 1, #card.ability.extra.eligibleJokers do
+            local newjoker = getRandomJokerKey({}, card.ability.extra.eligibleJokers[i].config.center.rarity, 'nescience')
+            card.ability.extra.newkeys[i] = newjoker
+        end
+        JokerConvert(card.ability.extra.eligibleJokers, card.ability.extra.newkeys)
     end
 }
 

@@ -1,9 +1,49 @@
 
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
+--[[
+X1 Mult for each
+owned Rental joker
+]]
+
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_algebra = {
+                name = 'Algebra',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult if played hand',
+                    'has a scoring {C:attention}Ace{} and',
+                    '{C:attention}Numbered{} card'
+                }
+            },
+            j_osquo_ext_mathematics_unsolved = {
+                name = 'Mathematics',
+                text = {
+                    'Gains {X:mult,C:white}X#3#{} Mult if the {C:attention}Sum{} of',
+                    'all played {C:attention}Numbered{} cards equals {C:green}#1#{}',
+                    'Refreshes after defeating {C:attention}Boss Blind{}',
+                    '{s:0.8,C:red}Unsolved{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#2#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_mathematics_solved = {
+                name = 'Mathematics',
+                text = {
+                    'Gains {X:mult,C:white}X#3#{} Mult if the {C:attention}Sum{} of',
+                    'all played {C:attention}Numbered{} cards equals {C:green}#1#{}',
+                    'Refreshes after defeating {C:attention}Boss Blind{}',
+                    '{s:0.8,C:green}Solved{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#2#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_compensation = {
+                name = 'Compensation',
+                text = {
+                    'Gives {X:mult,C:white}X#1#{} Mult for each',
+                    'owned {C:attention}Rental{} joker'
+                }
+            },
             j_osquo_ext_ghostjoker = {
                 name = 'Ghost Joker',
                 text = {
@@ -50,7 +90,7 @@ return {
                 name = 'Corrupt Joker',
                 text = {
                     'Gains {X:mult,C:white}X#1#{} Mult',
-                    'when rerolling',
+                    'for each {C:attention}reroll{}',
                     'Loses {X:mult,C:white}X#2#{} Mult',
                     'When buying a {C:attention}Joker{}',
                     '{C:inactive}(Currently {X:mult,C:white}X#3#{} {C:inactive}Mult){}'
@@ -228,7 +268,7 @@ return {
                 name = 'Idolatry',
                 text = {
                     'Retrigger each played',
-                    '{C:attention}#2# #1#{} additional time',
+                    '{C:attention}#2# #1#{} additional times',
                     '{s:0.8}Rank changes every round{}'
                 }
             },
@@ -238,7 +278,6 @@ return {
                     'Additionally level up a',
                     '{C:attention}random poker hand{} when',
                     'using a {C:planet}Planet{} card',
-                    --'{C:inactive}Debugvalue:#4#'mmmmmm
                 }
             },
             j_osquo_ext_earl = {
@@ -295,10 +334,10 @@ return {
             j_osquo_ext_seelie = {
                 name = 'Seelie',
                 text = {
-                    'Scored cards with a {C:tarot}Purple Seal',
-                    'create a {C:tarot}Tarot{} card',
-                    'Scored cards with a {C:planet}Blue Seal',
-                    'create a {C:planet}Planet{} card',
+                    'Cards with a {C:tarot}Purple Seal{} create',
+                    'a {C:tarot}Tarot{} card when scored',
+                    'Cards with a {C:planet}Blue Seal{} create',
+                    'a {C:planet}Planet{} card when scored',
                     '{C:inactive,s:0.8}(Must have room)'
                 }
             },
@@ -382,6 +421,13 @@ return {
                     'and {C:attention}Edition{}'
                 }
             },
+            c_osquo_ext_nescience = {
+                name = 'Nescience',
+                text = {
+                    'Replaces all {C:attention}Jokers{} with',
+                    'random jokers of {C:green}equal rarity{}'
+                }
+            },
         },
         Voucher = {
             v_osquo_ext_boosterfeast = {
@@ -426,7 +472,6 @@ return {
                     '{X:mult,C:white}X#1#{} Mult',
                     '{C:red}Shatters{} after',
                     'being played',
-                    '({C:attention}#2#{} plays remaining)'
                 }
             },
             m_osquo_ext_amberE = {
@@ -460,6 +505,8 @@ return {
             osquo_ext_temperategone = 'Lost!',
             osquo_ext_turnedin = 'Turned in!',
             osquo_ext_fraudjokerbusted = 'Busted!',
+            osquo_ext_refreshed = 'Refreshed!',
+            osquo_ext_solved = 'Solved!',
         },
         v_dictionary = {
             osquo_ext_a_rscore = "+#1# Score",
