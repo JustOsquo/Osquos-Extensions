@@ -1,2 +1,17 @@
 # Osquo's Extensions
-A fun-focused and (hopefully) balanced extension to the vanilla game
+A fun-focused and (hopefully) balanced extension to the vanilla game, aiming to open up new playstyles!
+
+# Content
+- 42 New Jokers
+- 2 New Spectral Cards
+- 1 New Tarot Card
+- 2 New Enhancements
+- 1 Pair of Vouchers (2 Total)
+
+# Dependencies
+- [Steamodded](https://github.com/Steamopollys/Steamodded) Version 1.0.0 Beta-0314a or later
+- [Lovely](https://github.com/ethangreen-dev/lovely-injector)
+
+# Credits
+- The Balatro Discord Server for their immense help in getting this project off the ground
+- bepisfever for the joker animation framework used in this mod

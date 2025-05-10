@@ -2,13 +2,20 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-X1 Mult for each
-owned Rental joker
+Sell this card to create
+a free Voucher Tag
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_sprite = {
+                name = 'Sprite',
+                text = {
+                    'Sell this card to create',
+                    'a free {C:attention}Voucher Tag{}'
+                }
+            },
             j_osquo_ext_algebra = {
                 name = 'Algebra',
                 text = {

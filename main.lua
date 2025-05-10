@@ -111,6 +111,29 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Sprite
+    key = 'sprite',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_sprite'},
+    blueprint_compat = true,
+    eternal_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 8, y = 2},
+    rarity = 2,
+    cost = 6,
+    calculate = function(self,card,context)
+        if context.selling_self then
+            G.E_MANAGER:add_event(Event({
+                    func = (function()
+                        card:juice_up()
+                        add_tag(Tag('tag_voucher'))
+                        play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
+                        play_sound('holo1', 1.2 + math.random()*0.1, 0.4)
+                        return true
+            end)}))
+        end
+    end
+}
+
 SMODS.Joker{ --Algebra
     key = 'algebra',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_algebra'},
