@@ -11,7 +11,8 @@ Happy modding!
 ]]
 SMODS.current_mod.optional_features = function() --of course i needed to do this, why wouldnt it just be added by default that'd be way too simple and easy
     return {
-        retrigger_joker = true
+        --retrigger_joker = true,
+        cardarea = {'deck', true}
     }
 end
 
@@ -110,6 +111,131 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 }
 
 --[[ ORDINARY JOKERS ]]--
+
+SMODS.Joker{ --Ominous Masque
+    key = 'ominousmasque',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_ominousmasque'},
+    blueprint_compat = true,
+    eternal_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 9, y = 3},
+    rarity = 2,
+    cost = 16,
+    calculate = function(self,card,context)
+        if context.selling_self then
+            SMODS.add_card({
+                set = 'Joker',
+                rarity = 0.1,
+                edition = 'e_negative'
+            })
+        end
+    end
+}
+
+SMODS.Joker{ --Hungry Hungry Joker
+    key = 'hungryhungryjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_hungryhungryjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 8, y = 3},
+    rarity = 1,
+    cost = 6,
+    config = {extra = {
+        multgain = 4,
+        multnow = 0,
+        deathmark = 0
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.multgain,
+            card.ability.extra.multnow
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.setting_blind then
+            card.ability.extra.deathmark = pseudorandom_element(G.deck.cards, pseudoseed('hungryhungry'))
+            card.ability.extra.deathmark:start_dissolve()
+            card.ability.extra.multnow = card.ability.extra.multnow + card.ability.extra.multgain
+            return {
+                extra = {focus = card, message = localize{type='variable',key='a_mult',vars={(card.ability.extra.multnow)}}, colour = G.C.MULT}
+            }
+        --[[ why doesnt this work
+        elseif context.destroy_card then
+            if context.destroy_card == card.ability.extra.deathmark then
+                card.ability.extra.deathmark = 0
+                return {
+                    remove = true,
+                    extra = {focus = card, message = localize{type='variable',key='a_mult',vars={(card.ability.extra.multnow)}}, colour = G.C.MULT}
+                }
+            end
+        ]]
+        elseif context.joker_main then
+            return {
+                mult = card.ability.extra.multnow
+            }
+        end
+    end
+}
+
+SMODS.Joker{ --Cheerleader Joker
+    key = 'cheerleaderjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_cheerleaderjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 9, y = 2},
+    rarity = 1,
+    cost = 3,
+    config = {extra = {
+        chipsgain = 3,
+        chipsnow = 0
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.chipsgain,
+            card.ability.extra.chipsnow
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return {
+                chips = card.ability.extra.chipsnow
+            }
+        --[[ old version
+        elseif context.individual and context.cardarea == G.play then
+            if context.other_card == context.scoring_hand[1] then
+                card.ability.extra.chipsnow = card.ability.extra.chipsnow + card.ability.extra.chipsgain
+                return {
+                    extra = {focus = card, message = localize('k_upgrade_ex'), colour = G.C.attention}
+                }
+            end
+        ]]
+        --[[ doesnt work bruh
+        elseif context.repetition and context.cardarea == G.play then
+            card.ability.extra.chipsnow = card.ability.extra.chipsnow + card.ability.extra.chipsgain
+            return {
+                extra = {focus = card, message = localize('k_upgrade_ex'), colour = G.C.attention}
+            }
+        --]]
+        elseif context.individual and context.cardarea == G.play then
+            if not context.other_card.retrigger_check_cheerleaderjoker then
+                _other_card = context.other_card -- because context.other_card doesnt exist in events
+                _other_card.retrigger_check_cheerleaderjoker = true
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        _other_card.retrigger_check_cheerleaderjoker = nil
+                        return true
+                    end}))
+            else
+                card.ability.extra.chipsnow = card.ability.extra.chipsnow + card.ability.extra.chipsgain
+                return {
+                    extra = {focus = card, message = localize('k_upgrade_ex'), colour = G.C.attention}
+                }
+            end
+        end
+    end
+}
 
 SMODS.Joker{ --Sprite
     key = 'sprite',
