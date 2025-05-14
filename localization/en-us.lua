@@ -2,13 +2,37 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Sell this card to create
-a free Voucher Tag
+Gains +2 Chips when a
+card is retriggered
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_ominousmasque = {
+                name = 'Ominous Masque',
+                text = {
+                    'Sell this card to create',
+                    'a {C:dark_edition}Negative{} {C:blue}Common{} {C:attention}Joker{}'
+                }
+            },
+            j_osquo_ext_hungryhungryjoker = {
+                name = 'Hungry Hungry Joker',
+                text = {
+                    'When blind is selected,',
+                    '{C:attention}eat{} a random card in',
+                    'deck and gain {C:mult}+#1#{} Mult',
+                    '{C:inactive}(Currently {C:mult}+#2#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_cheerleaderjoker = {
+                name = 'Cheerleader Joker',
+                text = {
+                    'Gains {C:chips}+#1#{} Chips when a',
+                    'card is {C:attention}retriggered{}',
+                    '{C:inactive}(Currently {C:chips}+#2#{} {C:inactive}Chips){}'
+                }
+            },
             j_osquo_ext_sprite = {
                 name = 'Sprite',
                 text = {
