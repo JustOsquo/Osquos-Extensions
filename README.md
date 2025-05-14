@@ -1,8 +1,9 @@
 # Osquo's Extensions
 A fun-focused and (hopefully) balanced extension to the vanilla game, aiming to open up new playstyles!
+This is my first mod (and first real project like this), so I hope you're able to enjoy playing it as much as I did making it.
 
 # Content
-- 42 New Jokers
+- 45 New Jokers
 - 2 New Spectral Cards
 - 1 New Tarot Card
 - 2 New Enhancements
