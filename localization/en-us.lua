@@ -538,6 +538,9 @@ return {
             osquo_ext_fraudjokerbusted = 'Busted!',
             osquo_ext_refreshed = 'Refreshed!',
             osquo_ext_solved = 'Solved!',
+            --
+            osquo_ext_ace = 'Ace',
+            osquo_ext_numbered = 'Numbered',
         },
         v_dictionary = {
             osquo_ext_a_rscore = "+#1# Score",

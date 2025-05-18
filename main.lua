@@ -644,7 +644,7 @@ SMODS.Joker{ --Corrupt Joker
     end
 }
 
-SMODS.Joker{ --Joker in the dell
+SMODS.Joker{ --Joker-in-the-dell
     key = 'delljoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_delljoker'},
     blueprint_compat = false,
@@ -668,7 +668,7 @@ SMODS.Joker{ --Joker in the dell
     end
 }
 
-SMODS.Joker{ --Ostracon
+SMODS.Joker{ --Ostrakon
     key = 'ostracon',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_ostracon'},
     blueprint_compat = true,
