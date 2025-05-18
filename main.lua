@@ -290,7 +290,7 @@ SMODS.Joker{ --Algebra
             local numbered = false
             for i = 1, #context.scoring_hand do
                 if context.scoring_hand[i]:get_id() == 14 then ace = true end
-                if context.scoring_hand[i]:get_id() < 11 then numbered = true end
+                if context.scoring_hand[i]:get_id() < 11 and context.scoring_hand[i]:get_id() > 0 then numbered = true end
             end
             if ace == true and numbered == true then
                 return {

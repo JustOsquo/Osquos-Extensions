@@ -35,7 +35,7 @@ jd_def['j_osquo_ext_algebra'] = {
         if text ~= 'Unknown' then
             for i = 1, #scoring_hand do
                 if scoring_hand[i]:get_id() == 14 then ace = true end
-                if scoring_hand[i]:get_id() < 11 then numbered = true end
+                if scoring_hand[i]:get_id() < 11 and scoring_hand[i]:get_id() > 0 then numbered = true end
             end
         end
 
