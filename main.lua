@@ -189,7 +189,8 @@ SMODS.Joker{ --Cheerleader Joker
     cost = 3,
     config = {extra = {
         chipsgain = 3,
-        chipsnow = 0
+        chipsnow = 0,
+        testtable = {}
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -220,7 +221,8 @@ SMODS.Joker{ --Cheerleader Joker
         --]]
         elseif context.individual and context.cardarea == G.play then
             if not context.other_card.retrigger_check_cheerleaderjoker then
-                _other_card = context.other_card -- because context.other_card doesnt exist in events
+                local _other_card = context.other_card -- because context.other_card doesnt exist in events
+                card.ability.extra.testtable[#card.ability.extra.testtable+1] = _other_card
                 _other_card.retrigger_check_cheerleaderjoker = true
                 G.E_MANAGER:add_event(Event({
                     func = function()
@@ -233,6 +235,11 @@ SMODS.Joker{ --Cheerleader Joker
                     extra = {focus = card, message = localize('k_upgrade_ex'), colour = G.C.attention}
                 }
             end
+        elseif context.after then --noticed some weird shenanigans, hope this fixes it but its really weird and hard to test
+            for i = 1, #card.ability.extra.testtable do
+                card.ability.extra.testtable[i].retrigger_check_cheerleaderjoker = nil
+            end
+            card.ability.extra.testtable = {}
         end
     end
 }
