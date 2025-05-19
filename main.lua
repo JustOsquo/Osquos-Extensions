@@ -82,6 +82,13 @@ SMODS.Atlas{ --another animated texture atlas!
     py = 95
 }
 
+SMODS.Atlas{ --It's the Chess atlas!
+    key = 'Chess',
+    path = 'Chess.png',
+    px = 71,
+    py = 95
+}
+
 SMODS.Atlas{ --this, however, is the tarot atlas
     key = 'qle_tarot',
     path = 'Tarots.png',
@@ -113,6 +120,12 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 --[[ ORDINARY JOKERS ]]--
 
 SMODS.Joker{
+    --Effect when hand contains Straight
+    --Effect when hand contains Flush
+    --Effect when hand contains Ace
+}
+
+SMODS.Joker{ --Uniform Joker
     key = 'uniformjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_uniformjoker'},
     blueprint_compat = true,
@@ -2240,3 +2253,66 @@ SMODS.Voucher{ --Booster Glutton
 --[[ DECKS ]]--
 
 --...IF I HAD ANY!
+
+--[[ CHESS CARDS ]]--
+
+--[[
+[1]King: Creates up to 2 random Chess cards
+[2]Queen: X1.5 Money | (Max $40)
+[3]Rook: Select 2 cards, copy the Enhancement, Seal, and Edition from the right card to the left card | (Drag to rearrange)
+[4]Bishop: Removes debuff status from up to 3 selected cards
+[6]Knight: 1 in 2 chance to create a Spectral card
+[12]Pawn: Creates the last Chess card used during this run | Pawn excluded
+
+[11]Vizier: Immediately draws up to 2 cards
+[7]Camel: Creates a random Tag | Orbital Tag excluded
+[5]Picket: Permenantly upgrades 1 selected card with +15 Chips
+[10]General: Create a random Tarot card
+[9]Elephant: Permenantly upgrades 1 selected card with +2 Mult
+[8]War Engine: Returns the last 3 played cards this round to hand
+]]
+
+SMODS.ConsumableType = {
+    key = 'chess',
+    primary_colour = HEX('7A4B32'),
+    secondary_colour = HEX('9F5D37'),
+    loc_txt = {
+        name = 'Chess',
+        collection = 'Chess Cards',
+        undiscovered = {
+            name = '???',
+            text = {
+                'You are yet to discover this card...'
+            }
+        }
+    },
+    collection_rows = {6, 6}
+}
+
+SMODS.Consumable = {
+    key = 'chess_king',
+    set = 'chess',
+    atlas = 'Chess',
+    pos = {x = 0, y = 0},
+    config = {extra = {
+        createn = 2
+    }},
+    cost = 3,
+    can_use = function(self,card)
+        if #G.consumeables.cards < G.consumeables.config.card_limit or self.area == G.consumeables then return true end
+    end,
+    use = function(self,card)
+        for i = 1, math.min(card.ability.extra.createn, G.consumeables.config.card_limit - #G.consumables.cards) do
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                if G.consumeables.config.card_limit > #G.consumables.cards then
+                    play_sound('timpani')
+                    local _card = create_card('chess', G.consumables, nil, nil, nil, nil, nil, 'king')
+                    _card:add_to_deck()
+                    G.consumables:emplace(card)
+                    used_tarot:juice_up(0.3, 0.5)
+                end
+                return true end}))
+        end
+        delay(0.6)
+    end
+}

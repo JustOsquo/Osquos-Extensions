@@ -10,6 +10,9 @@ contains no more than
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_tasteslikejoker = {
+                name = 'Joker that doesnt taste like Joker but makes you say "Mmm, Tastes like Joker"',
+            }
             j_osquo_ext_uniformjoker = {
                 name = 'Uniform Joker',
                 text = {
