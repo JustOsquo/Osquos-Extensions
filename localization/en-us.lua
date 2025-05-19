@@ -2,13 +2,22 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Gains +2 Chips when a
-card is retriggered
+X2 Mult if played hand
+contains no more than
+2 unique cards
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_uniformjoker = {
+                name = 'Uniform Joker',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult if {C:attention}Played Hand{}',
+                    'contains no more than',
+                    '{C:attention}#2#{} unique cards'
+                }
+            },
             j_osquo_ext_ominousmasque = {
                 name = 'Ominous Masque',
                 text = {

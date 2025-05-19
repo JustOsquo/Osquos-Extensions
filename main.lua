@@ -112,6 +112,44 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{
+    key = 'uniformjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_uniformjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        xmultgive = 3,
+        cardlimit = 3
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.xmultgive,
+            card.ability.extra.cardlimit
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            local cards = {}
+            for i = 1, #context.full_hand do
+                local rank = context.full_hand[i].base.id
+                local suit = context.full_hand[i].base.suit
+                if not table_contains(cards, rank..suit) then
+                    cards[#cards+1] = rank..suit
+                end
+            end
+            if #cards <= card.ability.extra.cardlimit then
+                return {
+                    xmult = card.ability.extra.xmultgive
+                }
+            end
+        end
+    end
+}
+
 SMODS.Joker{ --Ominous Masque
     key = 'ominousmasque',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_ominousmasque'},
