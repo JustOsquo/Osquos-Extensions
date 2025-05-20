@@ -2257,22 +2257,22 @@ SMODS.Voucher{ --Booster Glutton
 --[[ CHESS CARDS ]]--
 
 --[[
-[1]King: Creates up to 2 random Chess cards
-[2]Queen: X1.5 Money | (Max $40)
+[1]King: Create up to 2 random Chess cards
+[2]Queen: Randomize the rank and suit of up to 3 selected cards
 [3]Rook: Select 2 cards, copy the Enhancement, Seal, and Edition from the right card to the left card | (Drag to rearrange)
-[4]Bishop: Removes debuff status from up to 3 selected cards
+[4]Bishop: Remove debuff status from up to 3 selected cards
 [6]Knight: 1 in 2 chance to create a Spectral card
-[12]Pawn: Creates the last Chess card used during this run | Pawn excluded
+[12]Pawn: Create the last Chess card used during this run | Pawn excluded
 
-[11]Vizier: Immediately draws up to 2 cards
-[7]Camel: Creates a random Tag | Orbital Tag excluded
-[5]Picket: Permenantly upgrades 1 selected card with +15 Chips
-[10]General: Create a random Tarot card
-[9]Elephant: Permenantly upgrades 1 selected card with +2 Mult
-[8]War Engine: Returns the last 3 played cards this round to hand
+[11]Vizier: Immediately draw up to 2 cards
+[7]Camel: Convert 1 owned Joker into another owned Joker
+[5]Picket: Set money to $15
+[10]General: 1 in 4 chance to add Polychrome to a random Joker
+[9]Elephant: Destroy all but one Joker | +1 Hand Size
+[8]War Engine: Return the last 3 played cards this round to hand
 ]]
 
-SMODS.ConsumableType{
+SMODS.ConsumableType{ --Chess Cards
     key = 'Chess',
     primary_colour = HEX('9F5D37'),
     secondary_colour = HEX('995334'),
@@ -2289,7 +2289,7 @@ SMODS.ConsumableType{
     default = 'c_osquo_ext_king'
 }
 
-SMODS.Consumable{
+SMODS.Consumable{ --King Piece
     key = 'king',
     set = 'Chess',
     atlas = 'Chess',
@@ -2322,5 +2322,84 @@ SMODS.Consumable{
                 return true end}))
         end
         delay(0.6)
+    end
+}
+
+SMODS.Consumable{ --Queen Piece
+    key = 'queen',
+    set = 'Chess',
+    atlas = 'Chess',
+    pos = {x = 1, y = 0}
+    config = {extra = {
+        limit = 3
+    }},
+    cost = 3,
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.limit
+        }}
+    end,
+    can_use = function(self,card)
+        if #G.hand.highlighted > 0 and #G.hand.highlighted <= card.ability.extra.limit then return true end
+    end,
+    use = function(self,card)
+        cardBaseConvert(G.hand.highlighted, nil, nil, true, 'queen', true)
+    end
+}
+
+SMODS.Consumable{ --Rook Piece
+    key = 'rook',
+    set = 'Chess',
+    atlas = 'Chess',
+    pos = {x = 2, y = 0},
+    config = {extra = {
+        limit = 2
+    }},
+    cost = 3,
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.limit
+        }}
+    end,
+    can_use = function(self,card)
+        if #G.hand.highlighted <= card.ability.extra.limit and #G.hand.highlighted > 1 then return true end
+    end,
+    use = function(self,card)
+        local toenhance = SMODS.get_enhancements(G.hand.highlighted[#G.hand.highlighted])
+        local toseal = G.hand.highlighted[#G.hand.highlighted].seal
+        local toedit = G.hand.highlighted[#G.hand.highlighted].edition.key
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after', delay = 0.4, func = function()
+            play_sound('tarot1')
+            card:juice_up(0.3,0.5)
+            return true end}))
+
+        for i=1, #G.hand.highlighted do
+            local percent = 1.15 - (i-0.999)/(#G.hand.highlighted-0.998)*0.3
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() G.hand.highlighted[i]:flip();play_sound('card1', percent);G.hand.highlighted[i]:juice_up(0.3, 0.3);return true end }))
+        end
+        delay(0.2)
+        for i=1, #G.hand.highlighted do
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+                G.hand.highlighted[i]:set_ability(G.P_CENTERS[toenhance])
+                return true end }))
+        end
+        for i=1, #G.hand.highlighted do
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+                G.hand.highlighted[i]:set_seal(toseal)
+                return true end }))
+        end
+        for i=1, #G.hand.highlighted do
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+                G.hand.highlighted[i]:set_edition(toedit, true)
+                return true end }))
+        end
+
+        for i=1, #G.hand.highlighted do
+            local percent = 0.85 + (i-0.999)/(#G.hand.highlighted-0.998)*0.3
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() G.hand.highlighted[i]:flip();play_sound('tarot2', percent, 0.6);G.hand.highlighted[i]:juice_up(0.3, 0.3);return true end }))
+        end
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+        delay(0.5)
     end
 }
