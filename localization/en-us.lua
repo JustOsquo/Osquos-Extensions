@@ -12,7 +12,7 @@ return {
         Joker = {
             j_osquo_ext_tasteslikejoker = {
                 name = 'Joker that doesnt taste like Joker but makes you say "Mmm, Tastes like Joker"',
-            }
+            },
             j_osquo_ext_uniformjoker = {
                 name = 'Uniform Joker',
                 text = {
@@ -469,6 +469,16 @@ return {
                 text = {
                     'Replaces all {C:attention}Jokers{} with',
                     'random jokers of {C:green}equal rarity{}'
+                }
+            },
+        },
+        Chess = {
+            c_osquo_ext_king = {
+                name = 'King',
+                text = {
+                    'Create up to {C:attention}#1#{}',
+                    'random Chess cards',
+                    '{C:inactive}(Must have room)'
                 }
             },
         },

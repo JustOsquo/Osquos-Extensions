@@ -119,11 +119,11 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
-SMODS.Joker{
+--SMODS.Joker{
     --Effect when hand contains Straight
     --Effect when hand contains Flush
     --Effect when hand contains Ace
-}
+--}
 
 SMODS.Joker{ --Uniform Joker
     key = 'uniformjoker',
@@ -2272,10 +2272,10 @@ SMODS.Voucher{ --Booster Glutton
 [8]War Engine: Returns the last 3 played cards this round to hand
 ]]
 
-SMODS.ConsumableType = {
-    key = 'chess',
-    primary_colour = HEX('7A4B32'),
-    secondary_colour = HEX('9F5D37'),
+SMODS.ConsumableType{
+    key = 'Chess',
+    primary_colour = HEX('9F5D37'),
+    secondary_colour = HEX('995334'),
     loc_txt = {
         name = 'Chess',
         collection = 'Chess Cards',
@@ -2286,30 +2286,38 @@ SMODS.ConsumableType = {
             }
         }
     },
-    collection_rows = {6, 6}
+    default = 'c_osquo_ext_king'
 }
 
-SMODS.Consumable = {
-    key = 'chess_king',
-    set = 'chess',
+SMODS.Consumable{
+    key = 'king',
+    set = 'Chess',
     atlas = 'Chess',
     pos = {x = 0, y = 0},
     config = {extra = {
         createn = 2
     }},
     cost = 3,
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.createn
+        }}
+    end,
     can_use = function(self,card)
-        if #G.consumeables.cards < G.consumeables.config.card_limit or self.area == G.consumeables then return true end
+        if #G.consumeables.cards < G.consumeables.config.card_limit or card.area == G.consumeables then return true end
     end,
     use = function(self,card)
-        for i = 1, math.min(card.ability.extra.createn, G.consumeables.config.card_limit - #G.consumables.cards) do
+        for i = 1, math.min(card.ability.extra.createn, G.consumeables.config.card_limit - #G.consumeables.cards) do
             G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
-                if G.consumeables.config.card_limit > #G.consumables.cards then
+                if G.consumeables.config.card_limit > #G.consumeables.cards then
                     play_sound('timpani')
-                    local _card = create_card('chess', G.consumables, nil, nil, nil, nil, nil, 'king')
-                    _card:add_to_deck()
-                    G.consumables:emplace(card)
-                    used_tarot:juice_up(0.3, 0.5)
+                    SMODS.add_card({
+                        set = 'Chess',
+                        area = G.consumeables,
+                        key_append = 'king',
+                        no_edition = true
+                    })
+                    card:juice_up(0.3, 0.5)
                 end
                 return true end}))
         end
