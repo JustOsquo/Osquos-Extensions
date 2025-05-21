@@ -2260,16 +2260,16 @@ SMODS.Voucher{ --Booster Glutton
 [1]King: Create up to 2 random Chess cards
 [2]Queen: Randomize the rank and suit of up to 3 selected cards
 [3]Rook: Select 2 cards, copy the Enhancement, Seal, and Edition from the right card to the left card | (Drag to rearrange)
-[4]Bishop: Remove debuff status from up to 3 selected cards
+[4]Bishop: Upgrade 3 selected cards to a single random enhancement
 [6]Knight: 1 in 2 chance to create a Spectral card
 [12]Pawn: Create the last Chess card used during this run | Pawn excluded
 
-[11]Vizier: Immediately draw up to 2 cards
+[11]Vizier: Create the Planet card of your most played Poker Hand
 [7]Camel: Convert 1 owned Joker into another owned Joker
 [5]Picket: Set money to $15
 [10]General: 1 in 4 chance to add Polychrome to a random Joker
 [9]Elephant: Destroy all but one Joker | +1 Hand Size
-[8]War Engine: Return the last 3 played cards this round to hand
+[8]War Engine: Create a random Tag | 1 in 2 chance to create an additional Tag | Orbital Tag excluded
 ]]
 
 SMODS.ConsumableType{ --Chess Cards
@@ -2329,7 +2329,7 @@ SMODS.Consumable{ --Queen Piece
     key = 'queen',
     set = 'Chess',
     atlas = 'Chess',
-    pos = {x = 1, y = 0}
+    pos = {x = 1, y = 0},
     config = {extra = {
         limit = 3
     }},
@@ -2366,8 +2366,10 @@ SMODS.Consumable{ --Rook Piece
     end,
     use = function(self,card)
         local toenhance = SMODS.get_enhancements(G.hand.highlighted[#G.hand.highlighted])
+        local varrrr = {}
         local toseal = G.hand.highlighted[#G.hand.highlighted].seal
-        local toedit = G.hand.highlighted[#G.hand.highlighted].edition.key
+        local toedit = nil
+        if G.hand.highlighted[#G.hand.highlighted].edition then toedit = G.hand.highlighted[#G.hand.highlighted].edition.key end
         G.E_MANAGER:add_event(Event({
             trigger = 'after', delay = 0.4, func = function()
             play_sound('tarot1')
@@ -2381,17 +2383,28 @@ SMODS.Consumable{ --Rook Piece
         delay(0.2)
         for i=1, #G.hand.highlighted do
             G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
-                G.hand.highlighted[i]:set_ability(G.P_CENTERS[toenhance])
+                local thunk = nil
+                for k, v in pairs(toenhance) do
+                    thunk = true
+                end
+                if thunk then
+                    for k, v in pairs(toenhance) do
+                        varrrr = k
+                    end
+                    G.hand.highlighted[i]:set_ability(G.P_CENTERS[varrrr]) --uhhhhh i hope this doesnt break lmao
+                else
+                    G.hand.highlighted[i]:set_ability(G.P_CENTERS.c_base, nil, true)
+                end
                 return true end }))
         end
         for i=1, #G.hand.highlighted do
             G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
-                G.hand.highlighted[i]:set_seal(toseal)
+                if toseal then G.hand.highlighted[i]:set_seal(toseal) else G.hand.highlighted[i]:set_seal() end
                 return true end }))
         end
         for i=1, #G.hand.highlighted do
             G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
-                G.hand.highlighted[i]:set_edition(toedit, true)
+                if toedit then G.hand.highlighted[i]:set_edition(toedit, true) else G.hand.highlighted[i]:set_edition() end
                 return true end }))
         end
 

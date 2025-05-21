@@ -481,6 +481,22 @@ return {
                     '{C:inactive}(Must have room)'
                 }
             },
+            c_osquo_ext_queen = {
+                name = 'Queen',
+                text = {
+                    '{C:green}Randomize{} the {C:attention}rank{} and {C:attention}suit{}',
+                    'of up to {C:attention}#1#{} selected cards'
+                }
+            },
+            c_osquo_ext_rook = {
+                name = 'Rook',
+                text = {
+                    'Select {C:attention}#1#{} cards, copy the',
+                    '{C:attention}Enhancement{}, {C:attention}Seal{}, and {C:attention}Edition{}',
+                    'from the {C:attention}right{} card {C:attention}to the{} {C:attention}left{} card',
+                    '{C:inactive}(Drag to rearrange){}'
+                }
+            },
         },
         Voucher = {
             v_osquo_ext_boosterfeast = {

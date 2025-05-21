@@ -198,8 +198,8 @@ jd_def['j_osquo_ext_ostracon'] = {
 jd_def['j_osquo_ext_grandfinale'] = {
     retrigger_function = function(playing_card, scoring_hand, held_in_hand, joker_card)
         if held_in_hand then return 0 end
-        local last_card = scoring_hand and scoring_hand(#scoring_hand)
-        return last_card and playing_card == last_card and card.ability.extra.againzo * JokerDisplay.calculate_joker_triggers(card) or 0
+        local last_card = scoring_hand and scoring_hand[#scoring_hand]
+        return last_card and playing_card == last_card and joker_card.ability.extra.againzo * JokerDisplay.calculate_joker_triggers(joker_card) or 0
     end
 }
 jd_def['j_osquo_ext_bountyhunter'] = {
@@ -255,7 +255,7 @@ jd_def['j_osquo_ext_bumperjoker'] = {
 }
 jd_def['j_osquo_ext_illegiblejoker'] = {
     retrigger_function = function(playing_card, scoring_hand, held_in_hand, joker_card)
-        return ((playing_card:get_id() < 0) or (SMODS.has_no_rank(playing_card))) and card.ability.extra.retrig * JokerDisplay.calculate_joker_triggers(card) or 0
+        return ((playing_card:get_id() < 0) or (SMODS.has_no_rank(playing_card))) and joker_card.ability.extra.retrig * JokerDisplay.calculate_joker_triggers(joker_card) or 0
     end
 }
 jd_def['j_osquo_ext_ritualist'] = {

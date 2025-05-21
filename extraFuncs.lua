@@ -189,7 +189,7 @@ function cardBaseConvert(toConvert, newRank, newSuit, rng, rngseed, rngeach)
 			if rngeach then loops = loops + 1 end
 		end
 		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.1, func = function()
-			assert(SMODS.change_base(toConvert[i], rankc, suitc))
+			assert(SMODS.change_base(toConvert[i], suitc, rankc))
 		return true end}))
 	end
 	for i=1, #toConvert do
