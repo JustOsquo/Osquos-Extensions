@@ -199,3 +199,11 @@ function cardBaseConvert(toConvert, newRank, newSuit, rng, rngseed, rngeach)
 	G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end })) --unselect cards
 	delay(0.5)
 end
+
+function removeTableElement(tabl, content) --why isnt this just a thing already?????
+    for i = #tabl, 1, -1 do
+        if tabl[i] == content then
+            table.remove(tabl, i)
+        end
+    end
+end

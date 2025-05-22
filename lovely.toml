@@ -106,3 +106,45 @@ payload = '''
     end
 
 '''
+
+# tracks last used Chess Piece
+
+[[patches]]
+[patches.pattern]
+target = '''functions/misc_functions.lua'''
+match_indent = false
+position = 'after'
+pattern = '''
+      if card.config.center.set == 'Tarot' or card.config.center.set == 'Planet' then 
+        G.E_MANAGER:add_event(Event({
+          trigger = 'immediate',
+          func = function()
+            G.E_MANAGER:add_event(Event({
+              trigger = 'immediate',
+              func = function()
+                G.GAME.last_tarot_planet = card.config.center_key
+                  return true
+              end
+            }))
+              return true
+          end
+        }))
+      end
+'''
+payload = '''
+       if card.config.center.set == 'Chess' then
+        G.E_MANAGER:add_event(Event({
+          trigger = 'immediate',
+          func = function()
+            G.E_MANAGER:add_event(Event({
+              trigger = 'immediate',
+              func = function()
+                G.GAME.last_chess = card.config.center_key
+                  return true
+              end
+            }))
+              return true
+          end
+        }))
+      end
+'''

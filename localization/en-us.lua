@@ -477,7 +477,7 @@ return {
                 name = 'King',
                 text = {
                     'Create up to {C:attention}#1#{}',
-                    'random Chess cards',
+                    'random Chess Pieces',
                     '{C:inactive}(Must have room)'
                 }
             },
@@ -497,6 +497,74 @@ return {
                     '{C:inactive}(Drag to rearrange){}'
                 }
             },
+            c_osquo_ext_bishop = {
+                name = 'Bishop',
+                text = {
+                    'Convert up to {C:attention}#1#{}',
+                    'selected cards to a',
+                    'single {C:attention}random enhancement{}'
+                }
+            },
+            c_osquo_ext_picket = {
+                name = 'Picket',
+                text = {
+                    'Set money to {C:money}$#1#{}'
+                }
+            },
+            c_osquo_ext_knight = {
+                name = 'Knight',
+                text = {
+                    '{C:green}#1# in #2#{} chance to',
+                    'create a {C:spectral}Spectral{} card'
+                }
+            },
+            c_osquo_ext_camel = {
+                name = 'Camel',
+                text = {
+                    'Convert a {C:green}random{} owned {C:attention}Joker{}',
+                    'into another owned {C:attention}Joker{}'
+                }
+            },
+            c_osquo_ext_warengine = {
+                name = 'War Engine',
+                text = {
+                    'Create a random {C:attention}Tag{}',
+                    '{C:green}#1# in #2#{} chance to',
+                    'create an additional {C:attention}Tag',
+                    '{s:0.8}Orbital Tag excluded'
+                }
+            },
+            c_osquo_ext_elephant = {
+                name = 'Elephant',
+                text = {
+                    'Destroy all but one {C:attention}Joker{}',
+                    '{C:attention}+1{} Hand size'
+                }
+            },
+            c_osquo_ext_general = {
+                name = 'General',
+                text = {
+                    '{C:green}#1# in #2#{} chance to add',
+                    '{C:polychrome}Polychrome{} to a',
+                    'random {C:attention}Joker{}'
+                }
+            },
+            c_osquo_ext_vizier = {
+                name = 'Vizier',
+                text = {
+                    'Create the {C:planet}Planet{} card',
+                    'of your most played',
+                    '{C:attention}Poker hand{}'
+                }
+            },
+            c_osquo_ext_pawn = {
+                name = 'Pawn',
+                text = {
+                    'Create the last used',
+                    '{C:attention}Chess Piece{} this run',
+                    '{s:0.8,C:attention}Pawn{s:0.8} excluded{}'
+                }
+            }
         },
         Voucher = {
             v_osquo_ext_boosterfeast = {
