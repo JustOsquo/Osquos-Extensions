@@ -2,16 +2,29 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-X2 Mult if played hand
-contains no more than
-2 unique cards
+Retrigger all played cards 1
+time if played hand contains a Flush
+Played cards give X1.5 Mult if
+played hand contains a Straight
 ]]
 
 return {
     descriptions = {
         Joker = {
-            j_osquo_ext_tasteslikejoker = {
+            j_osquo_ext_royalcourt = {
+                name = 'Royal Court',
+                text = {
+                    'Retrigger all played cards {C:attention}#1#{}',
+                    'time if played hand contains a {C:attention}Flush{}',
+                    'Played cards give {X:mult,C:white}X#2#{} Mult if',
+                    'played hand contains a {C:attention}Straight{}'
+                }
+            },
+            j_osquo_ext_tasteslikejoker = { --I have no recollection of making this
                 name = 'Joker that doesnt taste like Joker but makes you say "Mmm, Tastes like Joker"',
+                text = {
+                    'Mmm, Tastes like Joker'
+                }
             },
             j_osquo_ext_uniformjoker = {
                 name = 'Uniform Joker',
@@ -435,14 +448,12 @@ return {
             }
         },
         Back = {
-            b_osquo_ext_fragile = {
-                name = 'Fragile Deck',
+            b_osquo_ext_chessdeck = {
+                name = 'Chess Deck',
                 text = {
-                    'Start run with',
-                    'one random {C:attention}Suit',
-                    'and {C:attention}Acrylic Bath',
-                    'Starting cards are',
-                    '{C:attention}Glass cards'
+                    'Start with a {C:attention}King Piece{}',
+                    'Create a {C:dark_edition}Negative{} {C:attention}King Piece{}',
+                    'when defeating {C:attention}Boss Blind{}'
                 }
             },
         },

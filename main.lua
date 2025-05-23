@@ -119,11 +119,37 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
---SMODS.Joker{
-    --Effect when hand contains Straight
-    --Effect when hand contains Flush
-    --Effect when hand contains Ace
---}
+SMODS.Joker{ --Royal Court
+    key = 'royalcourt',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_royalcourt'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 3,
+    cost = 8,
+    config = {extra = {
+        flushtrig = 1,
+        straightxmult = 1.5,
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.flushtrig,
+            card.ability.extra.straightxmult
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.repetition and context.cardarea == G.play and next(context.poker_hands['Flush']) then
+            return {
+                repetitions = card.ability.extra.flushtrig
+            }
+        elseif context.individual and context.cardarea == G.play and next(context.poker_hands['Straight']) then
+            return {
+                xmult = card.ability.extra.straightxmult
+            }
+        end
+    end
+}
 
 SMODS.Joker{ --Uniform Joker
     key = 'uniformjoker',
@@ -2252,7 +2278,37 @@ SMODS.Voucher{ --Booster Glutton
 
 --[[ DECKS ]]--
 
---...IF I HAD ANY!
+SMODS.Back{ --Chess Deck
+    key = 'chessdeck',
+    atlas = 'qle_decks',
+    pos = {x = 0, y = 0},
+    unlocked = true,
+    discovered = true,
+    apply = function(self,back)
+        G.E_MANAGER:add_event(Event({func = function()
+            SMODS.add_card({
+                set = 'Chess',
+                area = G.consumeables,
+                key = 'c_osquo_ext_king'
+            })
+            return true
+        end}))
+    end,
+    calculate = function(self,back,context)
+        if context.end_of_round and G.GAME.blind.boss then --NEED TO FIX!!!
+            G.E_MANAGER:add_event(Event({func = function()
+                SMODS.add_card({
+                    set = 'Chess',
+                    area = G.consumeables,
+                    key = 'c_osquo_ext_king',
+                    edition = 'e_negative'
+                })
+                return true
+            end}))
+        end
+    end
+    --Start with a King Piece, Create a Negative King Piece when defeating Boss Blind
+}
 
 --[[ CHESS CARDS ]]--
 
