@@ -119,6 +119,35 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{
+    key = 'hypernova',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_hypernova'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 3,
+    cost = 7,
+    config = {extra = {
+        givexmulteach = 0.25
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.givexmulteach
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.prescoring then
+            local levels = getHandLevel(context.scoring_name)
+            if to_number(levels) > 0 then
+                mult = mod_mult(mult * (levels * card.ability.extra.givexmulteach + 1))
+                update_hand_text({delay = 0}, {mult = mult})
+                card_eval_status_text(context.blueprint_card or card, 'jokers', nil, percent, nil, {message = localize{type='variable',key='a_xmult',vars={(levels * card.ability.extra.givexmulteach + 1)}}, mult_mod = (levels * card.ability.extra.givexmulteach + 1)})
+            end
+        end
+    end
+}
+
 SMODS.Joker{ --Royal Court
     key = 'royalcourt',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_royalcourt'},

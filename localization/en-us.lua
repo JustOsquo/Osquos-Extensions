@@ -2,15 +2,22 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Retrigger all played cards 1
-time if played hand contains a Flush
-Played cards give X1.5 Mult if
-played hand contains a Straight
+X0.25 Base Mult
+for each level in
+played Poker Hand
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_hypernova = {
+                name = 'Hypernova',
+                text = {
+                    '{X:mult,C:white}X#1#{} Base Mult',
+                    'for each {C:attention}level{} in',
+                    'played {C:attention}Poker Hand{}'
+                }
+            },
             j_osquo_ext_royalcourt = {
                 name = 'Royal Court',
                 text = {
