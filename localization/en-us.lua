@@ -632,6 +632,15 @@ return {
                     'No rank or suit'
                 }
             },
+            m_osquo_ext_corrosive = {
+                name = 'Corrosive Card',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult',
+                    '{C:green}#2# in #3#{} chance for',
+                    'adjacent played cards',
+                    'to also become {C:attention}Corrosive{}'
+                }
+            },
         },
     },
     misc = {
@@ -655,6 +664,7 @@ return {
             osquo_ext_fraudjokerbusted = 'Busted!',
             osquo_ext_refreshed = 'Refreshed!',
             osquo_ext_solved = 'Solved!',
+            osquo_ext_corroded = 'Corroded!',
             --
             osquo_ext_ace = 'Ace',
             osquo_ext_numbered = 'Numbered',

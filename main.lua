@@ -2237,6 +2237,73 @@ SMODS.Enhancement { --Amber Cards
     end
 }
 
+SMODS.Enhancement { --Corrosive Cards
+    key = 'corrosive',
+    atlas = 'qle_enhancements',
+    pos = {x = 2, y = 0},
+    replace_base_card = false,
+    no_rank = false,
+    no_suit = false,
+    always_scores = false,
+    weight = 1,
+    config = {extra = {
+        gxmult = 1.5,
+        odds = 3,
+        mypos = nil,
+        lastpos = nil,
+        nextpos = nil
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.gxmult,
+            (G.GAME.probabilities.normal or 1),
+            card.ability.extra.odds
+        }}
+    end,
+    calculate = function(self,card,context,ret)
+        if context.before and context.cardarea == G.play then
+            print('checked before')
+            for i = 1, #context.full_hand do
+                if context.full_hand[i] == (card or self) then
+                    print('found card self')
+                    card.ability.extra.mypos = i
+                    if context.full_hand[i-1] and not SMODS.has_enhancement(context.full_hand[i-1], 'm_osquo_ext_corrosive') then card.ability.extra.lastpos = card.ability.extra.mypos - 1 end
+                    if context.full_hand[i+1] and not SMODS.has_enhancement(context.full_hand[i+1], 'm_osquo_ext_corrosive') then card.ability.extra.nextpos = card.ability.extra.mypos + 1 end
+                end
+            end
+            print(card.ability.extra.mypos)
+            local corroding = {}
+            if card.ability.extra.lastpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                corroding[#corroding+1] = context.full_hand[card.ability.extra.lastpos]
+                print(card.ability.extra.lastpos)
+            end
+            if card.ability.extra.nextpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                corroding[#corroding+1] = context.full_hand[card.ability.extra.nextpos]
+                print(card.ability.extra.nextpos)
+            end
+            if corroding ~= {} then print('corroding contains items') else print('corroding found empty') end
+            for i = 1, #corroding do
+                corroding[i]:set_ability(G.P_CENTERS.m_osquo_ext_corrosive, nil, true)
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        corroding[i]:juice_up()
+                        SMODS.calculate_effect({message = localize('osquo_ext_corroded'), colour = G.C.ATTENTION}, corroding[i])
+                        return true
+                end}))
+            end
+            card.ability.extra.mypos = nil
+            card.ability.extra.lastpos = nil
+            card.ability.extra.nextpos = nil
+        elseif context.main_scoring and context.cardarea == G.play then
+            return {
+                xmult = card.ability.extra.gxmult
+            }
+        elseif context.after and context.cardarea == G.play then
+            --decrease rank by 1
+        end
+    end
+}
+
 --[[ VOUCHERS ]]--
 
 SMODS.Voucher{ --Booster Feast
