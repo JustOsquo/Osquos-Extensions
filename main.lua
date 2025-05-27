@@ -1425,7 +1425,7 @@ SMODS.Joker{ --Stellar Nursery
         if context.prescoring then --Context added in lovely patch
             local thishand = context.scoring_name --This poker hand
             local levels = getHandLevel(thishand, true, true) * card.ability.extra.multeach --See extraFuncs.lua
-            if levels > 0 then
+            if to_number(levels) > 0 then
                 mult = mod_mult(mult + levels) --Very archaic mult-adding since the normal return{mult} doesnt work here
                 update_hand_text({delay = 0}, {mult = mult})
                 card_eval_status_text(context.blueprint_card or card, 'jokers', nil, percent, nil, {message = localize{type='variable',key='a_mult',vars={levels}}, mult_mod = levels})
@@ -2158,6 +2158,36 @@ SMODS.Consumable{ --The Fox
     end,
 }
 
+SMODS.Consumable{ --The Tar
+    set = 'Tarot',
+    atlas = 'qle_tarot',
+    pos = {x = 0, y = 0},
+    key = 'tar',
+    config = {extra = {
+        limit = 1
+    }},
+    loc_vars = function(self,info_queue,card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'corrosive_info'}
+        return {vars = {
+            card.ability.extra.limit
+        }}
+    end,
+    can_use = function(self,card)
+        if G.hand and (#G.hand.highlighted >= 1) and (#G.hand.highlighted <= card.ability.extra.limit) then
+            return true
+        end
+        return false
+    end,
+    use = function(self,card)
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after', delay = 0.4, func = function()
+            play_sound('tarot1')
+            card:juice_up(0.3,0.5)
+            return true end}))
+        tarotConvert(G.hand.highlighted, 'm_osquo_ext_corrosive')
+    end,
+}
+
 --[[ ENHANCEMENTS ]]--
 
 SMODS.Enhancement { --Acrylic Cards
@@ -2248,7 +2278,7 @@ SMODS.Enhancement { --Corrosive Cards
     weight = 1,
     config = {extra = {
         gxmult = 1.5,
-        odds = 3,
+        odds = 4,
         mypos = nil,
         lastpos = nil,
         nextpos = nil
@@ -2262,44 +2292,53 @@ SMODS.Enhancement { --Corrosive Cards
     end,
     calculate = function(self,card,context,ret)
         if context.before and context.cardarea == G.play then
-            print('checked before')
-            for i = 1, #context.full_hand do
-                if context.full_hand[i] == (card or self) then
-                    print('found card self')
-                    card.ability.extra.mypos = i
-                    if context.full_hand[i-1] and not SMODS.has_enhancement(context.full_hand[i-1], 'm_osquo_ext_corrosive') then card.ability.extra.lastpos = card.ability.extra.mypos - 1 end
-                    if context.full_hand[i+1] and not SMODS.has_enhancement(context.full_hand[i+1], 'm_osquo_ext_corrosive') then card.ability.extra.nextpos = card.ability.extra.mypos + 1 end
+            if card.QQcorrodedcheck then
+                print('checked before')
+                for i = 1, #context.full_hand do
+                    if context.full_hand[i] == (card or self) then
+                        print('found card self')
+                        card.ability.extra.mypos = i
+                        if context.full_hand[i-1] and not SMODS.has_enhancement(context.full_hand[i-1], 'm_osquo_ext_corrosive') then card.ability.extra.lastpos = card.ability.extra.mypos - 1 end
+                        if context.full_hand[i+1] and not SMODS.has_enhancement(context.full_hand[i+1], 'm_osquo_ext_corrosive') then card.ability.extra.nextpos = card.ability.extra.mypos + 1 end
+                    end
                 end
+                print(card.ability.extra.mypos)
+                local corroding = {}
+                if card.ability.extra.lastpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                    corroding[#corroding+1] = context.full_hand[card.ability.extra.lastpos]
+                    print(card.ability.extra.lastpos)
+                end
+                if card.ability.extra.nextpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                    corroding[#corroding+1] = context.full_hand[card.ability.extra.nextpos]
+                    print(card.ability.extra.nextpos)
+                end
+                if corroding ~= {} then print('corroding contains items') else print('corroding found empty') end
+                for i = 1, #corroding do
+                    corroding[i]:set_ability(G.P_CENTERS.m_osquo_ext_corrosive, nil, true)
+                    corroding[i].QQcorrodedcheck = true
+                    SMODS.calculate_effect({message = localize('osquo_ext_corroded'), colour = G.C.ATTENTION}, corroding[i])
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            corroding[i]:juice_up()
+                            return true
+                    end}))
+                end
+                card.ability.extra.mypos = nil
+                card.ability.extra.lastpos = nil
+                card.ability.extra.nextpos = nil
             end
-            print(card.ability.extra.mypos)
-            local corroding = {}
-            if card.ability.extra.lastpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
-                corroding[#corroding+1] = context.full_hand[card.ability.extra.lastpos]
-                print(card.ability.extra.lastpos)
-            end
-            if card.ability.extra.nextpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
-                corroding[#corroding+1] = context.full_hand[card.ability.extra.nextpos]
-                print(card.ability.extra.nextpos)
-            end
-            if corroding ~= {} then print('corroding contains items') else print('corroding found empty') end
-            for i = 1, #corroding do
-                corroding[i]:set_ability(G.P_CENTERS.m_osquo_ext_corrosive, nil, true)
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        corroding[i]:juice_up()
-                        SMODS.calculate_effect({message = localize('osquo_ext_corroded'), colour = G.C.ATTENTION}, corroding[i])
-                        return true
-                end}))
-            end
-            card.ability.extra.mypos = nil
-            card.ability.extra.lastpos = nil
-            card.ability.extra.nextpos = nil
+            card.QQcorrodedcheck = nil
         elseif context.main_scoring and context.cardarea == G.play then
             return {
                 xmult = card.ability.extra.gxmult
             }
         elseif context.after and context.cardarea == G.play then
-            --decrease rank by 1
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                    card:juice_up(0.3, 0.4)
+                    play_sound('tarot1')
+                    assert(SMODS.modify_rank(card, -1))
+                    return true 
+            end}))
         end
     end
 }

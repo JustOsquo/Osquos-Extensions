@@ -464,7 +464,14 @@ return {
                     'Enhances {C:attention}#1#{} selected card',
                     'into an {C:attention}Amber Card{}'
                 }
-            }
+            },
+            c_osquo_ext_tar = {
+                name = 'The Tar',
+                text = {
+                    'Enhances {C:attention}#1#{} selected card',
+                    'into a {C:attention}Corrosive Card{}'
+                }
+            },
         },
         Spectral = {
             c_osquo_ext_erudition = {
@@ -612,6 +619,15 @@ return {
                     'No rank or suit'
                 }
             },
+            corrosive_info = {
+                name = 'Corrosive Card',
+                text = {
+                    '{X:mult,C:white}X1.5{} Mult',
+                    'Adjacent played cards have a',
+                    '{C:green}1 in 4{} to also become {C:attention}Corrosive{}',
+                    'Rank decreases after being played'
+                }
+            },
         },
         Enhanced = {
             m_osquo_ext_acrylic = {
@@ -636,9 +652,9 @@ return {
                 name = 'Corrosive Card',
                 text = {
                     '{X:mult,C:white}X#1#{} Mult',
-                    '{C:green}#2# in #3#{} chance for',
-                    'adjacent played cards',
-                    'to also become {C:attention}Corrosive{}'
+                    'Adjacent played cards have a',
+                    '{C:green}#2# in #3#{} to also become {C:attention}Corrosive{}',
+                    'Rank decreases after being played'
                 }
             },
         },
