@@ -2,29 +2,46 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-X0.25 Base Mult
-for each level in
-played Poker Hand
+Gains X0.2 mult if
+Played Hand contains
+a Full House
+(Currently X1 mult)
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_partytiem = {
+                name = '"Party Tiem!"',
+                text = {
+                    'Gains {X:mult,C:white}X#1#{} mult if',
+                    '{C:attention}played hand{} contains',
+                    'a {C:attention}Full House{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#2#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_dealmaker = {
+                name = 'Dealmaker',
+                text = {
+                    'When selling a card,',
+                    'earn {C:money}$#1#{} plus {C:attention}one-third{}',
+                    'of its {C:attention}sell value{}'
+                }
+            },
+            j_osquo_ext_tidyjoker = {
+                name = 'Playful Joker',
+                text = {
+                    '{X:mult,C:white}X#1#{} mult',
+                    '{X:mult,C:white}X#2#{} mult {C:attention}less{} for',
+                    'each card {C:attention}held in hand{}'
+                }
+            },
             j_osquo_ext_hypernova = {
                 name = 'Hypernova',
                 text = {
                     '{X:mult,C:white}X#1#{} Base Mult',
                     'for each {C:attention}level{} in',
                     'played {C:attention}Poker Hand{}'
-                }
-            },
-            j_osquo_ext_royalcourt = {
-                name = 'Royal Court',
-                text = {
-                    'Retrigger all played cards {C:attention}#1#{}',
-                    'time if played hand contains a {C:attention}Flush{}',
-                    'Played cards give {X:mult,C:white}X#2#{} Mult if',
-                    'played hand contains a {C:attention}Straight{}'
                 }
             },
             j_osquo_ext_tasteslikejoker = { --I have no recollection of making this
@@ -223,7 +240,7 @@ return {
                 name = 'Western Joker',
                 text = {
                     'Played {C:attention}Wild Cards{} are',
-                    'permanantly upgraded with',
+                    'permanently upgraded with',
                     'either {C:chips}+#1#{} Chips, {C:mult}+#2#{} Mult,',
                     '{X:mult,C:white}X#3#{} Mult, or {C:money}$#4#{} when scored'
                 }
@@ -635,6 +652,14 @@ return {
                     'Rank decreases after being played'
                 }
             },
+            noble_info = {
+                name = 'Noble Card',
+                text = {
+                    '{X:mult,C:white}X0.2{} Mult for each',
+                    'non-face card held in hand',
+                    'Counts as a {C:attention}Face Card{}'
+                }
+            },
         },
         Enhanced = {
             m_osquo_ext_acrylic = {
@@ -662,6 +687,14 @@ return {
                     'Adjacent played cards have a',
                     '{C:green}#2# in #3#{} to also become {C:attention}Corrosive{}',
                     'Rank decreases after being played'
+                }
+            },
+            m_osquo_ext_noble = {
+                name = 'Noble Card',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult for each',
+                    'non-face card held in hand',
+                    'Counts as a {C:attention}Face Card{}'
                 }
             },
         },

@@ -28,3 +28,12 @@ function Game:init_game_object()
     ret.osquo_ext_amber_consecutives = 0
     return ret
 end
+
+local _is_face = Card.is_face
+function Card:is_face(from_boss)
+    if self.debuff and not from_boss then return end
+    if self.config.center == G.P_CENTERS.m_osquo_ext_noble then --Noble Cards count as face cards
+        return true
+    end
+    return _is_face(self,from_boss)
+end

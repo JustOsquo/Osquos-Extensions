@@ -119,13 +119,110 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
-SMODS.Joker{
+SMODS.Joker{ --"Party Tiem!"
+    key = 'partytiem',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_partytiem'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    perishable_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 7, y = 5},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        scalexmult = 0.2,
+        currentxmult = 1
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.scalexmult,
+            card.ability.extra.currentxmult
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.before and not context.blueprint then
+            if next(context.poker_hands['Full House']) then
+                card.ability.extra.currentxmult = card.ability.extra.currentxmult + card.ability.extra.scalexmult
+                return {
+                    extra = {focus = card, message = localize('k_upgrade_ex'), colour = G.C.attention}
+                }
+            end
+        elseif context.joker_main then
+            return {
+                xmult = card.ability.extra.currentxmult
+            }
+        end
+    end
+}
+
+SMODS.Joker{ --Dealmaker
+    key = 'dealmaker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_dealmaker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 8, y = 5},
+    rarity = 1,
+    cost = 3,
+    config = {extra = {
+        doleach = 1
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.doleach
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.selling_card then
+            local moneydol = math.floor(context.card.sell_cost / 3) * card.ability.extra.doleach + 1
+            return {
+                dollars = moneydol
+            }
+        end
+    end
+}
+
+SMODS.Joker{ --Playful Joker
+    key = 'tidyjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_tidyjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 9, y = 5},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        basexmult = 4,
+        losteach = 0.5
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.basexmult,
+            card.ability.extra.losteach
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            local count = 0
+            for k, v in pairs(G.hand.cards) do
+                count = count + 1
+            end
+            local calcxmult = card.ability.extra.basexmult - (count * card.ability.extra.losteach)
+            if calcxmult < 1 then calcxmult = 1 end
+            return {
+                xmult = calcxmult
+            }
+        end
+    end
+}
+
+SMODS.Joker{ --Hypernova
     key = 'hypernova',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_hypernova'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 9, y = 4},
     rarity = 3,
     cost = 7,
     config = {extra = {
@@ -139,43 +236,11 @@ SMODS.Joker{
     calculate = function(self,card,context)
         if context.prescoring then
             local levels = getHandLevel(context.scoring_name)
-            if to_number(levels) > 0 then
+            if to_number(levels) > 0 then --Like stellar nova but xmult
                 mult = mod_mult(mult * (levels * card.ability.extra.givexmulteach + 1))
                 update_hand_text({delay = 0}, {mult = mult})
-                card_eval_status_text(context.blueprint_card or card, 'jokers', nil, percent, nil, {message = localize{type='variable',key='a_xmult',vars={(levels * card.ability.extra.givexmulteach + 1)}}, mult_mod = (levels * card.ability.extra.givexmulteach + 1)})
+                card_eval_status_text(context.blueprint_card or card, 'jokers', nil, percent, nil, {message = localize{type='variable',key='a_xmult',vars={(levels * card.ability.extra.givexmulteach + 1)}}, Xmult_mod = (levels * card.ability.extra.givexmulteach + 1)})
             end
-        end
-    end
-}
-
-SMODS.Joker{ --Royal Court
-    key = 'royalcourt',
-    loc_txt = {set = 'Joker', key = 'j_osquo_ext_royalcourt'},
-    blueprint_compat = true,
-    eternal_compat = true,
-    atlas = 'Jokers',
-    pos = {x = 0, y = 0},
-    rarity = 3,
-    cost = 8,
-    config = {extra = {
-        flushtrig = 1,
-        straightxmult = 1.5,
-    }},
-    loc_vars = function(self,info_queue,card)
-        return { vars = {
-            card.ability.extra.flushtrig,
-            card.ability.extra.straightxmult
-        }}
-    end,
-    calculate = function(self,card,context)
-        if context.repetition and context.cardarea == G.play and next(context.poker_hands['Flush']) then
-            return {
-                repetitions = card.ability.extra.flushtrig
-            }
-        elseif context.individual and context.cardarea == G.play and next(context.poker_hands['Straight']) then
-            return {
-                xmult = card.ability.extra.straightxmult
-            }
         end
     end
 }
@@ -186,11 +251,11 @@ SMODS.Joker{ --Uniform Joker
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 8, y = 4},
     rarity = 2,
     cost = 5,
     config = {extra = {
-        xmultgive = 3,
+        xmultgive = 2,
         cardlimit = 3
     }},
     loc_vars = function(self,info_queue,card)
@@ -243,6 +308,7 @@ SMODS.Joker{ --Hungry Hungry Joker
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_hungryhungryjoker'},
     blueprint_compat = true,
     eternal_compat = true,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 8, y = 3},
     rarity = 1,
@@ -289,6 +355,7 @@ SMODS.Joker{ --Cheerleader Joker
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_cheerleaderjoker'},
     blueprint_compat = true,
     eternal_compat = true,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 9, y = 2},
     rarity = 1,
@@ -412,6 +479,7 @@ SMODS.Joker{ --Mathematics
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_mathematics_unsolved'},
     blueprint_compat = true,
     eternal_compat = true,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 8, y = 0},
     rarity = 2,
@@ -645,6 +713,7 @@ SMODS.Joker{ --Fraudulent Joker
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_fraudjoker'},
     blueprint_compat = true,
     eternal_compat = false,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 6, y = 3},
     rarity = 2,
@@ -710,6 +779,7 @@ SMODS.Joker{ --Corrupt Joker
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_corruptjoker'},
     blueprint_compat = true,
     eternal_compat = false,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 7, y = 4},
     rarity = 2,
@@ -963,6 +1033,7 @@ SMODS.Joker{ --Shareholder | Concept from r/Balatro, thanks u/Imperator_Subira !
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_shareholder'},
     blueprint_compat = true,
     eternal_compat = true,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 1, y = 0},
     rarity = 3,
@@ -1259,6 +1330,7 @@ SMODS.Joker{ --Temperate Joker
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_temperatejoker'},
     blueprint_compat = true,
     eternal_compat = false,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 4, y = 3},
     rarity = 1,
@@ -1344,6 +1416,7 @@ SMODS.Joker { --Buff Ace
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_bufface'},
     blueprint_compat = true,
     eternal_compat = true,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 4, y = 1},
     rarity = 3,
@@ -1378,6 +1451,7 @@ SMODS.Joker{ --Lab-Grown Gem
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_labgrowngem'},
     blueprint_compat = true,
     eternal_compat = true,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 3, y = 3},
     rarity = 2,
@@ -1812,6 +1886,7 @@ SMODS.Joker{ --Empowered Opal
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_empoweredopal'},
     blueprint_compat = true,
     eternal_compat = true,
+    perishable_compat = false,
     atlas = 'empoweredopal_animated', --Define correct atlas
     pos = {x = 0, y = 0}, --Starting frame of animation
     AddRunningAnimation({'j_osquo_ext_empoweredopal',0.125,5,5,'loop',0,0,card}), --thanks @bepisfever for the animateObjects code, if you want to use it i made an ELI5 on it's discord post (or check this mod's  animateObjects.lua file where i copied it to)
@@ -1845,6 +1920,7 @@ SMODS.Joker{ --Giant Joker
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_giantjoker'},
     blueprint_compat = false, --Because otherwise it'd get real weird with the way hand size actually works, see chicot hand size bug
     eternal_compat = true,
+    perishable_compat = false,
     atlas = 'Jokers',
     pos = {x = 2, y = 2},
     rarity = 3,
@@ -2014,6 +2090,7 @@ SMODS.Joker{ --Nichola
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_nichola'},
     blueprint_compat = false,
     eternal_compat = true,
+    perishable_compat = false, --i dont think legendaries can be perishable anyway but just in case
     atlas = 'Jokers',
     pos = {x = 0, y = 4},
     soul_pos = {x = 1, y = 4},
@@ -2322,26 +2399,20 @@ SMODS.Enhancement { --Corrosive Cards
     calculate = function(self,card,context,ret)
         if context.before and context.cardarea == G.play then
             if card.QQcorrodedcheck then
-                print('checked before')
                 for i = 1, #context.full_hand do
                     if context.full_hand[i] == (card or self) then
-                        print('found card self')
                         card.ability.extra.mypos = i
                         if context.full_hand[i-1] and not SMODS.has_enhancement(context.full_hand[i-1], 'm_osquo_ext_corrosive') then card.ability.extra.lastpos = card.ability.extra.mypos - 1 end
                         if context.full_hand[i+1] and not SMODS.has_enhancement(context.full_hand[i+1], 'm_osquo_ext_corrosive') then card.ability.extra.nextpos = card.ability.extra.mypos + 1 end
                     end
                 end
-                print(card.ability.extra.mypos)
                 local corroding = {}
                 if card.ability.extra.lastpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
                     corroding[#corroding+1] = context.full_hand[card.ability.extra.lastpos]
-                    print(card.ability.extra.lastpos)
                 end
                 if card.ability.extra.nextpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
                     corroding[#corroding+1] = context.full_hand[card.ability.extra.nextpos]
-                    print(card.ability.extra.nextpos)
                 end
-                if corroding ~= {} then print('corroding contains items') else print('corroding found empty') end
                 for i = 1, #corroding do
                     corroding[i]:set_ability(G.P_CENTERS.m_osquo_ext_corrosive, nil, true)
                     corroding[i].QQcorrodedcheck = true
@@ -2368,6 +2439,36 @@ SMODS.Enhancement { --Corrosive Cards
                     assert(SMODS.modify_rank(card, -1))
                     return true 
             end}))
+        end
+    end
+}
+
+SMODS.Enhancement{ --Noble Cards
+    key = 'noble',
+    atlas = 'qle_enhancements',
+    pos = {x = 3, y = 0},
+    replace_base_card = false,
+    no_rank = false,
+    no_suit = false,
+    always_scores = false,
+    weight = 1,
+    config = {extra = {
+        xmulteach = 0.2
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.xmulteach
+        }}
+    end,
+    calculate = function(self,card,context,ret)
+        if context.main_scoring and context.cardarea == G.play then
+            local faces = 0
+            for k, v in ipairs(G.hand.cards) do
+                if v:is_face() then faces = faces + 1 end
+            end
+            return {
+                xmult = card.ability.extra.xmulteach * faces + 1
+            }
         end
     end
 }
@@ -2430,7 +2531,7 @@ SMODS.Back{ --Chess Deck
         end}))
     end,
     calculate = function(self,back,context)
-        if context.end_of_round and G.GAME.blind.boss then --NEED TO FIX!!!
+        if context.main_eval and G.GAME.last_blind and G.GAME.last_blind.boss then --NEED TO FIX!!!
             G.E_MANAGER:add_event(Event({func = function()
                 SMODS.add_card({
                     set = 'Chess',
