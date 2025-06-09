@@ -2359,18 +2359,11 @@ SMODS.Seal{ --Cosmic Seal
     sound = { sound = 'gold_seal', per = 1.2, vol = 0.4},
     calculate = function(self,card,context)
         if context.before and context.cardarea == G.play then
+            local oldhand,oldlevel = context.scoring_name, getHandLevel(context.scoring_name)
             SMODS.smart_level_up_hand(card,chooserandomhand({}, cosmicseal, false),false,1)
-            --[[
-            local oldmult,oldchips,oldhandname,oldlevel = 
-            local text,disp_text = chooserandomhand({}, cosmicseal, false)
-            card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')})
-            update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(text, 'poker_hands'),chips = G.GAME.hands[text].chips, mult = G.GAME.hands[text].mult, level=G.GAME.hands[text].level})
-            level_up_hand(context.blueprint_card or card, text, nil, 1)
-            update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = oldmult, chips = oldchips, handname = oldhandname, level = oldlevel})
-            ]]
+            update_hand_text({sound = 'button', volume = 0.0, pitch = 1.1, delay = 0}, {mult = mult, chips = chips, handname = oldhand, level = oldlevel})
         end
     end
-    --Level up a random poker hand when played
 }
 
 --[[ VOUCHERS ]]--
@@ -2413,7 +2406,7 @@ SMODS.Voucher{ --Booster Glutton
 }
 
 --[[ DECKS ]]--
-
+--[[
 SMODS.Back{ --Chess Deck
     key = 'chessdeck',
     atlas = 'qle_decks',
@@ -2445,7 +2438,8 @@ SMODS.Back{ --Chess Deck
     end
     --Start with a King Piece, Create a Negative King Piece when defeating Boss Blind
 }
-
+]]
 --[[ CHESS CARDS ]]--
-
+--[[
 SMODS.load_file('chesspieces.lua')() --its really long
+]]

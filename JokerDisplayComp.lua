@@ -1,5 +1,69 @@
 local jd_def = JokerDisplay.Definitions
 
+jd_def['j_osquo_ext_partytiem'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'givexmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local text, poker_hands, _ = JokerDisplay.evaluate_hand()
+        local xmult = card.ability.extra.currentxmult
+        xmult = card.ability.extra.currentxmult
+        card.joker_display_values.givexmult = xmult
+    end
+}
+jd_def['j_osquo_ext_tidyjoker'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'givexmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local _, _, scoring_hand = JokerDisplay.evaluate_hand()
+        local count = #G.hand.cards - #G.hand.highlighted
+        if card.ability.extra.basexmult - (card.ability.extra.losteach * count) >= 1 then
+            card.joker_display_values.givexmult = card.ability.extra.basexmult - (card.ability.extra.losteach * count)
+        else card.joker_display_values.givexmult = 1 end
+    end
+}
+jd_def['j_osquo_ext_hypernova'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'givexmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local text, poker_hands, _ = JokerDisplay.evaluate_hand()
+        local count = 0
+        if text ~= 'Unknown' and poker_hands[text] then count = (getHandLevel(text, false, true) + 1) * card.ability.extra.givexmulteach else count = 0 end
+        card.joker_display_values.givexmult = count + 1
+    end
+}
+jd_def['j_osquo_ext_uniformjoker'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'givexmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local cards = {}
+        for i = 1, #G.play.cards do
+            local rank = G.play.cards[i].base.id
+            local suit = G.play.cards[i].base.suit
+            if not table_contains(cards, rank..suit) then
+                cards[#cards+1] = rank..suit
+            end
+        end
+        if #cards <= card.ability.extra.cardlimit then
+            card.joker_display_values.givexmult = card.ability.extra.xmultgive
+        else card.joker_display_values.givexmult = 1 end
+    end
+}
 jd_def['j_osquo_ext_hungryhungryjoker'] = {
     text = {
         {text = '+'},
