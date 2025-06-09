@@ -660,6 +660,13 @@ return {
                     'Counts as a {C:attention}Face Card{}'
                 }
             },
+            osquo_ext_cosmic_seal = {
+                name = 'Cosmic Seal',
+                text = {
+                    'Level up a {C:attention}random{}',
+                    '{C:attention}Poker Hand{} when played'
+                },
+            },
         },
         Enhanced = {
             m_osquo_ext_acrylic = {
@@ -698,6 +705,7 @@ return {
                 }
             },
         },
+
     },
     misc = {
         dictionary = {
@@ -727,6 +735,9 @@ return {
         },
         v_dictionary = {
             osquo_ext_a_rscore = "+#1# Score",
+        },
+        labels = {
+            osquo_ext_cosmic_seal = 'Cosmic Seal',
         },
     },
 }

@@ -82,6 +82,13 @@ SMODS.Atlas{ --another animated texture atlas!
     py = 95
 }
 
+SMODS.Atlas{ --SEAL ATLAS!!!!!!
+    key = 'Seals',
+    path = 'Seals.png',
+    px = 71,
+    py = 95
+}
+
 SMODS.Atlas{ --It's the Chess atlas!
     key = 'Chess',
     path = 'Chess.png',
@@ -2264,36 +2271,6 @@ SMODS.Consumable{ --The Fox
     end,
 }
 
-SMODS.Consumable{ --The Tar
-    set = 'Tarot',
-    atlas = 'qle_tarot',
-    pos = {x = 0, y = 0},
-    key = 'tar',
-    config = {extra = {
-        limit = 1
-    }},
-    loc_vars = function(self,info_queue,card)
-        info_queue[#info_queue+1] = {set = 'Other', key = 'corrosive_info'}
-        return {vars = {
-            card.ability.extra.limit
-        }}
-    end,
-    can_use = function(self,card)
-        if G.hand and (#G.hand.highlighted >= 1) and (#G.hand.highlighted <= card.ability.extra.limit) then
-            return true
-        end
-        return false
-    end,
-    use = function(self,card)
-        G.E_MANAGER:add_event(Event({
-            trigger = 'after', delay = 0.4, func = function()
-            play_sound('tarot1')
-            card:juice_up(0.3,0.5)
-            return true end}))
-        tarotConvert(G.hand.highlighted, 'm_osquo_ext_corrosive')
-    end,
-}
-
 --[[ ENHANCEMENTS ]]--
 
 SMODS.Enhancement { --Acrylic Cards
@@ -2373,104 +2350,27 @@ SMODS.Enhancement { --Amber Cards
     end
 }
 
-SMODS.Enhancement { --Corrosive Cards
-    key = 'corrosive',
-    atlas = 'qle_enhancements',
-    pos = {x = 2, y = 0},
-    replace_base_card = false,
-    no_rank = false,
-    no_suit = false,
-    always_scores = false,
-    weight = 1,
-    config = {extra = {
-        gxmult = 1.5,
-        odds = 4,
-        mypos = nil,
-        lastpos = nil,
-        nextpos = nil
-    }},
-    loc_vars = function(self,info_queue,card)
-        return { vars = {
-            card.ability.extra.gxmult,
-            (G.GAME.probabilities.normal or 1),
-            card.ability.extra.odds
-        }}
-    end,
-    calculate = function(self,card,context,ret)
-        if context.before and context.cardarea == G.play then
-            if card.QQcorrodedcheck then
-                for i = 1, #context.full_hand do
-                    if context.full_hand[i] == (card or self) then
-                        card.ability.extra.mypos = i
-                        if context.full_hand[i-1] and not SMODS.has_enhancement(context.full_hand[i-1], 'm_osquo_ext_corrosive') then card.ability.extra.lastpos = card.ability.extra.mypos - 1 end
-                        if context.full_hand[i+1] and not SMODS.has_enhancement(context.full_hand[i+1], 'm_osquo_ext_corrosive') then card.ability.extra.nextpos = card.ability.extra.mypos + 1 end
-                    end
-                end
-                local corroding = {}
-                if card.ability.extra.lastpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
-                    corroding[#corroding+1] = context.full_hand[card.ability.extra.lastpos]
-                end
-                if card.ability.extra.nextpos and pseudorandom('corrosion') < G.GAME.probabilities.normal / card.ability.extra.odds then
-                    corroding[#corroding+1] = context.full_hand[card.ability.extra.nextpos]
-                end
-                for i = 1, #corroding do
-                    corroding[i]:set_ability(G.P_CENTERS.m_osquo_ext_corrosive, nil, true)
-                    corroding[i].QQcorrodedcheck = true
-                    SMODS.calculate_effect({message = localize('osquo_ext_corroded'), colour = G.C.ATTENTION}, corroding[i])
-                    G.E_MANAGER:add_event(Event({
-                        func = function()
-                            corroding[i]:juice_up()
-                            return true
-                    end}))
-                end
-                card.ability.extra.mypos = nil
-                card.ability.extra.lastpos = nil
-                card.ability.extra.nextpos = nil
-            end
-            card.QQcorrodedcheck = nil
-        elseif context.main_scoring and context.cardarea == G.play then
-            return {
-                xmult = card.ability.extra.gxmult
-            }
-        elseif context.after and context.cardarea == G.play then
-            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
-                    card:juice_up(0.3, 0.4)
-                    play_sound('tarot1')
-                    assert(SMODS.modify_rank(card, -1))
-                    return true 
-            end}))
-        end
-    end
-}
+--[[ SEALS ]]--
 
-SMODS.Enhancement{ --Noble Cards
-    key = 'noble',
-    atlas = 'qle_enhancements',
-    pos = {x = 3, y = 0},
-    replace_base_card = false,
-    no_rank = false,
-    no_suit = false,
-    always_scores = false,
-    weight = 1,
-    config = {extra = {
-        xmulteach = 0.2
-    }},
-    loc_vars = function(self,info_queue,card)
-        return { vars = {
-            card.ability.extra.xmulteach
-        }}
-    end,
-    calculate = function(self,card,context,ret)
-        if context.main_scoring and context.cardarea == G.play then
-            local faces = 0
-            for k, v in ipairs(G.hand.cards) do
-                if v:is_face() then faces = faces + 1 end
-            end
-            return {
-                xmult = card.ability.extra.xmulteach * faces + 1
-            }
+SMODS.Seal{ --Cosmic Seal
+    key = 'cosmic',
+    atlas = 'Seals',
+    badge_colour = HEX('4F6C74'),
+    sound = { sound = 'gold_seal', per = 1.2, vol = 0.4},
+    calculate = function(self,card,context)
+        if context.before and context.cardarea == G.play then
+            SMODS.smart_level_up_hand(card,chooserandomhand({}, cosmicseal, false),false,1)
+            --[[
+            local oldmult,oldchips,oldhandname,oldlevel = 
+            local text,disp_text = chooserandomhand({}, cosmicseal, false)
+            card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')})
+            update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(text, 'poker_hands'),chips = G.GAME.hands[text].chips, mult = G.GAME.hands[text].mult, level=G.GAME.hands[text].level})
+            level_up_hand(context.blueprint_card or card, text, nil, 1)
+            update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = oldmult, chips = oldchips, handname = oldhandname, level = oldlevel})
+            ]]
         end
     end
+    --Level up a random poker hand when played
 }
 
 --[[ VOUCHERS ]]--
