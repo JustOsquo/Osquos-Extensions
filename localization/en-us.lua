@@ -2,15 +2,38 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Gains X0.2 mult if
-Played Hand contains
-a Full House
-(Currently X1 mult)
+Gives $1 for every 2 levels
+in discarded poker hand
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_spacetour = {
+                name = 'Space Tour',
+                text = {
+                    'Earn {C:money}$#1#{} for every 2 {C:attention}levels{}',
+                    'in {C:attention}discarded{} poker hand'
+                }
+            },
+            j_osquo_ext_ledger = {
+                name = 'Ledger',
+                text = {
+                    'Adds {C:attention}sell value{} of all',
+                    'owned {C:attention}Jokers{} to {C:chips}chips{}',
+                    'when selecting {C:attention}blind{}',
+                    '{C:inactive}(Currently {C:chips}+#1#{} {C:inactive}chips){}'
+                }
+            },
+            j_osquo_ext_volcano = {
+                name = 'Volcano',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult',
+                    '{C:green}#3# in #2#{} chance to',
+                    'gain {X:mult,C:white}X#4#{} Mult',
+                    'when selecting {C:attention}Blind{}'
+                }
+            },
             j_osquo_ext_partytiem = {
                 name = '"Party Tiem!"',
                 text = {
@@ -381,7 +404,7 @@ return {
                 text = {
                     'Each {C:attention}Jack{}',
                     'held in hand',
-                    'gives {X:chips,C:white}X#1#{} Chips'
+                    'gives {C:chips}+#1#{} Chips'
                 }
             },
             j_osquo_ext_theharmony = {
@@ -687,25 +710,15 @@ return {
                     'No rank or suit'
                 }
             },
-            m_osquo_ext_corrosive = {
-                name = 'Corrosive Card',
+            m_osquo_ext_growth = {
+                name = 'Growth Card',
                 text = {
-                    '{X:mult,C:white}X#1#{} Mult',
-                    'Adjacent played cards have a',
-                    '{C:green}#2# in #3#{} to also become {C:attention}Corrosive{}',
-                    'Rank decreases after being played'
-                }
-            },
-            m_osquo_ext_noble = {
-                name = 'Noble Card',
-                text = {
-                    '{X:mult,C:white}X#1#{} Mult for each',
-                    'non-face card held in hand',
-                    'Counts as a {C:attention}Face Card{}'
+                    '{C:chips}+#1#{} extra chips',
+                    'Gains {C:chips}+#2#{} chips',
+                    'when {C:attention}discarded'
                 }
             },
         },
-
     },
     misc = {
         dictionary = {

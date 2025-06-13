@@ -1,5 +1,48 @@
 local jd_def = JokerDisplay.Definitions
 
+jd_def['j_osquo_ext_spacetour'] = {
+    text = {
+        {text = '+$'},
+        {ref_table = 'card.joker_display_values', ref_value = 'muns', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.GOLD},
+    calc_function = function(card)
+        local text, poker_hands, _ = JokerDisplay.evaluate_hand()
+        local munshold = 0
+        if poker_hands[text] and text ~= 'Unknown' then
+            local count = getHandLevel(text)
+            if math.floor(count / card.ability.extra.levelreq) ~= 0 then
+                munshold = math.floor(count / card.ability.extra.levelreq) * card.ability.extra.dollarsper
+            end
+        end
+        card.joker_display_values.muns = munshold
+    end
+}
+jd_def['j_osquo_ext_ledger'] = {
+    text = {
+        {text = '+'},
+        {ref_table = 'card.ability.extra', ref_value = 'chips', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.CHIPS}
+}
+jd_def['j_osquo_ext_volcano'] = {
+    extra = {{
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'odds'},
+        {text = ')'}
+    }},
+    extra_config = {colour = G.C.GREEN, scale = 0.3},
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+    end
+
+}
 jd_def['j_osquo_ext_partytiem'] = {
     text = {
         {border_nodes = {

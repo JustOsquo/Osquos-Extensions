@@ -14,6 +14,25 @@
 [8]War Engine: Create a random Tag | 1 in 2 chance to create an additional Tag | Orbital Tag excluded
 ]]
 
+--[[
+Chess Cards - 
+Relative value: Tarot < Chess < Spectral
+
+[1]King: 
+[2]Queen: 
+[3]Rook: 
+[4]Bishop: 
+[6]Knight: 
+[12]Pawn: 
+
+[11]Vizier: 
+[7]Camel: 
+[5]Picket: 
+[10]General:
+[9]Elephant: 
+[8]War Engine:
+]]
+
 SMODS.ConsumableType{ --Chess Pieces
     key = 'Chess',
     primary_colour = HEX('9F5D37'),

@@ -207,3 +207,12 @@ function removeTableElement(tabl, content) --why isnt this just a thing already?
         end
     end
 end
+
+function qmodval(base,mod,mult)
+	mult = mult or false
+	if mult == true then
+		base = base * mod
+	else
+		base = base + mod
+	end
+end

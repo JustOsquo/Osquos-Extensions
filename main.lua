@@ -89,13 +89,6 @@ SMODS.Atlas{ --SEAL ATLAS!!!!!!
     py = 95
 }
 
-SMODS.Atlas{ --It's the Chess atlas!
-    key = 'Chess',
-    path = 'Chess.png',
-    px = 71,
-    py = 95
-}
-
 SMODS.Atlas{ --this, however, is the tarot atlas
     key = 'qle_tarot',
     path = 'Tarots.png',
@@ -125,6 +118,115 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 }
 
 --[[ ORDINARY JOKERS ]]--
+
+SMODS.Joker{ --Space Tour
+    key = 'spacetour',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_spacetour'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    --pos = {x = 4, y = 5},
+    rarity = 1,
+    cost = 5,
+    config = {extra = {
+        dollarsper = 1,
+        levelreq = 2
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.dollarsper,
+            card.ability.extra.levelreq
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.pre_discard then
+            local text,disp_text = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
+            local count = getHandLevel(text)
+            if math.floor(count / card.ability.extra.levelreq) ~= 0 then
+                return {
+                    dollars = math.floor(count / card.ability.extra.levelreq) * card.ability.extra.dollarsper
+                }
+            end
+        end
+    end
+}
+
+SMODS.Joker{ --Ledger
+    key = 'ledger',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_ledger'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    perishable_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    --pos = {x = 5, y = 5},
+    rarity = 1,
+    cost = 4,
+    config = {extra = {
+        chips = 0
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.chips
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.setting_blind then
+            local sv = 0
+            for i = 1, #G.jokers.cards do
+                sv = sv + G.jokers.cards[i].sell_cost
+            end
+            card.ability.extra.chips = card.ability.extra.chips + sv
+            return {
+                extra = {focus = card, message = localize{type='variable',key='a_chips',vars={(card.ability.extra.chips)}}}
+            }
+        elseif context.joker_main then
+            return {
+                chips = card.ability.extra.chips
+            }
+        end
+    end
+}
+
+SMODS.Joker{ --Volcano
+    key = 'volcano',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_volcano'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    perishable_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 6, y = 5},
+    rarity = 3,
+    cost = 8,
+    config = {extra = {
+        xmult = 1,
+        odds = 4,
+        scale = 0.75
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.xmult,
+            card.ability.extra.odds,
+            (G.GAME.probabilities.normal or 1),
+            card.ability.extra.scale
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.setting_blind and not context.blueprint then
+            if pseudorandom('volcano') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                card.ability.extra.xmult = card.ability.extra.xmult + card.ability.extra.scale
+                return {
+                    extra = {focus = card, message = localize{type='variable',key='a_xmult',vars={(card.ability.extra.xmult)}}}
+                }
+            end
+        elseif context.joker_main then
+            return {
+                xmult = card.ability.extra.xmult
+            }
+        end
+    end
+}
 
 SMODS.Joker{ --"Party Tiem!"
     key = 'partytiem',
@@ -1803,14 +1905,14 @@ SMODS.Joker{ --Knave
     eternal_compat = true,
     atlas = 'Jokers',
     pos = {x = 3, y = 0},
-    rarity = 3,
-    cost = 7,
+    rarity = 2,
+    cost = 5,
     config = {extra = {
-        giveXchips = 1.5
+        givepchips = 125
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
-            card.ability.extra.giveXchips
+            card.ability.extra.givepchips
         }}
     end,
     calculate = function(self,card,context)
@@ -1824,7 +1926,7 @@ SMODS.Joker{ --Knave
                     }
                 else
                     return {
-                        xchips = card.ability.extra.giveXchips,
+                        chips = card.ability.extra.givepchips,
                         card = card --still dont know what this does | Upate: it tells the code this function returns to what card to put the juiceup and message on
                     }
                 end
@@ -2346,6 +2448,41 @@ SMODS.Enhancement { --Amber Cards
             }
         elseif context.after or context.selecting_blind or context.end_of_round then
             G.GAME.osquo_ext_amber_consecutives = 0
+        end
+    end
+}
+
+SMODS.Enhancement{
+    key = 'growth',
+    atlas = 'qle_enhancements',
+    pos = {x = 0, y = 1},
+    replace_base_card = false,
+    no_rank = false,
+    no_suit = false,
+    always_scores = false,
+    weight = 1,
+    config = {extra = {
+        xtrachips = 0,
+        chipmod = 10
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.xtrachips,
+            card.ability.extra.chipmod
+        }}
+    end,
+    calculate = function(self,card,context,ret)
+        if context.main_scoring and context.cardarea == G.play then
+            return {
+                chips = card.ability.extra.xtrachips
+            }
+        elseif context.discard and context.other_card == card then
+            card.ability.extra.xtrachips = card.ability.extra.xtrachips + card.ability.extra.chipmod
+            return {
+                delay = 0.1,
+                message = localize('k_upgrade_ex'),
+                colour = G.C.ATTENTION
+            }
         end
     end
 }
