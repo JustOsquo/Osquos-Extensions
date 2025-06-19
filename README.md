@@ -3,11 +3,11 @@ A fun-focused and (hopefully) balanced extension to the vanilla game, aiming to 
 This is my first mod (and first real project like this), so I hope you're able to enjoy playing it as much as I did making it.
 
 # Content
-- 50 New Jokers
-- 2 New Spectral Cards
+- 55 New Jokers
+- 3 New Spectral Cards
 - 2 New Tarot Cards
-- A totally new card type!
 - 3 New Enhancements
+- 1 New Seal
 - 1 Pair of Vouchers (2 Total)
 
 Also check out the [wiki](https://balatromods.miraheze.org/wiki/Osquo%27s_Extensions)!
