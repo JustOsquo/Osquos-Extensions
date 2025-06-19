@@ -13,7 +13,7 @@ This is my first mod (and first real project like this), so I hope you're able t
 Also check out the [wiki](https://balatromods.miraheze.org/wiki/Osquo%27s_Extensions)!
 
 # Dependencies
-- [Steamodded](https://github.com/Steamopollys/Steamodded) Version 1.0.0 Beta-0314a or later
+- [Steamodded](https://github.com/Steamopollys/Steamodded) Version 1.0.0 Beta-0504a or later
 - [Lovely](https://github.com/ethangreen-dev/lovely-injector)
 
 # Compatability

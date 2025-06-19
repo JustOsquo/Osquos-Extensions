@@ -1342,7 +1342,7 @@ SMODS.Joker{ --Western Joker
     end
 }
 
-SMODS.Joker{ --Bumper Joker
+SMODS.Joker{ --Bumper
     key = 'bumperjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_bumperjoker'},
     blueprint_compat = true,
@@ -1352,7 +1352,7 @@ SMODS.Joker{ --Bumper Joker
     rarity = 1,
     cost = 3,
     config = {extra = {
-        rscore = 250
+        rscore = 600
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
