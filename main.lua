@@ -1599,7 +1599,7 @@ SMODS.Joker{ --Transmutation
     rarity = 3,
     cost = 8,
     config = {extra = {
-        convperc = 0.05 --percentage
+        convperc = 0.20 --percentage
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -1608,7 +1608,7 @@ SMODS.Joker{ --Transmutation
     end,
     calculate = function(self,card,context)
         if context.joker_main then
-            local shift = math.sqrt(to_number(hand_chips)) or math.sqrt(hand_chips)
+            local shift = (to_number(hand_chips)) or math.sqrt(hand_chips) / card.ability.extra.convperc
             return {
                 chips = -shift,
                 mult = shift

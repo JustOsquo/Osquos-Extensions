@@ -54,7 +54,7 @@ return {
                 }
             },
             j_osquo_ext_partytiem = {
-                name = '"Party Tiem!"',
+                name = 'Party Tiem!',
                 text = {
                     'Gains {X:mult,C:white}X#1#{} mult if',
                     '{C:attention}played hand{} contains',
@@ -339,7 +339,7 @@ return {
             j_osquo_ext_transmutation = {
                 name = 'Transmutation',
                 text = {
-                    'Lose {C:attention}Square Root{} of {C:chips}Chips{}',
+                    'Lose {C:attention}#1#%{} of {C:chips}Chips{}',
                     'and gain that amount as {C:mult}Mult{}'
                 }
             },
@@ -614,6 +614,15 @@ return {
                     '{C:attention}Poker Hand{} when played'
                 },
             },
+        },
+        Seal = { --card exporter freaked out
+            osquo_ext_cosmic = {
+                name = 'Cosmic Seal',
+                text = {
+                    'Level up a {C:attention}random{}',
+                    '{C:attention}Poker Hand{} when played'
+                },
+            }
         },
         Enhanced = {
             m_osquo_ext_acrylic = {
