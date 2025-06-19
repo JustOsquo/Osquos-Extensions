@@ -172,3 +172,47 @@ function JokerConvert(toConvert, newKey)
 	G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end })) --unselect cards
 	delay(0.5)
 end
+
+function cardBaseConvert(toConvert, newRank, newSuit, rng, rngseed, rngeach)
+	for i=1, #toConvert do
+		local percent = 1.15 - (i-0.999)/(#toConvert-0.998)*0.3
+		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() toConvert[i]:flip();play_sound('card1', percent);toConvert[i]:juice_up(0.3, 0.3);return true end }))
+	end
+	delay(0.2)
+	local loops = 0
+	for i = 1, #toConvert do
+		local rankc = newRank
+		local suitc = newSuit
+		if rng then
+			rankc = pseudorandom_element(SMODS.Ranks, pseudoseed(rngseed..loops)).key
+			suitc = pseudorandom_element(SMODS.Suits, pseudoseed(rngseed..loops)).key
+			if rngeach then loops = loops + 1 end
+		end
+		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.1, func = function()
+			assert(SMODS.change_base(toConvert[i], suitc, rankc))
+		return true end}))
+	end
+	for i=1, #toConvert do
+		local percent = 0.85 + (i-0.999)/(#toConvert-0.998)*0.3
+		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() toConvert[i]:flip();play_sound('tarot2', percent, 0.6);toConvert[i]:juice_up(0.3, 0.3);return true end }))
+	end
+	G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end })) --unselect cards
+	delay(0.5)
+end
+
+function removeTableElement(tabl, content) --why isnt this just a thing already?????
+    for i = #tabl, 1, -1 do
+        if tabl[i] == content then
+            table.remove(tabl, i)
+        end
+    end
+end
+
+function qmodval(base,mod,mult)
+	mult = mult or false
+	if mult == true then
+		base = base * mod
+	else
+		base = base + mod
+	end
+end

@@ -8,9 +8,9 @@
 	"main_file": "main.lua",
 	"priority": 0,
 	"badge_colour": "770077",
-	"badge_text_colour": "BB55BB",
-	"version": "1.1.1-0522a",
+	"badge_text_colour": "DD77DD",
+	"version": "1.2.0-0619a",
 	"dependencies": [
-        "Steamodded (>=1.0.0~BETA-0314a)"
+        "Steamodded (>=1.0.0~BETA-0504a)"
     ],
 }

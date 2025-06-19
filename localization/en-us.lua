@@ -2,13 +2,104 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Gains +2 Chips when a
-card is retriggered
+Destroy this card and
+earn $20 at end of round
+Payout decreases by $4
+per used discard
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_prophecy = {
+                name = 'Prophecy',
+                text = {
+                    '{C:red}Destroy{} this card and',
+                    'earn {C:money}$#1#{} at {C:attention}end of round{}',
+                    'Payout {C:red}decreases{} by {C:money}$#2#{}',
+                    'per used {C:attention}Discard{}'
+                }
+            },
+            j_osquo_ext_cosmicjoker = {
+                name = 'Cosmos Joker',
+                text = {
+                    '{C:attention}Level up{} played',
+                    'poker hand during',
+                    '{C:attention}final hand{} of round'
+                }
+            },
+            j_osquo_ext_spacetour = {
+                name = 'Space Station',
+                text = {
+                    'Earn {C:money}$#1#{} for every 2 {C:attention}levels{}',
+                    'in {C:attention}discarded{} poker hand'
+                }
+            },
+            j_osquo_ext_ledger = {
+                name = 'Ledger',
+                text = {
+                    'Adds {C:attention}sell value{} of all',
+                    'owned {C:attention}Jokers{} to {C:chips}chips{}',
+                    'when selecting {C:attention}blind{}',
+                    '{C:inactive}(Currently {C:chips}+#1#{} {C:inactive}chips){}'
+                }
+            },
+            j_osquo_ext_volcano = {
+                name = 'Volcano',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult',
+                    '{C:green}#3# in #2#{} chance to',
+                    'gain {X:mult,C:white}X#4#{} Mult',
+                    'when selecting {C:attention}Blind{}'
+                }
+            },
+            j_osquo_ext_partytiem = {
+                name = 'Party Tiem!',
+                text = {
+                    'Gains {X:mult,C:white}X#1#{} mult if',
+                    '{C:attention}played hand{} contains',
+                    'a {C:attention}Full House{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#2#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_dealmaker = {
+                name = 'Dealmaker',
+                text = {
+                    'When selling a card,',
+                    'earn {C:money}$#1#{} plus {C:attention}one-third{}',
+                    'of its {C:attention}sell value{}'
+                }
+            },
+            j_osquo_ext_tidyjoker = {
+                name = 'Playful Joker',
+                text = {
+                    '{X:mult,C:white}X#1#{} mult',
+                    '{X:mult,C:white}X#2#{} mult {C:attention}less{} for',
+                    'each card {C:attention}held in hand{}'
+                }
+            },
+            j_osquo_ext_hypernova = {
+                name = 'Hypernova',
+                text = {
+                    '{X:mult,C:white}X#1#{} Base Mult',
+                    'for each {C:attention}level{} in',
+                    'played {C:attention}Poker Hand{}'
+                }
+            },
+            j_osquo_ext_tasteslikejoker = { --I have no recollection of making this
+                name = 'Joker that doesnt taste like Joker but makes you say "Mmm, Tastes like Joker"',
+                text = {
+                    'Mmm, Tastes like Joker'
+                }
+            },
+            j_osquo_ext_uniformjoker = {
+                name = 'Uniform Joker',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult if {C:attention}Played Hand{}',
+                    'contains no more than',
+                    '{C:attention}#2#{} unique cards'
+                }
+            },
             j_osquo_ext_ominousmasque = {
                 name = 'Ominous Masque',
                 text = {
@@ -191,7 +282,7 @@ return {
                 name = 'Western Joker',
                 text = {
                     'Played {C:attention}Wild Cards{} are',
-                    'permanantly upgraded with',
+                    'permanently upgraded with',
                     'either {C:chips}+#1#{} Chips, {C:mult}+#2#{} Mult,',
                     '{X:mult,C:white}X#3#{} Mult, or {C:money}$#4#{} when scored'
                 }
@@ -233,7 +324,7 @@ return {
                     'Earn {C:money}#1#${} for each hand played',
                     'this round if {C:attention}Played Hand{}',
                     'did not defeat the {C:attention}Blind{}',
-                    '{C:red}X#2#{} {C:red}Blind Size{} per {C:attention}Ante{}',
+                    '+{C:red}X#2#{} {C:red}Blind Size{} per {C:attention}Ante{}',
                     '{C:inactive}(Currently {}{C:red}X#3#{}{C:red} Blind Size{}{C;inactive}){}'
                 }
             },
@@ -248,7 +339,7 @@ return {
             j_osquo_ext_transmutation = {
                 name = 'Transmutation',
                 text = {
-                    'Lose {C:attention}Square Root{} of {C:chips}Chips{}',
+                    'Lose {C:attention}#1#%{} of {C:chips}Chips{}',
                     'and gain that amount as {C:mult}Mult{}'
                 }
             },
@@ -332,7 +423,7 @@ return {
                 text = {
                     'Each {C:attention}Jack{}',
                     'held in hand',
-                    'gives {X:chips,C:white}X#1#{} Chips'
+                    'gives {C:chips}+#1#{} Chips'
                 }
             },
             j_osquo_ext_theharmony = {
@@ -423,16 +514,6 @@ return {
             }
         },
         Back = {
-            b_osquo_ext_fragile = {
-                name = 'Fragile Deck',
-                text = {
-                    'Start run with',
-                    'one random {C:attention}Suit',
-                    'and {C:attention}Acrylic Bath',
-                    'Starting cards are',
-                    '{C:attention}Glass cards'
-                }
-            },
         },
         Tarot = {
             c_osquo_ext_fox = {
@@ -441,7 +522,15 @@ return {
                     'Enhances {C:attention}#1#{} selected card',
                     'into an {C:attention}Amber Card{}'
                 }
-            }
+            },
+            c_osquo_ext_garden = {
+                name = 'The Garden',
+                text = {
+                    'Enhances {C:attention}#1#{}',
+                    'selected cards',
+                    'to {C:attention}Growth Cards{}'
+                }
+            },
         },
         Spectral = {
             c_osquo_ext_erudition = {
@@ -457,6 +546,14 @@ return {
                 text = {
                     'Replaces all {C:attention}Jokers{} with',
                     'random jokers of {C:green}equal rarity{}'
+                }
+            },
+            c_osquo_ext_twilight = {
+                name = 'Twilight',
+                text = {
+                    'Add a {V:1}Cosmic Seal{}',
+                    'to {C:attention}#1#{} selected',
+                    'card in your hand'
                 }
             },
         },
@@ -495,6 +592,37 @@ return {
                     'No rank or suit'
                 }
             },
+            growth_info = {
+                name = 'Growth Card',
+                text = {
+                    '{C:chips}+0{} extra chips',
+                    'Gains {C:chips}+10{} chips',
+                    'when {C:attention}discarded'
+                }
+            },
+            cosmic_info = {
+                name = 'Cosmic Seal',
+                text = {
+                    'Level up a {C:attention}random{}',
+                    '{C:attention}Poker Hand{} when played'
+                },
+            },
+            osquo_ext_cosmic_seal = {
+                name = 'Cosmic Seal',
+                text = {
+                    'Level up a {C:attention}random{}',
+                    '{C:attention}Poker Hand{} when played'
+                },
+            },
+        },
+        Seal = { --card exporter freaked out
+            osquo_ext_cosmic = {
+                name = 'Cosmic Seal',
+                text = {
+                    'Level up a {C:attention}random{}',
+                    '{C:attention}Poker Hand{} when played'
+                },
+            }
         },
         Enhanced = {
             m_osquo_ext_acrylic = {
@@ -513,6 +641,14 @@ return {
                     'Gives {X:mult,C:white}X#1#{} more for each time',
                     'this effect has already triggered',
                     'No rank or suit'
+                }
+            },
+            m_osquo_ext_growth = {
+                name = 'Growth Card',
+                text = {
+                    '{C:chips}+#1#{} extra chips',
+                    'Gains {C:chips}+#2#{} chips',
+                    'when {C:attention}discarded'
                 }
             },
         },
@@ -538,12 +674,18 @@ return {
             osquo_ext_fraudjokerbusted = 'Busted!',
             osquo_ext_refreshed = 'Refreshed!',
             osquo_ext_solved = 'Solved!',
+            osquo_ext_corroded = 'Corroded!',
+            osquo_ext_downgrade = 'Downgrade!',
+            osquo_ext_broken = 'Broken!',
             --
             osquo_ext_ace = 'Ace',
             osquo_ext_numbered = 'Numbered',
         },
         v_dictionary = {
             osquo_ext_a_rscore = "+#1# Score",
+        },
+        labels = {
+            osquo_ext_cosmic_seal = 'Cosmic Seal',
         },
     },
 }

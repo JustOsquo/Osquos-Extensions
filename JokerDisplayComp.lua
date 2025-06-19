@@ -1,5 +1,131 @@
 local jd_def = JokerDisplay.Definitions
 
+jd_def['j_osquo_ext_prophecy'] = {
+    text = {
+        {text = '+$'},
+        {ref_table = 'card.ability.extra', ref_value = 'payout'}
+    },
+    text_config = {colour = G.C.GOLD}
+}
+jd_def['j_osquo_ext_cosmicjoker'] = {
+    reminder_text = {
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'active'},
+        {text = ')'}
+    },
+    calc_function = function(card)
+        card.joker_display_values.active = G.GAME and G.GAME.current_round.hands_left <= 1 and
+            localize('jdis_active') or localize('jdis_inactive)')
+    end
+}
+jd_def['j_osquo_ext_spacetour'] = {
+    text = {
+        {text = '+$'},
+        {ref_table = 'card.joker_display_values', ref_value = 'muns', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.GOLD},
+    calc_function = function(card)
+        local text, poker_hands, _ = JokerDisplay.evaluate_hand()
+        local munshold = 0
+        if poker_hands[text] and text ~= 'Unknown' then
+            local count = getHandLevel(text)
+            if math.floor(count / card.ability.extra.levelreq) ~= 0 then
+                munshold = math.floor(count / card.ability.extra.levelreq) * card.ability.extra.dollarsper
+            end
+        end
+        munshold = G.GAME.current_round.discards_left > 0 and munshold or 0
+        card.joker_display_values.muns = munshold
+    end
+}
+jd_def['j_osquo_ext_ledger'] = {
+    text = {
+        {text = '+'},
+        {ref_table = 'card.ability.extra', ref_value = 'chips', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.CHIPS}
+}
+jd_def['j_osquo_ext_volcano'] = {
+    extra = {{
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'odds'},
+        {text = ')'}
+    }},
+    extra_config = {colour = G.C.GREEN, scale = 0.3},
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+    end
+
+}
+jd_def['j_osquo_ext_partytiem'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'givexmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local text, poker_hands, _ = JokerDisplay.evaluate_hand()
+        local xmult = card.ability.extra.currentxmult
+        xmult = card.ability.extra.currentxmult
+        card.joker_display_values.givexmult = xmult
+    end
+}
+jd_def['j_osquo_ext_tidyjoker'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'givexmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local _, _, scoring_hand = JokerDisplay.evaluate_hand()
+        local count = #G.hand.cards - #G.hand.highlighted
+        if card.ability.extra.basexmult - (card.ability.extra.losteach * count) >= 1 then
+            card.joker_display_values.givexmult = card.ability.extra.basexmult - (card.ability.extra.losteach * count)
+        else card.joker_display_values.givexmult = 1 end
+    end
+}
+jd_def['j_osquo_ext_hypernova'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'givexmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local text, poker_hands, _ = JokerDisplay.evaluate_hand()
+        local count = 0
+        if text ~= 'Unknown' and poker_hands[text] then count = (getHandLevel(text, false, true) + 1) * card.ability.extra.givexmulteach else count = 0 end
+        card.joker_display_values.givexmult = count + 1
+    end
+}
+jd_def['j_osquo_ext_uniformjoker'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'givexmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local cards = {}
+        for i = 1, #G.play.cards do
+            local rank = G.play.cards[i].base.id
+            local suit = G.play.cards[i].base.suit
+            if not table_contains(cards, rank..suit) then
+                cards[#cards+1] = rank..suit
+            end
+        end
+        if #cards <= card.ability.extra.cardlimit then
+            card.joker_display_values.givexmult = card.ability.extra.xmultgive
+        else card.joker_display_values.givexmult = 1 end
+    end
+}
 jd_def['j_osquo_ext_hungryhungryjoker'] = {
     text = {
         {text = '+'},
@@ -407,12 +533,10 @@ jd_def['j_osquo_ext_count'] = {
 }
 jd_def['j_osquo_ext_knave'] = {
     text = {
-        {border_nodes = {
-            {text = 'X'},
-            {ref_table = 'card.joker_display_values', ref_value = 'total', retrigger_type = 'exp'}
-        },
-        border_colour = G.C.CHIPS
-    }},
+        {text = '+'},
+        {ref_table = 'card.joker_display_values', ref_value = 'total', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.CHIPS},
     calc_function = function(card)
         local playing_hand = next(G.play.cards)
         local count = 0
@@ -423,7 +547,7 @@ jd_def['j_osquo_ext_knave'] = {
                 end
             end
         end
-        card.joker_display_values.total = card.ability.extra.giveXchips ^ count
+        card.joker_display_values.total = card.ability.extra.givepchips * count
     end
 }
 jd_def['j_osquo_ext_theharmony'] = {
