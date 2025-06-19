@@ -1,5 +1,23 @@
 local jd_def = JokerDisplay.Definitions
 
+jd_def['j_osquo_ext_prophecy'] = {
+    text = {
+        {text = '+$'},
+        {ref_table = 'card.ability.extra', ref_value = 'payout'}
+    },
+    text_config = {colour = G.C.GOLD}
+}
+jd_def['j_osquo_ext_cosmicjoker'] = {
+    reminder_text = {
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'active'},
+        {text = ')'}
+    },
+    calc_function = function(card)
+        card.joker_display_values.active = G.GAME and G.GAME.current_round.hands_left <= 1 and
+            localize('jdis_active') or localize('jdis_inactive)')
+    end
+}
 jd_def['j_osquo_ext_spacetour'] = {
     text = {
         {text = '+$'},
@@ -15,6 +33,7 @@ jd_def['j_osquo_ext_spacetour'] = {
                 munshold = math.floor(count / card.ability.extra.levelreq) * card.ability.extra.dollarsper
             end
         end
+        munshold = G.GAME.current_round.discards_left > 0 and munshold or 0
         card.joker_display_values.muns = munshold
     end
 }
@@ -514,12 +533,10 @@ jd_def['j_osquo_ext_count'] = {
 }
 jd_def['j_osquo_ext_knave'] = {
     text = {
-        {border_nodes = {
-            {text = 'X'},
-            {ref_table = 'card.joker_display_values', ref_value = 'total', retrigger_type = 'exp'}
-        },
-        border_colour = G.C.CHIPS
-    }},
+        {text = '+'},
+        {ref_table = 'card.joker_display_values', ref_value = 'total', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.CHIPS},
     calc_function = function(card)
         local playing_hand = next(G.play.cards)
         local count = 0
@@ -530,7 +547,7 @@ jd_def['j_osquo_ext_knave'] = {
                 end
             end
         end
-        card.joker_display_values.total = card.ability.extra.giveXchips ^ count
+        card.joker_display_values.total = card.ability.extra.givepchips * count
     end
 }
 jd_def['j_osquo_ext_theharmony'] = {

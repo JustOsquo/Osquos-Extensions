@@ -2,15 +2,34 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Gives $1 for every 2 levels
-in discarded poker hand
+Destroy this card and
+earn $20 at end of round
+Payout decreases by $4
+per used discard
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_prophecy = {
+                name = 'Prophecy',
+                text = {
+                    '{C:red}Destroy{} this card and',
+                    'earn {C:money}$#1#{} at {C:attention}end of round{}',
+                    'Payout {C:red}decreases{} by {C:money}$#2#{}',
+                    'per used {C:attention}Discard{}'
+                }
+            },
+            j_osquo_ext_cosmicjoker = {
+                name = 'Cosmos Joker',
+                text = {
+                    '{C:attention}Level up{} played',
+                    'poker hand during',
+                    '{C:attention}final hand{} of round'
+                }
+            },
             j_osquo_ext_spacetour = {
-                name = 'Space Tour',
+                name = 'Space Station',
                 text = {
                     'Earn {C:money}$#1#{} for every 2 {C:attention}levels{}',
                     'in {C:attention}discarded{} poker hand'
@@ -305,7 +324,7 @@ return {
                     'Earn {C:money}#1#${} for each hand played',
                     'this round if {C:attention}Played Hand{}',
                     'did not defeat the {C:attention}Blind{}',
-                    '{C:red}X#2#{} {C:red}Blind Size{} per {C:attention}Ante{}',
+                    '+{C:red}X#2#{} {C:red}Blind Size{} per {C:attention}Ante{}',
                     '{C:inactive}(Currently {}{C:red}X#3#{}{C:red} Blind Size{}{C;inactive}){}'
                 }
             },
@@ -495,14 +514,6 @@ return {
             }
         },
         Back = {
-            b_osquo_ext_chessdeck = {
-                name = 'Chess Deck',
-                text = {
-                    'Start with a {C:attention}King Piece{}',
-                    'Create a {C:dark_edition}Negative{} {C:attention}King Piece{}',
-                    'when defeating {C:attention}Boss Blind{}'
-                }
-            },
         },
         Tarot = {
             c_osquo_ext_fox = {
@@ -512,11 +523,12 @@ return {
                     'into an {C:attention}Amber Card{}'
                 }
             },
-            c_osquo_ext_tar = {
-                name = 'The Tar',
+            c_osquo_ext_garden = {
+                name = 'The Garden',
                 text = {
-                    'Enhances {C:attention}#1#{} selected card',
-                    'into a {C:attention}Corrosive Card{}'
+                    'Enhances {C:attention}#1#{}',
+                    'selected cards',
+                    'to {C:attention}Growth Cards{}'
                 }
             },
         },
@@ -536,100 +548,14 @@ return {
                     'random jokers of {C:green}equal rarity{}'
                 }
             },
-        },
-        Chess = {
-            c_osquo_ext_king = {
-                name = 'King',
+            c_osquo_ext_twilight = {
+                name = 'Twilight',
                 text = {
-                    'Create up to {C:attention}#1#{}',
-                    'random Chess Pieces',
-                    '{C:inactive}(Must have room)'
+                    'Add a {V:1}Cosmic Seal{}',
+                    'to {C:attention}#1#{} selected',
+                    'card in your hand'
                 }
             },
-            c_osquo_ext_queen = {
-                name = 'Queen',
-                text = {
-                    '{C:green}Randomize{} the {C:attention}rank{} and {C:attention}suit{}',
-                    'of up to {C:attention}#1#{} selected cards'
-                }
-            },
-            c_osquo_ext_rook = {
-                name = 'Rook',
-                text = {
-                    'Select {C:attention}#1#{} cards, copy the',
-                    '{C:attention}Enhancement{}, {C:attention}Seal{}, and {C:attention}Edition{}',
-                    'from the {C:attention}right{} card {C:attention}to the{} {C:attention}left{} card',
-                    '{C:inactive}(Drag to rearrange){}'
-                }
-            },
-            c_osquo_ext_bishop = {
-                name = 'Bishop',
-                text = {
-                    'Convert up to {C:attention}#1#{}',
-                    'selected cards to a',
-                    'single {C:attention}random enhancement{}'
-                }
-            },
-            c_osquo_ext_picket = {
-                name = 'Picket',
-                text = {
-                    'Set money to {C:money}$#1#{}'
-                }
-            },
-            c_osquo_ext_knight = {
-                name = 'Knight',
-                text = {
-                    '{C:green}#1# in #2#{} chance to',
-                    'create a {C:spectral}Spectral{} card'
-                }
-            },
-            c_osquo_ext_camel = {
-                name = 'Camel',
-                text = {
-                    'Convert a {C:green}random{} owned {C:attention}Joker{}',
-                    'into another owned {C:attention}Joker{}'
-                }
-            },
-            c_osquo_ext_warengine = {
-                name = 'War Engine',
-                text = {
-                    'Create a random {C:attention}Tag{}',
-                    '{C:green}#1# in #2#{} chance to',
-                    'create an additional {C:attention}Tag',
-                    '{s:0.8}Orbital Tag excluded'
-                }
-            },
-            c_osquo_ext_elephant = {
-                name = 'Elephant',
-                text = {
-                    'Destroy all but one {C:attention}Joker{}',
-                    '{C:attention}+1{} Hand size'
-                }
-            },
-            c_osquo_ext_general = {
-                name = 'General',
-                text = {
-                    '{C:green}#1# in #2#{} chance to add',
-                    '{C:polychrome}Polychrome{} to a',
-                    'random {C:attention}Joker{}'
-                }
-            },
-            c_osquo_ext_vizier = {
-                name = 'Vizier',
-                text = {
-                    'Create the {C:planet}Planet{} card',
-                    'of your most played',
-                    '{C:attention}Poker hand{}'
-                }
-            },
-            c_osquo_ext_pawn = {
-                name = 'Pawn',
-                text = {
-                    'Create the last used',
-                    '{C:attention}Chess Piece{} this run',
-                    '{s:0.8,C:attention}Pawn{s:0.8} excluded{}'
-                }
-            }
         },
         Voucher = {
             v_osquo_ext_boosterfeast = {
@@ -666,22 +592,20 @@ return {
                     'No rank or suit'
                 }
             },
-            corrosive_info = {
-                name = 'Corrosive Card',
+            growth_info = {
+                name = 'Growth Card',
                 text = {
-                    '{X:mult,C:white}X1.5{} Mult',
-                    'Adjacent played cards have a',
-                    '{C:green}1 in 4{} to also become {C:attention}Corrosive{}',
-                    'Rank decreases after being played'
+                    '{C:chips}+0{} extra chips',
+                    'Gains {C:chips}+10{} chips',
+                    'when {C:attention}discarded'
                 }
             },
-            noble_info = {
-                name = 'Noble Card',
+            cosmic_info = {
+                name = 'Cosmic Seal',
                 text = {
-                    '{X:mult,C:white}X0.2{} Mult for each',
-                    'non-face card held in hand',
-                    'Counts as a {C:attention}Face Card{}'
-                }
+                    'Level up a {C:attention}random{}',
+                    '{C:attention}Poker Hand{} when played'
+                },
             },
             osquo_ext_cosmic_seal = {
                 name = 'Cosmic Seal',
@@ -742,6 +666,8 @@ return {
             osquo_ext_refreshed = 'Refreshed!',
             osquo_ext_solved = 'Solved!',
             osquo_ext_corroded = 'Corroded!',
+            osquo_ext_downgrade = 'Downgrade!',
+            osquo_ext_broken = 'Broken!',
             --
             osquo_ext_ace = 'Ace',
             osquo_ext_numbered = 'Numbered',

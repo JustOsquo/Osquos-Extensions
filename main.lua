@@ -105,7 +105,7 @@ SMODS.Atlas{ --enhancement atlas...
 
 SMODS.Atlas{ --oh youre never gonna guess
     key = 'qle_decks',
-    path = 'Decks.png',
+    path = 'Enhancements.png',
     px = 71,
     py = 95
 }
@@ -119,14 +119,112 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
-SMODS.Joker{ --Space Tour
+SMODS.Joker{ --Prophecy
+    key = 'prophecy',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_prophecy'},
+    blueprint_compat = false,
+    eternal_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 2, y = 5},
+    rarity = 1,
+    cost = 5,
+    config = {extra = {
+        payout = 20,
+        loss = 4 -- YOU CANT ESCAPE LOSS
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.payout,
+            card.ability.extra.loss
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.pre_discard and not context.blueprint then
+            if card.ability.extra.payout <= card.ability.extra.loss then
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        play_sound('tarot1')
+                        card.T.r = -0.2
+                        card:juice_up(0.3, 0.4)
+                        card.states.drag.is = true
+                        card.children.center.pinch.x = true
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'after',
+                            delay = 0.3,
+                            blockable = false,
+                            func = function()
+                                G.jokers:remove_card(card)
+                                card:remove()
+                                card = nil
+                                return true;
+                            end
+                        }))
+                    return true
+                    end
+                }))
+                return {
+                    message = localize('osquo_ext_broken')
+                }
+            else
+                card.ability.extra.payout = card.ability.extra.payout - card.ability.extra.loss
+                return {
+                    extra = {focus = card, message = localize('osquo_ext_downgrade'), colour = G.C.attention}
+                }
+            end
+        end
+    end,
+    calc_dollar_bonus = function(self,card) --End of round money handling
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                play_sound('tarot1')
+                card.T.r = -0.2
+                card:juice_up(0.3, 0.4)
+                card.states.drag.is = true
+                card.children.center.pinch.x = true
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.3,
+                    blockable = false,
+                    func = function()
+                        G.jokers:remove_card(card)
+                        card:remove()
+                        card = nil
+                        return true;
+                    end
+                }))
+            return true
+            end
+        }))
+        return card.ability.extra.payout
+    end
+}
+
+SMODS.Joker{ --Cosmos Joker
+    key = 'cosmicjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_cosmicjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 3, y = 5},
+    rarity = 2,
+    cost = 5,
+    calculate = function(self,card,context)
+        if context.before and G.GAME.current_round.hands_left == 0 then
+            if G.GAME.last_hand_played then
+                card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_level_up_ex'), colour = G.C.ATTENTION})
+                SMODS.smart_level_up_hand(context.blueprint_card or card,G.GAME.last_hand_played,false,1)
+            end
+        end
+    end
+}
+
+SMODS.Joker{ --Space Station
     key = 'spacetour',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_spacetour'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
-    --pos = {x = 4, y = 5},
+    pos = {x = 4, y = 5},
     rarity = 1,
     cost = 5,
     config = {extra = {
@@ -159,8 +257,7 @@ SMODS.Joker{ --Ledger
     eternal_compat = true,
     perishable_compat = false,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
-    --pos = {x = 5, y = 5},
+    pos = {x = 5, y = 5},
     rarity = 1,
     cost = 4,
     config = {extra = {
@@ -172,7 +269,7 @@ SMODS.Joker{ --Ledger
         }}
     end,
     calculate = function(self,card,context)
-        if context.setting_blind then
+        if context.setting_blind and not context.blueprint then
             local sv = 0
             for i = 1, #G.jokers.cards do
                 sv = sv + G.jokers.cards[i].sell_cost
@@ -335,7 +432,7 @@ SMODS.Joker{ --Hypernova
     rarity = 3,
     cost = 7,
     config = {extra = {
-        givexmulteach = 0.25
+        givexmulteach = 0.2
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -1071,7 +1168,7 @@ SMODS.Joker{ --Bounty Hunter
         }}
     end,
     calculate = function(self,card,context)
-        if (context.hand_drawn or context.after or context.using_consumeable) and not context.open_booster then
+        if (context.hand_drawn or context.after or context.using_consumeable) and not context.open_booster and not context.blueprint then
             for k, v in ipairs(G.hand.cards) do
                 if (v:get_id() == G.GAME.current_round.osquo_ext_bountyhunter_card.id and v:is_suit(G.GAME.current_round.osquo_ext_bountyhunter_card.suit)) then
                     card.ability.extra.potential = true
@@ -1081,7 +1178,7 @@ SMODS.Joker{ --Bounty Hunter
                 end
             end
         end
-        if context.end_of_round then card.ability.extra.potential = false end
+        if context.end_of_round and not context.blueprint then card.ability.extra.potential = false end
         local eval = function(card) return card.ability.extra.potential == true end
         juice_card_until(card, eval, true)
         if context.destroy_card and not context.blueprint then
@@ -1398,8 +1495,8 @@ SMODS.Joker{ --Cabinet Joker
     cost = 5,
     config = {extra = {
         givedollar = 4,
-        bspa = 1.5, --blind size per ante
-        currentscale = 1.5
+        bspa = 0.75, --blind size per ante
+        currentscale = 1.75
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -1430,7 +1527,7 @@ SMODS.Joker{ --Cabinet Joker
         end
     end,
     update = function(self,card,context)
-        card.ability.extra.currentscale = card.ability.extra.bspa^(G.GAME.round_resets.ante or 1)
+        card.ability.extra.currentscale = (card.ability.extra.bspa*(G.GAME.round_resets.ante or 1)) + 1
     end
 }
 
@@ -2343,6 +2440,45 @@ SMODS.Consumable{ --Nescience
     end
 }
 
+SMODS.Consumable{ --Twilight
+    set = 'Spectral',
+    atlas = 'qle_tarot',
+    pos = {x = 1, y = 1},
+    key = 'twilight',
+    config = {extra = {
+        count = 1
+    }},
+    loc_vars = function(self,info_queue,card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'cosmic_info'}
+        return {vars = {
+            card and card.ability.extra.count or self.config.extra.count,
+            colours = {
+                HEX('4F6C74')
+            }
+        }}
+    end,
+    can_use = function(self,card)
+        if G.hand and (#G.hand.highlighted >= 1) and (#G.hand.highlighted <= card.ability.extra.count) then
+            return true
+        end
+        return false
+    end,
+    use = function(self,card)
+        local conv_card = G.hand.highlighted[1]
+        G.E_MANAGER:add_event(Event({func = function()
+            play_sound('tarot1')
+            card:juice_up(0.3, 0.5)
+            return true end
+        }))
+        G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+            conv_card:set_seal('osquo_ext_cosmic', nil, true)
+            return true end
+        }))
+        delay(0.5)
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+    end
+}
+
 SMODS.Consumable{ --The Fox
     set = 'Tarot',
     atlas = 'qle_tarot',
@@ -2370,6 +2506,36 @@ SMODS.Consumable{ --The Fox
             card:juice_up(0.3,0.5)
             return true end}))
         tarotConvert(G.hand.highlighted, 'm_osquo_ext_amberE') --this function is haunted
+    end,
+}
+
+SMODS.Consumable{ --The Garden
+    set = 'Tarot',
+    atlas = 'qle_tarot',
+    pos = {x = 1, y = 0},
+    key = 'garden',
+    config = {extra = {
+        count = 2
+    }},
+    loc_vars = function(self,info_queue,card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'growth_info'}
+        return {vars = {
+            card and card.ability.extra.count or self.config.extra.count
+        }}
+    end,
+    can_use = function(self,card)
+        if G.hand and (#G.hand.highlighted >= 1) and (#G.hand.highlighted <= card.ability.extra.count) then
+            return true
+        end
+        return false
+    end,
+    use = function(self,card)
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after', delay = 0.4, func = function()
+            play_sound('tarot1')
+            card:juice_up(0.3,0.5)
+            return true end}))
+        tarotConvert(G.hand.highlighted, 'm_osquo_ext_growth')
     end,
 }
 
@@ -2452,7 +2618,7 @@ SMODS.Enhancement { --Amber Cards
     end
 }
 
-SMODS.Enhancement{
+SMODS.Enhancement{ --Growth Cards
     key = 'growth',
     atlas = 'qle_enhancements',
     pos = {x = 0, y = 1},
@@ -2479,7 +2645,7 @@ SMODS.Enhancement{
         elseif context.discard and context.other_card == card then
             card.ability.extra.xtrachips = card.ability.extra.xtrachips + card.ability.extra.chipmod
             return {
-                delay = 0.1,
+                delay = 0.2,
                 message = localize('k_upgrade_ex'),
                 colour = G.C.ATTENTION
             }
