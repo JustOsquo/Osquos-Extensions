@@ -54,7 +54,7 @@ return {
                 }
             },
             j_osquo_ext_partytiem = {
-                name = 'Party Tiem!',
+                name = '"Party Tiem!"',
                 text = {
                     'Gains {X:mult,C:white}X#1#{} mult if',
                     '{C:attention}played hand{} contains',
