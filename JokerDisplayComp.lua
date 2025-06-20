@@ -476,9 +476,9 @@ jd_def['j_osquo_ext_backgroundcheck'] = {
                 for i = 1, #scoring_hand do --for every card in scoring hand
                     if scoring_card.ability.name == 'Wild Card' then mysuit = scoring_hand[i].base.suit end
                     if scoring_hand[i].ability.name ~= 'Wild Card' then
-                        if scoring_hand[i].base.suit == mysuit then alike = alike + 1 end
+                        if scoring_hand[i].base.suit == mysuit then alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand) end
                     elseif scoring_hand[i].ability.name == 'Wild Card' then
-                        alike = alike + 1
+                        alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand)
                     end
                 end
                 total2 = total2 * (card.ability.extra.xmulteach * alike + 1)
