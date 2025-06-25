@@ -2920,43 +2920,26 @@ SMODS.Enhancement { --Acrylic Cards
     replace_base_card = false,
     no_suit = false,
     no_rank = false,
+    shatters = true,
     always_scores = false,
     weight = -1,
-    config = {extra = {Xmult = 3, timer = 1, markedfordeath = false}},
+    config = {extra = {
+        xmult = 3,
+    }},
     loc_vars = function(self, info_queue, card)
-        return {
-            vars = {card.ability.extra.Xmult, card.ability.extra.timer}
-        }
+        return { vars = {
+            card.ability.extra.xmult,
+        }}
     end,
     calculate = function(self, card, context, ret)
-        if context.cardarea == G.play and context.before then --If played and before scoring
-            card.ability.extra.timer = card.ability.extra.timer - 1 --Count down the death clock
-        end
-        if context.cardarea == G.play and context.main_scoring then
-            if card.ability.extra.timer <= 0 then card.ability.extra.markedfordeath = true end --If time's up
+        if context.main_scoring and context.cardarea == G.play then
             return {
-                xmult = card.ability.extra.Xmult --Give effect
+                xmult = card.ability.extra.xmult
             }
-        end
-        if context.final_scoring_step then --After scoring
-            if card.ability.extra.timer <= 0 then --If time's up
-                G.E_MANAGER:add_event(Event({
-                    trigger = 'immediate',
-                    func = function() --Kill it (with shattery pazaz)
-                        card:shatter()
-                        play_sound('glass'..math.random(1, 6), math.random()*0.2 + 0.9,0.5)
-                        play_sound('generic1', math.random()*0.2 + 0.9,0.5)
-                        return true
-                    end
-                }))
-            elseif context.cardarea == G.play then --If it's been played
-                SMODS.calculate_effect({message = localize('osquo_ext_acrylicrunningout'), colour = G.C.ATTENTION}, card) --Running out!
+        elseif context.destroying_card then
+            if context.destroying_card == card and context.cardarea == G.play then
+                return { remove = true}
             end
-        end
-        if context.destroying_card and card.ability.extra.markedfordeath == true then --When it's shattered
-            return {
-                remove = true --Kill it for real this time (the last time was a fake)
-            }
         end
     end
 }
