@@ -29,9 +29,9 @@ function Game:init_game_object()
     return ret
 end
 
---Context for destroying jokers
 local _card_remove = Card.remove
 function Card.remove(self)
+    --Context for destroying jokers
     if self.added_to_deck and self.ability.set == 'Joker' and not G.CONTROLLER.locks.selling_card then
         SMODS.calculate_context({
             osquo_ext = {
@@ -39,18 +39,23 @@ function Card.remove(self)
                 destroyed_joker = self
             }
         })
+    --Make sure overselectable cards remove their highlighted_limit increase when they are sold (or otherwise removed while highlighted, except using)
+    elseif self.ability.extra and type(self.ability.extra) == 'table' and self.ability.extra.overselect == true and self.area and table_contains(self.area.highlighted, self) then
+        self.area.config.highlighted_limit = self.area.config.highlighted_limit - self.ability.extra.limit
     end
     return _card_remove(self)
 end
---[[
-local _card_start_dissolve = Card.start_dissolve
-function Card:start_dissolve(dissolve_colours, silent, dissolve_time_fac, no_juice)
-    if self.added_to_deck and self.ability.set == 'Joker' and not G.CONTROLLER.locks.selling_card and self.config.center_key == 'j_osquo_ext_bargainingjoker' and not self.debuff then
-        local _card = copy_card(self, nil, nil, nil, false)
-        _card:add_to_deck()
-        G.jokers:emplace(_card)
-        _card:start_materialize()
+
+--Allows consumables to overselect if specified
+local _card_highlight = Card.highlight
+function Card.highlight(self, is_highlighted)
+    self.highlighted = is_highlighted
+    if self.area and self.area == G.consumeables and self.ability.extra and type(self.ability.extra) == 'table' and self.ability.extra.overselect == true then
+        if self.highlighted then
+            self.area.config.highlighted_limit = self.area.config.highlighted_limit + self.ability.extra.limit
+        else
+            self.area.config.highlighted_limit = self.area.config.highlighted_limit - self.ability.extra.limit
+        end
     end
-    return _card_start_dissolve(dissolve_colours, silent, dissolve_time_fac, no_juice)
+    return _card_highlight(self, is_highlighted)
 end
-]]

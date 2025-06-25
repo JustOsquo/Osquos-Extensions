@@ -549,6 +549,14 @@ return {
                     'to {C:attention}Growth Cards{}'
                 }
             },
+            c_osquo_ext_croesus = {
+                name = 'The Croesus',
+                text = {
+                    'Adds {C:money}$#2#{} of {C:attention}sell value{}',
+                    'to {C:attention}#1#{} selected {C:attention}Joker{}',
+                    'or {C:attention}Consumable{}'
+                }
+            },
         },
         Spectral = {
             c_osquo_ext_erudition = {
@@ -637,7 +645,13 @@ return {
                 text = {
                     '{C:inactive,s:0.9}(Copy retains edition){}'
                 }
-            }
+            },
+            osquo_ext_overselect_c = {
+                name = 'n',
+                text = {
+                    '{C:inactive,s:0.9}(Can overselect consumeables){}'
+                }
+            },
         },
         Seal = { --card exporter freaked out
             osquo_ext_cosmic = {

@@ -127,7 +127,10 @@ SMODS.Joker{ --Bargaining Joker
     atlas = 'Jokers',
     pos = {x = 0, y = 0},
     rarity = 1,
-    cost = 6,
+    cost = 3,
+    config = {extra = {
+        osquo_ext_ignoreslice = true --marks this card to be able to ignore getting_sliced, allowing it to calculate when it is destroyed (see lovely patch)
+    }},
     loc_vars = function(self,info_queue,card)
         local main_end
         if G.jokers then
@@ -144,20 +147,16 @@ SMODS.Joker{ --Bargaining Joker
             main_end = main_end and main_end[1]
         }
     end,
-    --[[
     calculate = function(self,card,context)
-        if context.osquo_ext then
-            if context.osquo_ext.destroy_joker then
-                if context.osquo_ext.destroyed_joker == card then
-                    local _card = copy_card(card, nil, nil, nil, false)
-                    _card:add_to_deck()
-                    G.jokers:emplace(_card)
-                    _card:start_materialize() 
-                end
+        if context.osquo_ext and context.osquo_ext.destroy_joker and context.osquo_ext.destroyed_joker == card then
+            if G.STAGE == G.STAGES.RUN and not G.screenwipe then --Otherwise you cant go to main menu lol
+                local _card = copy_card(card, nil, nil, nil, false)
+                _card:add_to_deck()
+                G.jokers:emplace(_card)
+                _card:start_materialize()
             end
         end
     end
-    ]]
 }
 
 SMODS.Joker{ --Throwaway Line
@@ -2674,6 +2673,74 @@ SMODS.Consumable{ --The Garden
             return true end}))
         tarotConvert(G.hand.highlighted, 'm_osquo_ext_growth')
     end,
+}
+
+SMODS.Consumable{ --The Croesus
+    set = 'Tarot',
+    atlas = 'qle_tarot',
+    pos = {x = 0, y = 0},
+    key = 'croesus',
+    config = {extra = {
+        limit = 1,
+        sellvalue = 5,
+        overselect = true
+    }},
+    loc_vars = function(self,info_queue,card)
+        local main_end
+        if G.consumeables then
+            if card.area == G.consumeables then
+                main_end = {}
+                localize{
+                    type = 'other',
+                    key = 'osquo_ext_overselect_c',
+                    nodes = main_end
+                }
+            end
+        end
+        return {
+            main_end = main_end and main_end[1],
+            vars = {
+                card and card.ability.extra.limit or self.config.extra.count,
+                card and card.ability.extra.sellvalue or self.config.extra.count,
+            }
+        }
+    end,
+    can_use = function(self,card)
+        --If using on a joker, no consumeables must be selected OR this card must be the only selected consumeable
+        if #G.jokers.highlighted == card.ability.extra.limit and ((not G.consumeables.highlighted[1]) or (#G.consumeables.highlighted == 1 and G.consumeables.highlighted[1] == card)) then
+            return true
+        --If using on a consumeable, it must either be the only one selected OR the only other one out of two selected cards, including this one 
+        elseif (#G.consumeables.highlighted == card.ability.extra.limit and G.consumeables.highlighted[1] ~= card) or (#G.consumeables.highlighted == (card.ability.extra.limit + 1) and table_contains(G.consumeables.highlighted, card)) then
+            return true
+        end
+        return false
+    end,
+    use = function(self,card, area)
+        --First, get a list of cards that need modifying. Should always be just 1 normally, but it should be able to be compatable with more anyway
+        local cardlist = {}
+        if #G.jokers.highlighted == card.ability.extra.limit and ((not G.consumeables.highlighted[1]) or (#G.consumeables.highlighted == 1 and G.consumeables.highlighted[1] == card)) then
+            for k, v in pairs(G.jokers.highlighted) do
+                cardlist[#cardlist+1] = v
+            end
+        elseif (#G.consumeables.highlighted == card.ability.extra.limit and G.consumeables.highlighted[1] ~= card) or (#G.consumeables.highlighted == (card.ability.extra.limit + 1) and table_contains(G.consumeables.highlighted, card)) then
+            for k, v in pairs(G.consumeables.highlighted) do
+                if v ~= card then cardlist[#cardlist+1] = v end
+            end
+        end
+        for i = 1, #cardlist do
+            cardlist[i].ability.extra_value = (cardlist[i].ability.extra_value or 0) + card.ability.extra.sellvalue
+            cardlist[i]:set_cost()
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                play_sound('tarot1')
+                SMODS.calculate_effect({message = localize('k_val_up'), colour = G.C.MONEY}, cardlist[i])
+                cardlist[i]:juice_up(0.3, 0.5)
+            return true end }))
+        end
+        if area == G.consumeables then
+            area.config.highlighted_limit = area.config.highlighted_limit - card.ability.extra.limit
+        end
+        delay(0.6)
+    end
 }
 
 --[[ ENHANCEMENTS ]]--
