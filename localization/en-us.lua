@@ -2,15 +2,33 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Destroy this card and
-earn $20 at end of round
-Payout decreases by $4
-per used discard
+Create a duplicate of
+this Joker when it is
+destroyed (not sold)
+Duplicate will retain edition
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_bargainingjoker = {
+                name = 'Bargaining Joker',
+                text = {
+                    'Create a {C:attention}duplicate{} of',
+                    'this Joker when it is',
+                    '{C:attention}destroyed{} {C:inactive}(Not Sold){}',
+                }
+            },
+            j_osquo_ext_throwawayline = {
+                name = 'Throwaway Line',
+                text = {
+                    'Gains {C:mult}+#1#{} Mult if discarded',
+                    '{C:attention}Poker Hand{} is a {C:attention}#2#{}',
+                    '{s:0.8}Poker Hand changes every round{}',
+                    '{s:0.8}Mult gain depends on Poker Hand{}',
+                    '{C:inactive}(Currently {C:mult}+#3#{} {C:inactive}Mult){}'
+                }
+            },
             j_osquo_ext_prophecy = {
                 name = 'Prophecy',
                 text = {
@@ -614,6 +632,12 @@ return {
                     '{C:attention}Poker Hand{} when played'
                 },
             },
+            osquo_ext_retain_edition = {
+                name = 'n',
+                text = {
+                    '{C:inactive,s:0.9}(Copy retains edition){}'
+                }
+            }
         },
         Seal = { --card exporter freaked out
             osquo_ext_cosmic = {

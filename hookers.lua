@@ -18,7 +18,6 @@ function SMODS.calculate_individual_effect(effect, scored_card, key, amount, fro
     return _calculate_individual_effect(effect, scored_card, key, amount, from_edition) -- run the base function as normal
 end
 
---I think this is a hook? Adds global variables
 local _init_game_object = Game.init_game_object
 function Game:init_game_object()
     local ret = _init_game_object(self)
@@ -26,14 +25,32 @@ function Game:init_game_object()
     ret.current_round.osquo_ext_idolatry_card = {rank = 'Ace', id = 14}
     ret.current_round.osquo_ext_bountyhunter_card = {suit = 'Spades', rank = 'Ace', id = 14} --Card for Wanted Poster (Default: Ace of Spades)
     ret.osquo_ext_amber_consecutives = 0
+    ret.current_round.osquo_ext_throwawayline_hand = 'High Card'
     return ret
 end
 
-local _is_face = Card.is_face
-function Card:is_face(from_boss)
-    if self.debuff and not from_boss then return end
-    if self.config.center == G.P_CENTERS.m_osquo_ext_noble then --Noble Cards count as face cards
-        return true
+--Context for destroying jokers
+local _card_remove = Card.remove
+function Card.remove(self)
+    if self.added_to_deck and self.ability.set == 'Joker' and not G.CONTROLLER.locks.selling_card then
+        SMODS.calculate_context({
+            osquo_ext = {
+                destroy_joker = true,
+                destroyed_joker = self
+            }
+        })
     end
-    return _is_face(self,from_boss)
+    return _card_remove(self)
 end
+--[[
+local _card_start_dissolve = Card.start_dissolve
+function Card:start_dissolve(dissolve_colours, silent, dissolve_time_fac, no_juice)
+    if self.added_to_deck and self.ability.set == 'Joker' and not G.CONTROLLER.locks.selling_card and self.config.center_key == 'j_osquo_ext_bargainingjoker' and not self.debuff then
+        local _card = copy_card(self, nil, nil, nil, false)
+        _card:add_to_deck()
+        G.jokers:emplace(_card)
+        _card:start_materialize()
+    end
+    return _card_start_dissolve(dissolve_colours, silent, dissolve_time_fac, no_juice)
+end
+]]

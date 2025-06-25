@@ -113,6 +113,14 @@ function SMODS.current_mod.reset_game_globals(run_start)
 		G.GAME.current_round.osquo_ext_idolatry_card.rank = chosen2.base.value
 		G.GAME.current_round.osquo_ext_idolatry_card.id = chosen2.base.id
 	end
+	--Random Poker Hand for Throwaway Line
+	G.GAME.current_round.osquo_ext_throwawayline_hand = 'High Card'
+	local _pokerhands1 = {}
+	for k, v in pairs(G.GAME.hands) do
+		if v.visible then _pokerhands1[#_pokerhands1+1] = k end
+	end
+	local hand1 = pseudorandom_element(_pokerhands1, pseudoseed('throwawayline'..G.GAME.round_resets.ante))
+	G.GAME.current_round.osquo_ext_throwawayline_hand = hand1
 end
 
 function getRandomTag(ignore, seed) --get a random tag

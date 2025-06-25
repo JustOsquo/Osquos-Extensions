@@ -119,6 +119,143 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Bargaining Joker
+    key = 'bargainingjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_bargainingjoker'},
+    blueprint_compat = true,
+    eternal_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 1,
+    cost = 6,
+    loc_vars = function(self,info_queue,card)
+        local main_end
+        if G.jokers then
+            if card.edition and card.edition.negative then
+                main_end = {}
+                localize{
+                    type = 'other',
+                    key = 'osquo_ext_retain_edition',
+                    nodes = main_end
+                }
+            end
+        end
+        return {
+            main_end = main_end and main_end[1]
+        }
+    end,
+    --[[
+    calculate = function(self,card,context)
+        if context.osquo_ext then
+            if context.osquo_ext.destroy_joker then
+                if context.osquo_ext.destroyed_joker == card then
+                    local _card = copy_card(card, nil, nil, nil, false)
+                    _card:add_to_deck()
+                    G.jokers:emplace(_card)
+                    _card:start_materialize() 
+                end
+            end
+        end
+    end
+    ]]
+}
+
+SMODS.Joker{ --Throwaway Line
+    key = 'throwawayline',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_throwawayline'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    perishable_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        mult = 0,
+        mult_ref = {
+            ['High Card'] = 1,
+            ['Pair'] = 2,
+            ['Two Pair'] = 3,
+            ['Three of a Kind'] = 6,
+            ['Straight'] = 8,
+            ['Flush'] = 7,
+            ['Full House'] = 10,
+            ['Four of a Kind'] = 12,
+            ['Straight Flush'] = 14,
+            ['Five of a Kind'] = 18,
+            ['Flush House'] = 22,
+            ['Flush Five'] = 26,
+            --Some modded hands for compatability
+            --Handsome Devils
+            ['hnds_stone_ocean'] = 5,
+            --Maximus (6 Card Hands)
+            ['mxms_three_pair'] = 7,
+            ['mxms_s_straight'] = 11,
+            ['mxms_s_flush'] = 10,
+            ['mxms_double_triple'] = 12,
+            ['mxms_house_party'] = 13,
+            ['mxms_f_three_pair'] = 22,
+            ['mxms_f_double_triple'] = 27,
+            ['mxms_f_party'] = 29,
+            ['mxms_6oak'] = 30,
+            ['mxms_s_straight_f'] = 32,
+            ['mxms_f_6oak'] = 36,
+            --Cardsauce | YOU DONT NEED YOUR PREFIX IN THE KEY!!!!
+            ['csau_csau_Blackjack'] = 7,
+            ['csau_csau_FlushBlackjack'] = 10,
+            ['csau_csau_Fibonacci'] = 10,
+            ['csau_csau_FlushFibonacci'] = 16,
+            --Cryptid
+            ['cry_Bulwark'] = 5, --no idea how this works with stone ocean lmaoooo
+            ['cry_Clusterfuck'] = 20,
+            ['cry_UltPair'] = 28,
+            ['cry_WholeDeck'] = 52525252525252525252525252525, --whatever
+            ['cry_None'] = -1, --Why not lmao
+            --GARBSHIT (Bisexuals and Quadrants)
+            ['garb_str_house'] = 16,
+            ['garb_str_four'] = 20,
+            ['garb_str_five'] = 22,
+            ['garb_str_fl_house'] = 28,
+            ['garb_str_fl_five'] = 30,
+            ['garb_blush'] = 12,
+            ['garb_caliginous'] = 12,
+            ['garb_ashen'] = 12,
+            ['garb_pale'] = 12,
+            --JoyousSpring
+            ['joy_eldlixir'] = 8,
+            --Visibility
+            ['vis_industrialization'] = 8,
+            ['vis_heavyweight'] = 16,
+            --Might add more in the future
+            --I'll add spectrum support once all the mods that add it just use the spectrum framework, im NOT adding spectrum like 4 seperate times, man.
+        },
+    }},
+    loc_vars = function(self,info_queue,card)
+        local handname = localize(G.GAME.current_round.osquo_ext_throwawayline_hand, 'poker_hands')
+            or G.GAME.current_round.osquo_ext_throwawayline_hand
+        return { vars = {
+            (card.ability.extra.mult_ref[G.GAME.current_round.osquo_ext_throwawayline_hand] or G.GAME.hands[G.GAME.current_round.osquo_ext_throwawayline_hand].s_mult or 0), --fallback incase the hand isnt accounted for
+            handname,
+            card.ability.extra.mult
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.pre_discard then
+            local text,disp_text = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
+            if text == G.GAME.current_round.osquo_ext_throwawayline_hand then
+                card.ability.extra.mult = card.ability.extra.mult + (card.ability.extra.mult_ref[G.GAME.current_round.osquo_ext_throwawayline_hand] or G.GAME.hands[G.GAME.current_round.osquo_ext_throwawayline_hand].s_mult or 0)
+                return {
+                    message = localize('k_upgrade_ex')
+                }
+            end
+        elseif context.joker_main then
+            return {
+                mult = card.ability.extra.mult
+            }
+        end
+    end
+}
+
 SMODS.Joker{ --Prophecy
     key = 'prophecy',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_prophecy'},
