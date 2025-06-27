@@ -2,15 +2,41 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Create a duplicate of
-this Joker when it is
-destroyed (not sold)
-Duplicate will retain edition
+Destroys all other owned
+Jokers when Blind is selected
+Gains X0.2 Mult for each
+Joker destroyed this way
+(Currently X2 Mult)
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_bloodyjoker = {
+                name = 'Bloody Joker',
+                text = {
+                    '{C:attention}Destroys{} all other owned',
+                    '{C:attention}Jokers{} when {C:attention}Blind{} is selected',
+                    'Gains {X:mult,C:white}X#2#{} Mult for each',
+                    '{C:attention}Joker{} destroyed this way',
+                    '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_virtualsinger = {
+                name = 'Virtual Singer',
+                text = {
+                    'Gives {C:mult}+#2#{} Mult for each',
+                    '{C:attention}Face{} card in your {C:attention}full deck{}',
+                    '{C:inactive}(Currently {C:mult}+#1#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_cheshirecat = {
+                name = 'Cheshire Cat',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult if {C:attention}played hand{}',
+                    'contains only {C:attention}Face{} cards'
+                }
+            },
             j_osquo_ext_bargainingjoker = {
                 name = 'Bargaining Joker',
                 text = {

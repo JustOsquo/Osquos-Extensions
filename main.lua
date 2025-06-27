@@ -119,13 +119,119 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Bloody Joker
+    key = 'bloodyjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_bloodyjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    perishable_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 3,
+    cost = 7,
+    config = {extra = {
+        xmult = 1,
+        scale = 0.2,
+        jlist = {}
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.xmult,
+            card.ability.extra.scale
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.setting_blind and not context.blueprint then
+            card.ability.extra.jlist = {}
+            for k, v in pairs(G.jokers.cards) do
+                if v ~= card and (v.ability and not v.ability.eternal) then card.ability.extra.jlist[#card.ability.extra.jlist+1] = v end
+            end
+            if #card.ability.extra.jlist > 0 then
+                card.ability.extra.xmult = card.ability.extra.xmult + (card.ability.extra.scale * #card.ability.extra.jlist)
+                SMODS.destroy_cards(card.ability.extra.jlist)
+                return {
+                    extra = {focus = card, message = localize{type='variable',key='a_xmult',vars={(card.ability.extra.xmult)}}}
+                }
+            end
+        elseif context.joker_main then
+            return {
+                xmult = card.ability.extra.xmult
+            }
+        end
+    end
+}
+
+SMODS.Joker{ --Virtual Singer
+    key = 'virtualsinger',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_virtualsinger'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        count = 0,
+        per = 3
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            (card.ability.extra.count * card.ability.extra.per),
+            card.ability.extra.per
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return {
+                mult = card.ability.extra.count * card.ability.extra.per
+            }
+        end
+    end,
+    update = function(self,card,context)
+        card.ability.extra.count = 0
+        if G.playing_cards and #G.playing_cards ~= 0 then
+            for k, v in pairs(G.playing_cards) do
+                if v:is_face() then card.ability.extra.count = card.ability.extra.count + 1 end
+            end
+        end
+    end
+}
+
+SMODS.Joker{ --Cheshire Cat
+    key = 'cheshirecat',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_cheshirecat'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 1, y = 5},
+    rarity = 2,
+    cost = 6,
+    config = {extra = {
+        xmult = 3
+    }},
+    loc_vars = function(self,info_queue,card)
+        return{ vars = {
+            card.ability.extra.xmult
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            local allow = true
+            for k, v in pairs(context.full_hand) do
+                if not v:is_face() then allow = false end
+            end
+            if allow == true then return { xmult = card.ability.extra.xmult} end
+        end
+    end
+}
+
 SMODS.Joker{ --Bargaining Joker
     key = 'bargainingjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_bargainingjoker'},
     blueprint_compat = true,
     eternal_compat = false,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 0, y = 6},
     rarity = 1,
     cost = 3,
     config = {extra = {
@@ -166,7 +272,7 @@ SMODS.Joker{ --Throwaway Line
     eternal_compat = true,
     perishable_compat = false,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 0, y = 5},
     rarity = 2,
     cost = 5,
     config = {extra = {
@@ -2716,7 +2822,7 @@ SMODS.Consumable{ --The Croesus
         return false
     end,
     use = function(self,card, area)
-        --First, get a list of cards that need modifying. Should always be just 1 normally, but it should be able to be compatable with more anyway
+        --Get a list of cards that need modifying. Should always be just 1 normally, but it should be able to be compatable with more anyway
         local cardlist = {}
         if #G.jokers.highlighted == card.ability.extra.limit and ((not G.consumeables.highlighted[1]) or (#G.consumeables.highlighted == 1 and G.consumeables.highlighted[1] == card)) then
             for k, v in pairs(G.jokers.highlighted) do
