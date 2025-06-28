@@ -473,15 +473,19 @@ jd_def['j_osquo_ext_backgroundcheck'] = {
             for _, scoring_card in pairs(scoring_hand) do
                 local mysuit = scoring_card.base.suit
                 local alike = 0
-                for i = 1, #scoring_hand do --for every card in scoring hand
-                    if scoring_card.ability.name == 'Wild Card' then mysuit = scoring_hand[i].base.suit end
-                    if scoring_hand[i].ability.name ~= 'Wild Card' then
-                        if scoring_hand[i].base.suit == mysuit then alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand) end
-                    elseif scoring_hand[i].ability.name == 'Wild Card' then
-                        alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand)
+                if not SMODS.has_no_suit(scoring_card) then
+                    for i = 1, #scoring_hand do --for every card in scoring hand
+                        if not SMODS.has_no_suit(scoring_hand[i]) then --Check if it has a suit
+                            if SMODS.has_any_suit(scoring_card) then mysuit = scoring_hand[i].base.suit end
+                            if not SMODS.has_any_suit(scoring_hand[i]) then
+                                if scoring_hand[i].base.suit == mysuit then alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand) end
+                            elseif SMODS.has_any_suit(scoring_hand[i]) then
+                                alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand)
+                            end
+                        end
                     end
                 end
-                total2 = total2 * (card.ability.extra.xmulteach * alike + 1)
+            total2 = total2 * (card.ability.extra.xmulteach * alike + 1)
             end
         end
         card.joker_display_values.total = total2

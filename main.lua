@@ -119,6 +119,37 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Refund Policy
+    key = 'refundpolicy',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_refundpolicy'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 1,
+    cost = 6,
+    config = {extra = {
+        used_this_round = false
+    }},
+    calculate = function(self,card,context)
+        if context.skipping_booster and card.ability.extra.used_this_round == false then
+            G.E_MANAGER:add_event(Event({
+                func = (function()
+                    card:juice_up()
+                    add_tag(Tag(pseudorandom_element(
+                        {'tag_standard', 'tag_charm', 'tag_meteor', 'tag_ethereal'}, pseudoseed('refundpolicy')
+                    )))
+                    play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
+                    play_sound('holo1', 1.2 + math.random()*0.1, 0.4)
+                    return true
+            end)}))
+            card.ability.extra.used_this_round = true
+        elseif context.setting_blind then
+            card.ability.extra.used_this_round = false
+        end
+    end
+}
+
 SMODS.Joker{ --Bloody Joker
     key = 'bloodyjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_bloodyjoker'},
@@ -1594,7 +1625,7 @@ SMODS.Joker{ --Bumper
     rarity = 1,
     cost = 3,
     config = {extra = {
-        rscore = 600
+        rscore = 1000
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -2003,15 +2034,17 @@ SMODS.Joker{ --Background Check
         }}
     end,
     calculate = function(self,card,context)
-        if context.individual and context.cardarea == G.play then
+        if context.individual and context.cardarea == G.play and not SMODS.has_no_suit(context.other_card) then
             local mysuit = context.other_card.base.suit
             local alike = 0
             for i = 1, #context.scoring_hand do --for every card in scoring hand
-                if context.other_card.ability.name == 'Wild Card' then mysuit = context.scoring_hand[i].base.suit end
-                if context.scoring_hand[i].ability.name ~= 'Wild Card' then
-                    if context.scoring_hand[i].base.suit == mysuit then alike = alike + 1 end
-                elseif context.scoring_hand[i].ability.name == 'Wild Card' then
-                    alike = alike + 1
+                if not SMODS.has_no_suit(context.scoring_hand[i]) then
+                    if SMODS.has_any_suit(context.other_card) then mysuit = context.scoring_hand[i].base.suit end
+                    if not SMODS.has_any_suit(context.scoring_hand[i]) then
+                        if context.scoring_hand[i].base.suit == mysuit then alike = alike + 1 end
+                    elseif SMODS.has_any_suit(context.scoring_hand[i]) then
+                        alike = alike + 1
+                    end
                 end
             end
             return {

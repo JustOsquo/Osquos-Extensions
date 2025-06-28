@@ -2,23 +2,31 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Destroys all other owned
-Jokers when Blind is selected
-Gains X0.2 Mult for each
-Joker destroyed this way
-(Currently X2 Mult)
+Once per round, create a
+Standard, Charm, Celestial,
+or Spectral Tag when a
+booster pack is skipped
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_refundpolicy = {
+                name = 'Refund Policy',
+                text = {
+                    'Once per round, create a',
+                    '{C:attention}Standard{}, {C:tarot}Charm{}, {C:planet}Meteor{},',
+                    'or {C:spectral}Ethereal{} Tag when a',
+                    '{C:attention}Booster Pack{} is skipped'
+                }
+            },
             j_osquo_ext_bloodyjoker = {
                 name = 'Bloody Joker',
                 text = {
                     '{C:attention}Destroys{} all other owned',
                     '{C:attention}Jokers{} when {C:attention}Blind{} is selected',
                     'Gains {X:mult,C:white}X#2#{} Mult for each',
-                    '{C:attention}Joker{} destroyed this way',
+                    'Joker destroyed this way',
                     '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}'
                 }
             },

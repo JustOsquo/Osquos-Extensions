@@ -17,6 +17,54 @@ function tarotConvert(selected, enhancement)
 	delay(0.5)
 end
 
+function ConvertCards(cards, rank, suit, enhance, seal, edition, flip, seed) --New, More flexible version of tarotConvert()
+	--cards: Table of cards to convert
+	--rank, suit, enhance, seal, edition: Table of relevant modifiers to randomly choose from to apply
+	--flip: Boolean whether to flip cards during conversion
+	--seed: RNG Seed
+
+	seed = seed or 'ConvertCards'
+	
+	if flip then
+		for i=1, #cards do --Flip cards
+			local percent = 1.15 - (i-0.999)/(#cards-0.998)*0.3
+			G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() cards[i]:flip();play_sound('card1', percent);cards[i]:juice_up(0.3, 0.3);return true end }))
+		end
+		delay(0.2)
+	end
+	
+	for i=1, #cards do --Convert cards
+		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+
+		if rank or suit then assert(SMODS.change_base( --Rank and Suit
+			cards[i],
+			pseudorandom_element(enhance, pseudoseed(suit)),
+			pseudorandom_element(rank, pseudoseed(seed))
+		)) end
+
+		if enhance then cards[i]:set_ability(G.P_CENTERS[ --Enhancement
+			pseudorandom_element(enhance, pseudoseed(seed))
+		]) end
+
+		if seal then cards[i]:set_seal( --Seal
+			pseudorandom_element(seal, pseudoseed(seed))
+		) end
+
+		if edition then cards[i]:set_edition( --Edition
+			pseudorandom_element(edition, pseudoseed(seed))
+		) end
+
+		return true end }))
+	end
+
+	if flip then --Flip cards back
+		for i=1, #cards do --Flip cards back
+			local percent = 0.85 + (i-0.999)/(#cards-0.998)*0.3
+			G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() cards[i]:flip();play_sound('tarot2', percent, 0.6);cards[i]:juice_up(0.3, 0.3);return true end }))
+		end
+	end
+end
+
 function chooserandomhand(ignore, seed, allowhidden)
 	local chosen_hand = nil
 	ignore = ignore or {} --can specify hands to not choose
@@ -123,9 +171,10 @@ function SMODS.current_mod.reset_game_globals(run_start)
 	G.GAME.current_round.osquo_ext_throwawayline_hand = hand1
 end
 
-function getRandomTag(ignore, seed) --get a random tag
+function getRandomTag(ignore, seed, include) --get a random tag
 	--ignore: specify tags to avoid
 	--seed: rng
+	--include: specify tags to choose between
 	ignore = ignore or {}
 	ignore[#ignore+1] = 'UNAVAILABLE' --because it can return this and thats bad so just reroll if it lands it
 	seed = seed or 'seed'
@@ -134,7 +183,9 @@ function getRandomTag(ignore, seed) --get a random tag
 	while true do
 		chosen = pseudorandom_element(get_current_pool('Tag'), pseudoseed(seed..num))
 		if not table_contains(ignore, chosen) then
-			break
+			if include then if table_contains(include, chosen) then
+				break
+			end else break end
 		end
 		num = num + 1
 	end
