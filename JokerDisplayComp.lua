@@ -1,5 +1,74 @@
 local jd_def = JokerDisplay.Definitions
 
+jd_def['j_osquo_ext_refundpolicy'] = {
+    reminder_text = {
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'active'},
+        {text = ')'}
+    },
+    calc_function = function(card)
+        card.joker_display_values.active = (card.ability.extra.not_used_this_round and localize('k_active')) or
+            localize('osquo_ext_inactive')
+    end
+}
+jd_def['j_osquo_ext_bloodyjoker'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger = 'exp'}
+        }}
+    }
+}
+jd_def['j_osquo_ext_virtualsinger'] = {
+    text = {
+        {text = '+'},
+        {ref_table = 'card.joker_display_values', ref_value = 'mult', retrigger = 'mult'}
+    },
+    text_config = {colour = G.C.MULT},
+    calc_function = function(card)
+        local count = 0
+        if G.playing_cards and #G.playing_cards ~= 0 then
+            for k, v in pairs(G.playing_cards) do
+                if v:is_face() then count = count + 1 end
+            end
+        end
+        card.joker_display_values.mult = count * card.ability.extra.per
+    end
+}
+jd_def['j_osquo_ext_cheshirecat'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+        local face = true
+        if hand[1] then
+            for k, v in pairs(hand) do
+                if not v:is_face() then face = false end
+            end
+        else face = false end
+        if face == true then card.joker_display_values.xmult = 3 else card.joker_display_values.xmult = 1 end
+    end
+}
+jd_def['j_osquo_ext_throwawayline'] = {
+    text = {
+        {text = '+'},
+        {ref_table = 'card.ability.extra', ref_value = 'mult', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.MULT},
+    reminder_text = {
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'handname', colour = G.C.ORANGE},
+        {text = ')'}
+    },
+    calc_function = function(card)
+        card.joker_display_values.handname = localize(G.GAME.current_round.osquo_ext_throwawayline_hand, 'poker_hands')
+            or G.GAME.current_round.osquo_ext_throwawayline_hand
+    end
+}
 jd_def['j_osquo_ext_prophecy'] = {
     text = {
         {text = '+$'},

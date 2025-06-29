@@ -1,14 +1,5 @@
---[[
+--CODE!!! I LOVE CODE!!!
 
-Hey there! Snooping around my code, are we?
-No worries. Whether you're here to just examine it, or to try to learn modding for yourself, feel free! You are welcome here.
-
-See a bit of code you like or think is useful? Feel free to take and use it for yourself, unless that code isn't mine, which will be specified.
-Otherwise, please help yourself. If you do this I would of course appreciate credit for it, but there's no need to come to me for permission.
-The code here should have enough comments that you can (hopefully) piece together what each bit of it does, so feel free to take a read!
-Happy modding!
-
-]]
 SMODS.current_mod.optional_features = function() --of course i needed to do this, why wouldnt it just be added by default that'd be way too simple and easy
     return {
         --retrigger_joker = true,
@@ -125,14 +116,14 @@ SMODS.Joker{ --Refund Policy
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 3, y = 6},
     rarity = 1,
     cost = 6,
     config = {extra = {
-        used_this_round = false
+        not_used_this_round = true
     }},
     calculate = function(self,card,context)
-        if context.skipping_booster and card.ability.extra.used_this_round == false then
+        if context.skipping_booster and card.ability.extra.not_used_this_round == true then
             G.E_MANAGER:add_event(Event({
                 func = (function()
                     card:juice_up()
@@ -143,21 +134,21 @@ SMODS.Joker{ --Refund Policy
                     play_sound('holo1', 1.2 + math.random()*0.1, 0.4)
                     return true
             end)}))
-            card.ability.extra.used_this_round = true
+            card.ability.extra.not_used_this_round = false
         elseif context.setting_blind then
-            card.ability.extra.used_this_round = false
+            card.ability.extra.not_used_this_round = true
         end
     end
 }
 
-SMODS.Joker{ --Bloody Joker
+SMODS.Joker{ --Butcher
     key = 'bloodyjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_bloodyjoker'},
     blueprint_compat = true,
     eternal_compat = true,
     perishable_compat = false,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 2, y = 6},
     rarity = 3,
     cost = 7,
     config = {extra = {
@@ -198,7 +189,7 @@ SMODS.Joker{ --Virtual Singer
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 1, y = 6},
     rarity = 2,
     cost = 5,
     config = {extra = {
@@ -2309,7 +2300,7 @@ SMODS.Joker{ --Knave
 
 SMODS.Joker{ --The Harmony
     key = 'theharmony',
-    loc_txt = {set = 'Joker', key = 'j_osquo_ext_theharmony'}, --WHY WONT IT FUCKING WORK THERES NOTHING WRONG WITH IT???? Update: typo'd text as taxt fml
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_theharmony'}, --WHY WONT IT FING WORK THERES NOTHING WRONG WITH IT???? Update: typo'd text as taxt fml
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -2718,7 +2709,7 @@ SMODS.Consumable{ --Nescience
 SMODS.Consumable{ --Twilight
     set = 'Spectral',
     atlas = 'qle_tarot',
-    pos = {x = 1, y = 1},
+    pos = {x = 1, y = 2},
     key = 'twilight',
     config = {extra = {
         count = 1
@@ -2817,7 +2808,7 @@ SMODS.Consumable{ --The Garden
 SMODS.Consumable{ --The Croesus
     set = 'Tarot',
     atlas = 'qle_tarot',
-    pos = {x = 0, y = 0},
+    pos = {x = 1, y = 1},
     key = 'croesus',
     config = {extra = {
         limit = 1,

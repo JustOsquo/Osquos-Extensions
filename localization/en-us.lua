@@ -21,7 +21,7 @@ return {
                 }
             },
             j_osquo_ext_bloodyjoker = {
-                name = 'Bloody Joker',
+                name = 'Butcher',
                 text = {
                     '{C:attention}Destroys{} all other owned',
                     '{C:attention}Jokers{} when {C:attention}Blind{} is selected',
@@ -749,6 +749,7 @@ return {
             osquo_ext_corroded = 'Corroded!',
             osquo_ext_downgrade = 'Downgrade!',
             osquo_ext_broken = 'Broken!',
+            osquo_ext_inactive = 'inactive',
             --
             osquo_ext_ace = 'Ace',
             osquo_ext_numbered = 'Numbered',
