@@ -110,6 +110,44 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Scavenger
+    key = 'scavenger',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_scavenger'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 4, y = 6},
+    rarity = 1,
+    cost = 6,
+    config = {extra = {
+        odds = 3,
+        odds_2 = 5
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            (G.GAME.probabilities.normal or 1),
+            card.ability.extra.odds,
+            card.ability.extra.odds_2
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.osquo_ext and context.osquo_ext.destroy_joker then
+            if pseudorandom('scavenger') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                local newtag = 'tag_uncommon'
+                if pseudorandom('scavenger') < G.GAME.probabilities.normal / card.ability.extra.odds_2 then newtag = 'tag_rare' end
+                G.E_MANAGER:add_event(Event({
+                    func = (function()
+                        card:juice_up()
+                        add_tag(Tag(newtag))
+                        play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
+                        play_sound('holo1', 1.2 + math.random()*0.1, 0.4)
+                        return true
+                end)}))
+            end
+        end
+    end
+}
+
 SMODS.Joker{ --Refund Policy
     key = 'refundpolicy',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_refundpolicy'},

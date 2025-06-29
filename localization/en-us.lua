@@ -2,15 +2,26 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Once per round, create a
-Standard, Charm, Celestial,
-or Spectral Tag when a
-booster pack is skipped
+1 in 3 chance to create an
+Uncommon Tag when a joker
+is destroyed
+1 in 4 chance for created
+Tag to instead be a Rare Tag
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_scavenger = {
+                name = 'Scavenger',
+                text = {
+                    '{C:green}#1# in #2#{} chance to create an',
+                    '{C:green}Uncommon{} Tag when a joker',
+                    'is {C:attention}destroyed{}',
+                    '{C:green}#1# in #3#{} chance for created',
+                    'Tag to instead be a {C:red}Rare{} Tag'
+                }
+            },
             j_osquo_ext_refundpolicy = {
                 name = 'Refund Policy',
                 text = {
@@ -99,10 +110,10 @@ return {
             j_osquo_ext_volcano = {
                 name = 'Volcano',
                 text = {
-                    '{X:mult,C:white}X#1#{} Mult',
                     '{C:green}#3# in #2#{} chance to',
                     'gain {X:mult,C:white}X#4#{} Mult',
-                    'when selecting {C:attention}Blind{}'
+                    'when selecting {C:attention}Blind{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}',
                 }
             },
             j_osquo_ext_partytiem = {
@@ -125,9 +136,9 @@ return {
             j_osquo_ext_tidyjoker = {
                 name = 'Playful Joker',
                 text = {
-                    '{X:mult,C:white}X#1#{} mult',
                     '{X:mult,C:white}X#2#{} mult {C:attention}less{} for',
-                    'each card {C:attention}held in hand{}'
+                    'each card {C:attention}held in hand{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}',
                 }
             },
             j_osquo_ext_hypernova = {
