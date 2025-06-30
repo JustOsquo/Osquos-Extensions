@@ -17,13 +17,14 @@ function tarotConvert(selected, enhancement)
 	delay(0.5)
 end
 
-function ConvertCards(cards, rank, suit, enhance, seal, edition, flip, seed) --New, More flexible version of tarotConvert()
+function ConvertCards(cards, rank, suit, enhance, seal, edition, rank_mod, seed, flip) --New, More flexible version of tarotConvert()
 	--cards: Table of cards to convert
 	--rank, suit, enhance, seal, edition: Table of relevant modifiers to randomly choose from to apply
+	--rank_mod: Increases rank by value
 	--flip: Boolean whether to flip cards during conversion
 	--seed: RNG Seed
-
 	seed = seed or 'ConvertCards'
+	flip = flip or true
 	
 	if flip then
 		for i=1, #cards do --Flip cards
@@ -40,6 +41,11 @@ function ConvertCards(cards, rank, suit, enhance, seal, edition, flip, seed) --N
 			cards[i],
 			pseudorandom_element(enhance, pseudoseed(suit)),
 			pseudorandom_element(rank, pseudoseed(seed))
+		)) end
+
+		if rank_mod then assert(SMODS.modify_rank(
+				cards[i],
+				rank_mod
 		)) end
 
 		if enhance then cards[i]:set_ability(G.P_CENTERS[ --Enhancement
@@ -63,6 +69,9 @@ function ConvertCards(cards, rank, suit, enhance, seal, edition, flip, seed) --N
 			G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() cards[i]:flip();play_sound('tarot2', percent, 0.6);cards[i]:juice_up(0.3, 0.3);return true end }))
 		end
 	end
+
+	G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end })) --unselect cards
+	delay(0.5)
 end
 
 function chooserandomhand(ignore, seed, allowhidden)

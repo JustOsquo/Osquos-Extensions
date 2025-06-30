@@ -136,9 +136,9 @@ return {
             j_osquo_ext_tidyjoker = {
                 name = 'Playful Joker',
                 text = {
+                    '{X:mult,C:white}X#1#{} Mult',
                     '{X:mult,C:white}X#2#{} mult {C:attention}less{} for',
-                    'each card {C:attention}held in hand{}',
-                    '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}',
+                    'each card {C:attention}held in hand{}'
                 }
             },
             j_osquo_ext_hypernova = {
@@ -600,6 +600,13 @@ return {
                     'Adds {C:money}$#2#{} of {C:attention}sell value{}',
                     'to {C:attention}#1#{} selected {C:attention}Joker{}',
                     'or {C:attention}Consumable{}'
+                }
+            },
+            c_osquo_ext_fortitude = {
+                name = 'Fortitude',
+                text = {
+                    'Increases rank of',
+                    '{C:attention}#1#{} selected card by {C:attention}#2#{}'
                 }
             },
         },

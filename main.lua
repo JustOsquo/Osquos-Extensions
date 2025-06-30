@@ -2911,6 +2911,37 @@ SMODS.Consumable{ --The Croesus
     end
 }
 
+SMODS.Consumable{ --Fortitude
+    set = 'Tarot',
+    atlas = 'qle_tarot',
+    pos = {x = 2, y = 0},
+    key = 'fortitude',
+    config = {extra = {
+        limit = 1,
+        inc = 2
+    }},
+    loc_vars = function(self,info_queue,card)
+        return {vars = {
+            card.ability.extra.limit,
+            card.ability.extra.inc
+        }}
+    end,
+    can_use = function(self,card)
+        if G.hand and (#G.hand.highlighted >= 1) and (#G.hand.highlighted <= card.ability.extra.limit) then
+            return true
+        end
+        return false
+    end,
+    use = function(self,card)
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after', delay = 0.4, func = function()
+            play_sound('tarot1')
+            card:juice_up(0.3,0.5)
+            return true end}))
+        ConvertCards(G.hand.highlighted, nil, nil, nil, nil, nil, card.ability.extra.inc, 'fortitude')
+    end
+}
+
 --[[ ENHANCEMENTS ]]--
 
 SMODS.Enhancement { --Acrylic Cards
