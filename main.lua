@@ -110,6 +110,36 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Moneyshot
+    key = 'moneyshot',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_moneyshot'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        dollars = 2,
+        xmult = 2
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card:gabil('dollars'), --Card:gabil() test, might use this in the future might not idk
+            --card.ability.extra.dollars,
+            card.ability.extra.xmult
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return {
+                dollars = card.ability.extra.dollars * -1,
+                xmult = card.ability.extra.xmult
+            }
+        end
+    end
+}
+
 SMODS.Joker{ --Scavenger
     key = 'scavenger',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_scavenger'},
@@ -202,9 +232,17 @@ SMODS.Joker{ --Butcher
     end,
     calculate = function(self,card,context)
         if context.setting_blind and not context.blueprint then
+            local mypos = nil
+            for i = 1, #G.jokers.cards do --Find position of this card
+                if G.jokers.cards[i] == card then mypos = i; break end
+            end
             card.ability.extra.jlist = {}
-            for k, v in pairs(G.jokers.cards) do
-                if v ~= card and (v.ability and not v.ability.eternal) then card.ability.extra.jlist[#card.ability.extra.jlist+1] = v end
+            for i = 1, #G.jokers.cards do
+                if i > mypos then --Only cards to the right of this one
+                    if not G.jokers.cards[i].ability.eternal and not G.jokers.cards[i].getting_sliced then --If not eternal and not already being destroyed
+                        card.ability.extra.jlist[#card.ability.extra.jlist+1] = G.jokers.cards[i]
+                    end
+                end
             end
             if #card.ability.extra.jlist > 0 then
                 card.ability.extra.xmult = card.ability.extra.xmult + (card.ability.extra.scale * #card.ability.extra.jlist)

@@ -290,11 +290,10 @@ function removeTableElement(tabl, content) --why isnt this just a thing already?
     end
 end
 
-function qmodval(base,mod,mult)
-	mult = mult or false
-	if mult == true then
-		base = base * mod
-	else
-		base = base + mod
-	end
+function Card:gabil(ask, noextra)
+	--ask: String, requested value
+	--noextra: Boolean, check card.ability instead of card.ability.extra (not recommended)
+	assert(tostring(ask) == ask) --if its not a string then just crash idc
+	local ret = ((self.ability.extra and not noextra) and self.ability.extra[ask]) or (self.ability[ask] and noextra)
+	return ret
 end

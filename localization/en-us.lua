@@ -2,16 +2,20 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-1 in 3 chance to create an
-Uncommon Tag when a joker
-is destroyed
-1 in 4 chance for created
-Tag to instead be a Rare Tag
+X2 Mult, Lose $1
+when triggered
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_moneyshot = {
+                name = 'Moneyshot',
+                text = {
+                    '{X:mult,C:white}X#2#{} Mult, Lose {C:money}$#1#{}',
+                    'when triggered'
+                }
+            },
             j_osquo_ext_scavenger = {
                 name = 'Scavenger',
                 text = {
@@ -34,8 +38,8 @@ return {
             j_osquo_ext_bloodyjoker = {
                 name = 'Butcher',
                 text = {
-                    '{C:attention}Destroys{} all other owned',
-                    '{C:attention}Jokers{} when {C:attention}Blind{} is selected',
+                    '{C:attention}Destroys{} all Jokers to the',
+                    '{C:attention}right{} when {C:attention}Blind{} is selected',
                     'Gains {X:mult,C:white}X#2#{} Mult for each',
                     'Joker destroyed this way',
                     '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}'
