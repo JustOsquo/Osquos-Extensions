@@ -2,15 +2,82 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Destroy this card and
-earn $20 at end of round
-Payout decreases by $4
-per used discard
+X2 Mult, Lose $1
+when triggered
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_moneyshot = {
+                name = 'Moneyshot',
+                text = {
+                    '{X:mult,C:white}X#2#{} Mult, Lose {C:money}$#1#{}',
+                    'when triggered'
+                }
+            },
+            j_osquo_ext_scavenger = {
+                name = 'Scavenger',
+                text = {
+                    '{C:green}#1# in #2#{} chance to create an',
+                    '{C:green}Uncommon{} Tag when a joker',
+                    'is {C:attention}destroyed{}',
+                    '{C:green}#1# in #3#{} chance for created',
+                    'Tag to instead be a {C:red}Rare{} Tag'
+                }
+            },
+            j_osquo_ext_refundpolicy = {
+                name = 'Refund Policy',
+                text = {
+                    'Once per round, create a',
+                    '{C:attention}Standard{}, {C:tarot}Charm{}, {C:planet}Meteor{},',
+                    'or {C:spectral}Ethereal{} Tag when a',
+                    '{C:attention}Booster Pack{} is skipped'
+                }
+            },
+            j_osquo_ext_bloodyjoker = {
+                name = 'Butcher',
+                text = {
+                    '{C:attention}Destroys{} all Jokers to the',
+                    '{C:attention}right{} when {C:attention}Blind{} is selected',
+                    'Gains {X:mult,C:white}X#2#{} Mult for each',
+                    'Joker destroyed this way',
+                    '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_virtualsinger = {
+                name = 'Virtual Singer',
+                text = {
+                    'Gives {C:mult}+#2#{} Mult for each',
+                    '{C:attention}Face{} card in your {C:attention}full deck{}',
+                    '{C:inactive}(Currently {C:mult}+#1#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_cheshirecat = {
+                name = 'Cheshire Cat',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult if {C:attention}played hand{}',
+                    'contains only {C:attention}Face{} cards'
+                }
+            },
+            j_osquo_ext_bargainingjoker = {
+                name = 'Bargaining Joker',
+                text = {
+                    'Create a {C:attention}duplicate{} of',
+                    'this Joker when it is',
+                    '{C:attention}destroyed{} {C:inactive}(Not Sold){}',
+                }
+            },
+            j_osquo_ext_throwawayline = {
+                name = 'Throwaway Line',
+                text = {
+                    'Gains {C:mult}+#1#{} Mult if discarded',
+                    '{C:attention}Poker Hand{} is a {C:attention}#2#{}',
+                    '{s:0.8}Poker Hand changes every round{}',
+                    '{s:0.8}Mult gain depends on Poker Hand{}',
+                    '{C:inactive}(Currently {C:mult}+#3#{} {C:inactive}Mult){}'
+                }
+            },
             j_osquo_ext_prophecy = {
                 name = 'Prophecy',
                 text = {
@@ -47,10 +114,10 @@ return {
             j_osquo_ext_volcano = {
                 name = 'Volcano',
                 text = {
-                    '{X:mult,C:white}X#1#{} Mult',
                     '{C:green}#3# in #2#{} chance to',
                     'gain {X:mult,C:white}X#4#{} Mult',
-                    'when selecting {C:attention}Blind{}'
+                    'when selecting {C:attention}Blind{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}',
                 }
             },
             j_osquo_ext_partytiem = {
@@ -73,7 +140,7 @@ return {
             j_osquo_ext_tidyjoker = {
                 name = 'Playful Joker',
                 text = {
-                    '{X:mult,C:white}X#1#{} mult',
+                    '{X:mult,C:white}X#1#{} Mult',
                     '{X:mult,C:white}X#2#{} mult {C:attention}less{} for',
                     'each card {C:attention}held in hand{}'
                 }
@@ -531,6 +598,21 @@ return {
                     'to {C:attention}Growth Cards{}'
                 }
             },
+            c_osquo_ext_croesus = {
+                name = 'The Croesus',
+                text = {
+                    'Adds {C:money}$#2#{} of {C:attention}sell value{}',
+                    'to {C:attention}#1#{} selected {C:attention}Joker{}',
+                    'or {C:attention}Consumable{}'
+                }
+            },
+            c_osquo_ext_fortitude = {
+                name = 'Fortitude',
+                text = {
+                    'Increases rank of',
+                    '{C:attention}#1#{} selected card by {C:attention}#2#{}'
+                }
+            },
         },
         Spectral = {
             c_osquo_ext_erudition = {
@@ -614,6 +696,18 @@ return {
                     '{C:attention}Poker Hand{} when played'
                 },
             },
+            osquo_ext_retain_edition = {
+                name = 'n',
+                text = {
+                    '{C:inactive,s:0.9}(Copy retains edition){}'
+                }
+            },
+            osquo_ext_overselect_c = {
+                name = 'n',
+                text = {
+                    '{C:inactive,s:0.9}(Can overselect consumeables){}'
+                }
+            },
         },
         Seal = { --card exporter freaked out
             osquo_ext_cosmic = {
@@ -677,6 +771,7 @@ return {
             osquo_ext_corroded = 'Corroded!',
             osquo_ext_downgrade = 'Downgrade!',
             osquo_ext_broken = 'Broken!',
+            osquo_ext_inactive = 'inactive',
             --
             osquo_ext_ace = 'Ace',
             osquo_ext_numbered = 'Numbered',

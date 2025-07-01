@@ -1,5 +1,102 @@
 local jd_def = JokerDisplay.Definitions
 
+jd_def['j_osquo_ext_moneyshot'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger_type = 'exp'}
+        }}
+    },
+    reminder_text = {
+        {text = '-$'},
+        {ref_table = 'card.ability.extra', ref_value = 'dollars', retrigger_type = 'mult'}
+    },
+    reminder_text_config = {colour = G.C.MONEY}
+}
+jd_def['j_osquo_ext_scavenger'] = {
+    extra = {{
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'odds'},
+        {text = '), '},
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'odds_2'},
+        {text = ')'}
+    }},
+    extra_config = {colour = G.C.GREEN, scale = 0.3},
+    calc_function = function(card)
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+        card.joker_display_values.odds_2 = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds_2}}
+    end
+}
+jd_def['j_osquo_ext_refundpolicy'] = {
+    reminder_text = {
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'active'},
+        {text = ')'}
+    },
+    calc_function = function(card)
+        card.joker_display_values.active = (card.ability.extra.not_used_this_round and localize('k_active')) or
+            localize('osquo_ext_inactive')
+    end
+}
+jd_def['j_osquo_ext_bloodyjoker'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger = 'exp'}
+        }}
+    }
+}
+jd_def['j_osquo_ext_virtualsinger'] = {
+    text = {
+        {text = '+'},
+        {ref_table = 'card.joker_display_values', ref_value = 'mult', retrigger = 'mult'}
+    },
+    text_config = {colour = G.C.MULT},
+    calc_function = function(card)
+        local count = 0
+        if G.playing_cards and #G.playing_cards ~= 0 then
+            for k, v in pairs(G.playing_cards) do
+                if v:is_face() then count = count + 1 end
+            end
+        end
+        card.joker_display_values.mult = count * card.ability.extra.per
+    end
+}
+jd_def['j_osquo_ext_cheshirecat'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp'}
+        }}
+    },
+    calc_function = function(card)
+        local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+        local face = true
+        if hand[1] then
+            for k, v in pairs(hand) do
+                if not v:is_face() then face = false end
+            end
+        else face = false end
+        if face == true then card.joker_display_values.xmult = 3 else card.joker_display_values.xmult = 1 end
+    end
+}
+jd_def['j_osquo_ext_throwawayline'] = {
+    text = {
+        {text = '+'},
+        {ref_table = 'card.ability.extra', ref_value = 'mult', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.MULT},
+    reminder_text = {
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'handname', colour = G.C.ORANGE},
+        {text = ')'}
+    },
+    calc_function = function(card)
+        card.joker_display_values.handname = localize(G.GAME.current_round.osquo_ext_throwawayline_hand, 'poker_hands')
+            or G.GAME.current_round.osquo_ext_throwawayline_hand
+    end
+}
 jd_def['j_osquo_ext_prophecy'] = {
     text = {
         {text = '+$'},
@@ -473,15 +570,19 @@ jd_def['j_osquo_ext_backgroundcheck'] = {
             for _, scoring_card in pairs(scoring_hand) do
                 local mysuit = scoring_card.base.suit
                 local alike = 0
-                for i = 1, #scoring_hand do --for every card in scoring hand
-                    if scoring_card.ability.name == 'Wild Card' then mysuit = scoring_hand[i].base.suit end
-                    if scoring_hand[i].ability.name ~= 'Wild Card' then
-                        if scoring_hand[i].base.suit == mysuit then alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand) end
-                    elseif scoring_hand[i].ability.name == 'Wild Card' then
-                        alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand)
+                if not SMODS.has_no_suit(scoring_card) then
+                    for i = 1, #scoring_hand do --for every card in scoring hand
+                        if not SMODS.has_no_suit(scoring_hand[i]) then --Check if it has a suit
+                            if SMODS.has_any_suit(scoring_card) then mysuit = scoring_hand[i].base.suit end
+                            if not SMODS.has_any_suit(scoring_hand[i]) then
+                                if scoring_hand[i].base.suit == mysuit then alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand) end
+                            elseif SMODS.has_any_suit(scoring_hand[i]) then
+                                alike = alike + JokerDisplay.calculate_card_triggers(scoring_hand[i], scoring_hand)
+                            end
+                        end
                     end
                 end
-                total2 = total2 * (card.ability.extra.xmulteach * alike + 1)
+            total2 = total2 * (card.ability.extra.xmulteach * alike + 1)
             end
         end
         card.joker_display_values.total = total2

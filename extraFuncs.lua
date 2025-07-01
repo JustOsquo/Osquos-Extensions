@@ -17,6 +17,63 @@ function tarotConvert(selected, enhancement)
 	delay(0.5)
 end
 
+function ConvertCards(cards, rank, suit, enhance, seal, edition, rank_mod, seed, flip) --New, More flexible version of tarotConvert()
+	--cards: Table of cards to convert
+	--rank, suit, enhance, seal, edition: Table of relevant modifiers to randomly choose from to apply
+	--rank_mod: Increases rank by value
+	--flip: Boolean whether to flip cards during conversion
+	--seed: RNG Seed
+	seed = seed or 'ConvertCards'
+	flip = flip or true
+	
+	if flip then
+		for i=1, #cards do --Flip cards
+			local percent = 1.15 - (i-0.999)/(#cards-0.998)*0.3
+			G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() cards[i]:flip();play_sound('card1', percent);cards[i]:juice_up(0.3, 0.3);return true end }))
+		end
+		delay(0.2)
+	end
+	
+	for i=1, #cards do --Convert cards
+		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+
+		if rank or suit then assert(SMODS.change_base( --Rank and Suit
+			cards[i],
+			pseudorandom_element(enhance, pseudoseed(suit)),
+			pseudorandom_element(rank, pseudoseed(seed))
+		)) end
+
+		if rank_mod then assert(SMODS.modify_rank(
+				cards[i],
+				rank_mod
+		)) end
+
+		if enhance then cards[i]:set_ability(G.P_CENTERS[ --Enhancement
+			pseudorandom_element(enhance, pseudoseed(seed))
+		]) end
+
+		if seal then cards[i]:set_seal( --Seal
+			pseudorandom_element(seal, pseudoseed(seed))
+		) end
+
+		if edition then cards[i]:set_edition( --Edition
+			pseudorandom_element(edition, pseudoseed(seed))
+		) end
+
+		return true end }))
+	end
+
+	if flip then --Flip cards back
+		for i=1, #cards do --Flip cards back
+			local percent = 0.85 + (i-0.999)/(#cards-0.998)*0.3
+			G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() cards[i]:flip();play_sound('tarot2', percent, 0.6);cards[i]:juice_up(0.3, 0.3);return true end }))
+		end
+	end
+
+	G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end })) --unselect cards
+	delay(0.5)
+end
+
 function chooserandomhand(ignore, seed, allowhidden)
 	local chosen_hand = nil
 	ignore = ignore or {} --can specify hands to not choose
@@ -113,11 +170,20 @@ function SMODS.current_mod.reset_game_globals(run_start)
 		G.GAME.current_round.osquo_ext_idolatry_card.rank = chosen2.base.value
 		G.GAME.current_round.osquo_ext_idolatry_card.id = chosen2.base.id
 	end
+	--Random Poker Hand for Throwaway Line
+	G.GAME.current_round.osquo_ext_throwawayline_hand = 'High Card'
+	local _pokerhands1 = {}
+	for k, v in pairs(G.GAME.hands) do
+		if v.visible then _pokerhands1[#_pokerhands1+1] = k end
+	end
+	local hand1 = pseudorandom_element(_pokerhands1, pseudoseed('throwawayline'..G.GAME.round_resets.ante))
+	G.GAME.current_round.osquo_ext_throwawayline_hand = hand1
 end
 
-function getRandomTag(ignore, seed) --get a random tag
+function getRandomTag(ignore, seed, include) --get a random tag
 	--ignore: specify tags to avoid
 	--seed: rng
+	--include: specify tags to choose between
 	ignore = ignore or {}
 	ignore[#ignore+1] = 'UNAVAILABLE' --because it can return this and thats bad so just reroll if it lands it
 	seed = seed or 'seed'
@@ -126,7 +192,9 @@ function getRandomTag(ignore, seed) --get a random tag
 	while true do
 		chosen = pseudorandom_element(get_current_pool('Tag'), pseudoseed(seed..num))
 		if not table_contains(ignore, chosen) then
-			break
+			if include then if table_contains(include, chosen) then
+				break
+			end else break end
 		end
 		num = num + 1
 	end
@@ -152,23 +220,37 @@ function getRandomJokerKey(ignore, myrarity, seed) --get a random joker key with
 	return chosen.key
 end
 
+function Card:reset_size()
+	self.T.w = G.CARD_W
+	self.T.h = G.CARD_H
+end
+
 function JokerConvert(toConvert, newKey)
 	for i=1, #toConvert do
 		local percent = 1.15 - (i-0.999)/(#toConvert-0.998)*0.3
-		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() toConvert[i]:flip();play_sound('card1', percent);toConvert[i]:juice_up(0.3, 0.3);return true end }))
-	end
-	delay(0.2)
-	for i=1, #toConvert do
-    local thiskey = nil
-	if type(newKey) == 'table' then thiskey = newKey[i] else thiskey = newKey end
-	G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
-		toConvert[i]:set_ability(thiskey)
+		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function()
+			toConvert[i]:flip()
+			play_sound('card1', percent)
+			toConvert[i]:juice_up(0.3, 0.3)
+			toConvert[i]:reset_size()
 		return true end }))
 	end
+
+	delay(0.2)
+
+	for i=1, #toConvert do
+		local thiskey = nil
+		if type(newKey) == 'table' then thiskey = newKey[i] else thiskey = newKey end
+		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+			toConvert[i]:set_ability(thiskey)
+		return true end }))
+	end
+
 	for i=1, #toConvert do
 		local percent = 0.85 + (i-0.999)/(#toConvert-0.998)*0.3
 		G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() toConvert[i]:flip();play_sound('tarot2', percent, 0.6);toConvert[i]:juice_up(0.3, 0.3);return true end }))
 	end
+
 	G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end })) --unselect cards
 	delay(0.5)
 end
@@ -208,11 +290,10 @@ function removeTableElement(tabl, content) --why isnt this just a thing already?
     end
 end
 
-function qmodval(base,mod,mult)
-	mult = mult or false
-	if mult == true then
-		base = base * mod
-	else
-		base = base + mod
-	end
+function Card:gabil(ask, noextra)
+	--ask: String, requested value
+	--noextra: Boolean, check card.ability instead of card.ability.extra (not recommended)
+	assert(tostring(ask) == ask) --if its not a string then just crash idc
+	local ret = ((self.ability.extra and not noextra) and self.ability.extra[ask]) or (self.ability[ask] and noextra)
+	return ret
 end

@@ -1,14 +1,5 @@
---[[
+--CODE!!! I LOVE CODE!!!
 
-Hey there! Snooping around my code, are we?
-No worries. Whether you're here to just examine it, or to try to learn modding for yourself, feel free! You are welcome here.
-
-See a bit of code you like or think is useful? Feel free to take and use it for yourself, unless that code isn't mine, which will be specified.
-Otherwise, please help yourself. If you do this I would of course appreciate credit for it, but there's no need to come to me for permission.
-The code here should have enough comments that you can (hopefully) piece together what each bit of it does, so feel free to take a read!
-Happy modding!
-
-]]
 SMODS.current_mod.optional_features = function() --of course i needed to do this, why wouldnt it just be added by default that'd be way too simple and easy
     return {
         --retrigger_joker = true,
@@ -118,6 +109,355 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 }
 
 --[[ ORDINARY JOKERS ]]--
+
+SMODS.Joker{ --Moneyshot
+    key = 'moneyshot',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_moneyshot'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 5, y = 6},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        dollars = 2,
+        xmult = 2
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card:gabil('dollars'), --Card:gabil() test, might use this in the future might not idk
+            --card.ability.extra.dollars,
+            card.ability.extra.xmult
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return {
+                dollars = card.ability.extra.dollars * -1,
+                xmult = card.ability.extra.xmult
+            }
+        end
+    end
+}
+
+SMODS.Joker{ --Scavenger
+    key = 'scavenger',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_scavenger'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 4, y = 6},
+    rarity = 1,
+    cost = 6,
+    config = {extra = {
+        odds = 3,
+        odds_2 = 5
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            (G.GAME.probabilities.normal or 1),
+            card.ability.extra.odds,
+            card.ability.extra.odds_2
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.osquo_ext and context.osquo_ext.destroy_joker then
+            if pseudorandom('scavenger') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                local newtag = 'tag_uncommon'
+                if pseudorandom('scavenger') < G.GAME.probabilities.normal / card.ability.extra.odds_2 then newtag = 'tag_rare' end
+                G.E_MANAGER:add_event(Event({
+                    func = (function()
+                        card:juice_up()
+                        add_tag(Tag(newtag))
+                        play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
+                        play_sound('holo1', 1.2 + math.random()*0.1, 0.4)
+                        return true
+                end)}))
+            end
+        end
+    end
+}
+
+SMODS.Joker{ --Refund Policy
+    key = 'refundpolicy',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_refundpolicy'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 3, y = 6},
+    rarity = 1,
+    cost = 6,
+    config = {extra = {
+        not_used_this_round = true
+    }},
+    calculate = function(self,card,context)
+        if context.skipping_booster and card.ability.extra.not_used_this_round == true then
+            G.E_MANAGER:add_event(Event({
+                func = (function()
+                    card:juice_up()
+                    add_tag(Tag(pseudorandom_element(
+                        {'tag_standard', 'tag_charm', 'tag_meteor', 'tag_ethereal'}, pseudoseed('refundpolicy')
+                    )))
+                    play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
+                    play_sound('holo1', 1.2 + math.random()*0.1, 0.4)
+                    return true
+            end)}))
+            card.ability.extra.not_used_this_round = false
+        elseif context.setting_blind then
+            card.ability.extra.not_used_this_round = true
+        end
+    end
+}
+
+SMODS.Joker{ --Butcher
+    key = 'bloodyjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_bloodyjoker'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    perishable_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 2, y = 6},
+    rarity = 3,
+    cost = 7,
+    config = {extra = {
+        xmult = 1,
+        scale = 0.2,
+        jlist = {}
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.xmult,
+            card.ability.extra.scale
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.setting_blind and not context.blueprint then
+            local mypos = nil
+            for i = 1, #G.jokers.cards do --Find position of this card
+                if G.jokers.cards[i] == card then mypos = i; break end
+            end
+            card.ability.extra.jlist = {}
+            for i = 1, #G.jokers.cards do
+                if i > mypos then --Only cards to the right of this one
+                    if not G.jokers.cards[i].ability.eternal and not G.jokers.cards[i].getting_sliced then --If not eternal and not already being destroyed
+                        card.ability.extra.jlist[#card.ability.extra.jlist+1] = G.jokers.cards[i]
+                    end
+                end
+            end
+            if #card.ability.extra.jlist > 0 then
+                card.ability.extra.xmult = card.ability.extra.xmult + (card.ability.extra.scale * #card.ability.extra.jlist)
+                SMODS.destroy_cards(card.ability.extra.jlist)
+                return {
+                    extra = {focus = card, message = localize{type='variable',key='a_xmult',vars={(card.ability.extra.xmult)}}}
+                }
+            end
+        elseif context.joker_main then
+            return {
+                xmult = card.ability.extra.xmult
+            }
+        end
+    end
+}
+
+SMODS.Joker{ --Virtual Singer
+    key = 'virtualsinger',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_virtualsinger'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 1, y = 6},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        count = 0,
+        per = 3
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            (card.ability.extra.count * card.ability.extra.per),
+            card.ability.extra.per
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return {
+                mult = card.ability.extra.count * card.ability.extra.per
+            }
+        end
+    end,
+    update = function(self,card,context)
+        card.ability.extra.count = 0
+        if G.playing_cards and #G.playing_cards ~= 0 then
+            for k, v in pairs(G.playing_cards) do
+                if v:is_face() then card.ability.extra.count = card.ability.extra.count + 1 end
+            end
+        end
+    end
+}
+
+SMODS.Joker{ --Cheshire Cat
+    key = 'cheshirecat',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_cheshirecat'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 1, y = 5},
+    rarity = 2,
+    cost = 6,
+    config = {extra = {
+        xmult = 3
+    }},
+    loc_vars = function(self,info_queue,card)
+        return{ vars = {
+            card.ability.extra.xmult
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            local allow = true
+            for k, v in pairs(context.full_hand) do
+                if not v:is_face() then allow = false end
+            end
+            if allow == true then return { xmult = card.ability.extra.xmult} end
+        end
+    end
+}
+
+SMODS.Joker{ --Bargaining Joker
+    key = 'bargainingjoker',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_bargainingjoker'},
+    blueprint_compat = false,
+    eternal_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 6},
+    rarity = 1,
+    cost = 3,
+    config = {extra = {
+        osquo_ext_ignoreslice = true --marks this card to be able to ignore getting_sliced, allowing it to calculate when it is destroyed (see lovely patch)
+    }},
+    loc_vars = function(self,info_queue,card)
+        local main_end
+        if G.jokers then
+            if card.edition and card.edition.negative then
+                main_end = {}
+                localize{
+                    type = 'other',
+                    key = 'osquo_ext_retain_edition',
+                    nodes = main_end
+                }
+            end
+        end
+        return {
+            main_end = main_end and main_end[1]
+        }
+    end,
+    calculate = function(self,card,context)
+        if context.osquo_ext and context.osquo_ext.destroy_joker and context.osquo_ext.destroyed_joker == card and not context.blueprint then
+            if G.STAGE == G.STAGES.RUN and not G.screenwipe then --Otherwise you cant go to main menu lol
+                local _card = copy_card(card, nil, nil, nil, false)
+                _card:add_to_deck()
+                G.jokers:emplace(_card)
+                _card:start_materialize()
+            end
+        end
+    end
+}
+
+SMODS.Joker{ --Throwaway Line
+    key = 'throwawayline',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_throwawayline'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    perishable_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 5},
+    rarity = 2,
+    cost = 5,
+    config = {extra = {
+        mult = 0,
+        mult_ref = {
+            ['High Card'] = 1,
+            ['Pair'] = 2,
+            ['Two Pair'] = 3,
+            ['Three of a Kind'] = 6,
+            ['Straight'] = 8,
+            ['Flush'] = 7,
+            ['Full House'] = 10,
+            ['Four of a Kind'] = 12,
+            ['Straight Flush'] = 14,
+            ['Five of a Kind'] = 18,
+            ['Flush House'] = 22,
+            ['Flush Five'] = 26,
+            --Some modded hands for compatability
+            --Handsome Devils
+            ['hnds_stone_ocean'] = 5,
+            --Maximus (6 Card Hands)
+            ['mxms_three_pair'] = 7,
+            ['mxms_s_straight'] = 11,
+            ['mxms_s_flush'] = 10,
+            ['mxms_double_triple'] = 12,
+            ['mxms_house_party'] = 13,
+            ['mxms_f_three_pair'] = 22,
+            ['mxms_f_double_triple'] = 27,
+            ['mxms_f_party'] = 29,
+            ['mxms_6oak'] = 30,
+            ['mxms_s_straight_f'] = 32,
+            ['mxms_f_6oak'] = 36,
+            --Cardsauce | YOU DONT NEED YOUR PREFIX IN THE KEY!!!!
+            ['csau_csau_Blackjack'] = 7,
+            ['csau_csau_FlushBlackjack'] = 10,
+            ['csau_csau_Fibonacci'] = 10,
+            ['csau_csau_FlushFibonacci'] = 16,
+            --Cryptid
+            ['cry_Bulwark'] = 5, --no idea how this works with stone ocean lmaoooo
+            ['cry_Clusterfuck'] = 20,
+            ['cry_UltPair'] = 28,
+            ['cry_WholeDeck'] = 52525252525252525252525252525, --whatever
+            ['cry_None'] = -1, --Why not lmao
+            --GARBSHIT (Bisexuals and Quadrants)
+            ['garb_str_house'] = 16,
+            ['garb_str_four'] = 20,
+            ['garb_str_five'] = 22,
+            ['garb_str_fl_house'] = 28,
+            ['garb_str_fl_five'] = 30,
+            ['garb_blush'] = 12,
+            ['garb_caliginous'] = 12,
+            ['garb_ashen'] = 12,
+            ['garb_pale'] = 12,
+            --JoyousSpring
+            ['joy_eldlixir'] = 8,
+            --Visibility
+            ['vis_industrialization'] = 8,
+            ['vis_heavyweight'] = 16,
+            --Might add more in the future
+            --I'll add spectrum support once all the mods that add it just use the spectrum framework, im NOT adding spectrum like 4 seperate times, man.
+        },
+    }},
+    loc_vars = function(self,info_queue,card)
+        local handname = localize(G.GAME.current_round.osquo_ext_throwawayline_hand, 'poker_hands')
+            or G.GAME.current_round.osquo_ext_throwawayline_hand
+        return { vars = {
+            (card.ability.extra.mult_ref[G.GAME.current_round.osquo_ext_throwawayline_hand] or G.GAME.hands[G.GAME.current_round.osquo_ext_throwawayline_hand].s_mult or 0), --fallback incase the hand isnt accounted for
+            handname,
+            card.ability.extra.mult
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.pre_discard and not context.blueprint then
+            local text,disp_text = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
+            if text == G.GAME.current_round.osquo_ext_throwawayline_hand then
+                card.ability.extra.mult = card.ability.extra.mult + (card.ability.extra.mult_ref[G.GAME.current_round.osquo_ext_throwawayline_hand] or G.GAME.hands[G.GAME.current_round.osquo_ext_throwawayline_hand].s_mult or 0)
+                return {
+                    message = localize('k_upgrade_ex')
+                }
+            end
+        elseif context.joker_main then
+            return {
+                mult = card.ability.extra.mult
+            }
+        end
+    end
+}
 
 SMODS.Joker{ --Prophecy
     key = 'prophecy',
@@ -1352,7 +1692,7 @@ SMODS.Joker{ --Bumper
     rarity = 1,
     cost = 3,
     config = {extra = {
-        rscore = 600
+        rscore = 1000
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -1761,15 +2101,17 @@ SMODS.Joker{ --Background Check
         }}
     end,
     calculate = function(self,card,context)
-        if context.individual and context.cardarea == G.play then
+        if context.individual and context.cardarea == G.play and not SMODS.has_no_suit(context.other_card) then
             local mysuit = context.other_card.base.suit
             local alike = 0
             for i = 1, #context.scoring_hand do --for every card in scoring hand
-                if context.other_card.ability.name == 'Wild Card' then mysuit = context.scoring_hand[i].base.suit end
-                if context.scoring_hand[i].ability.name ~= 'Wild Card' then
-                    if context.scoring_hand[i].base.suit == mysuit then alike = alike + 1 end
-                elseif context.scoring_hand[i].ability.name == 'Wild Card' then
-                    alike = alike + 1
+                if not SMODS.has_no_suit(context.scoring_hand[i]) then
+                    if SMODS.has_any_suit(context.other_card) then mysuit = context.scoring_hand[i].base.suit end
+                    if not SMODS.has_any_suit(context.scoring_hand[i]) then
+                        if context.scoring_hand[i].base.suit == mysuit then alike = alike + 1 end
+                    elseif SMODS.has_any_suit(context.scoring_hand[i]) then
+                        alike = alike + 1
+                    end
                 end
             end
             return {
@@ -2034,7 +2376,7 @@ SMODS.Joker{ --Knave
 
 SMODS.Joker{ --The Harmony
     key = 'theharmony',
-    loc_txt = {set = 'Joker', key = 'j_osquo_ext_theharmony'}, --WHY WONT IT FUCKING WORK THERES NOTHING WRONG WITH IT???? Update: typo'd text as taxt fml
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_theharmony'}, --WHY WONT IT FING WORK THERES NOTHING WRONG WITH IT???? Update: typo'd text as taxt fml
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
@@ -2443,7 +2785,7 @@ SMODS.Consumable{ --Nescience
 SMODS.Consumable{ --Twilight
     set = 'Spectral',
     atlas = 'qle_tarot',
-    pos = {x = 1, y = 1},
+    pos = {x = 1, y = 2},
     key = 'twilight',
     config = {extra = {
         count = 1
@@ -2537,6 +2879,105 @@ SMODS.Consumable{ --The Garden
             return true end}))
         tarotConvert(G.hand.highlighted, 'm_osquo_ext_growth')
     end,
+}
+
+SMODS.Consumable{ --The Croesus
+    set = 'Tarot',
+    atlas = 'qle_tarot',
+    pos = {x = 1, y = 1},
+    key = 'croesus',
+    config = {extra = {
+        limit = 1,
+        sellvalue = 5,
+        overselect = true
+    }},
+    loc_vars = function(self,info_queue,card)
+        local main_end
+        if G.consumeables then
+            if card.area == G.consumeables then
+                main_end = {}
+                localize{
+                    type = 'other',
+                    key = 'osquo_ext_overselect_c',
+                    nodes = main_end
+                }
+            end
+        end
+        return {
+            main_end = main_end and main_end[1],
+            vars = {
+                card and card.ability.extra.limit or self.config.extra.count,
+                card and card.ability.extra.sellvalue or self.config.extra.count,
+            }
+        }
+    end,
+    can_use = function(self,card)
+        --If using on a joker, no consumeables must be selected OR this card must be the only selected consumeable
+        if #G.jokers.highlighted == card.ability.extra.limit and ((not G.consumeables.highlighted[1]) or (#G.consumeables.highlighted == 1 and G.consumeables.highlighted[1] == card)) then
+            return true
+        --If using on a consumeable, it must either be the only one selected OR the only other one out of two selected cards, including this one 
+        elseif (#G.consumeables.highlighted == card.ability.extra.limit and G.consumeables.highlighted[1] ~= card) or (#G.consumeables.highlighted == (card.ability.extra.limit + 1) and table_contains(G.consumeables.highlighted, card)) then
+            return true
+        end
+        return false
+    end,
+    use = function(self,card, area)
+        --Get a list of cards that need modifying. Should always be just 1 normally, but it should be able to be compatable with more anyway
+        local cardlist = {}
+        if #G.jokers.highlighted == card.ability.extra.limit and ((not G.consumeables.highlighted[1]) or (#G.consumeables.highlighted == 1 and G.consumeables.highlighted[1] == card)) then
+            for k, v in pairs(G.jokers.highlighted) do
+                cardlist[#cardlist+1] = v
+            end
+        elseif (#G.consumeables.highlighted == card.ability.extra.limit and G.consumeables.highlighted[1] ~= card) or (#G.consumeables.highlighted == (card.ability.extra.limit + 1) and table_contains(G.consumeables.highlighted, card)) then
+            for k, v in pairs(G.consumeables.highlighted) do
+                if v ~= card then cardlist[#cardlist+1] = v end
+            end
+        end
+        for i = 1, #cardlist do
+            cardlist[i].ability.extra_value = (cardlist[i].ability.extra_value or 0) + card.ability.extra.sellvalue
+            cardlist[i]:set_cost()
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                play_sound('tarot1')
+                SMODS.calculate_effect({message = localize('k_val_up'), colour = G.C.MONEY}, cardlist[i])
+                cardlist[i]:juice_up(0.3, 0.5)
+            return true end }))
+        end
+        if area == G.consumeables then
+            area.config.highlighted_limit = area.config.highlighted_limit - card.ability.extra.limit
+        end
+        delay(0.6)
+    end
+}
+
+SMODS.Consumable{ --Fortitude
+    set = 'Tarot',
+    atlas = 'qle_tarot',
+    pos = {x = 2, y = 0},
+    key = 'fortitude',
+    config = {extra = {
+        limit = 1,
+        inc = 2
+    }},
+    loc_vars = function(self,info_queue,card)
+        return {vars = {
+            card.ability.extra.limit,
+            card.ability.extra.inc
+        }}
+    end,
+    can_use = function(self,card)
+        if G.hand and (#G.hand.highlighted >= 1) and (#G.hand.highlighted <= card.ability.extra.limit) then
+            return true
+        end
+        return false
+    end,
+    use = function(self,card)
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after', delay = 0.4, func = function()
+            play_sound('tarot1')
+            card:juice_up(0.3,0.5)
+            return true end}))
+        ConvertCards(G.hand.highlighted, nil, nil, nil, nil, nil, card.ability.extra.inc, 'fortitude')
+    end
 }
 
 --[[ ENHANCEMENTS ]]--

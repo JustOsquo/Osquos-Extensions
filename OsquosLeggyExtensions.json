@@ -9,8 +9,8 @@
 	"priority": 0,
 	"badge_colour": "770077",
 	"badge_text_colour": "DD77DD",
-	"version": "1.2.1-0625a",
+	"version": "1.3.0-0701a",
 	"dependencies": [
-        "Steamodded (>=1.0.0~BETA-0504a)"
+        "Steamodded (>=1.0.0~BETA-0623a)"
     ],
 }

@@ -18,7 +18,6 @@ function SMODS.calculate_individual_effect(effect, scored_card, key, amount, fro
     return _calculate_individual_effect(effect, scored_card, key, amount, from_edition) -- run the base function as normal
 end
 
---I think this is a hook? Adds global variables
 local _init_game_object = Game.init_game_object
 function Game:init_game_object()
     local ret = _init_game_object(self)
@@ -26,14 +25,37 @@ function Game:init_game_object()
     ret.current_round.osquo_ext_idolatry_card = {rank = 'Ace', id = 14}
     ret.current_round.osquo_ext_bountyhunter_card = {suit = 'Spades', rank = 'Ace', id = 14} --Card for Wanted Poster (Default: Ace of Spades)
     ret.osquo_ext_amber_consecutives = 0
+    ret.current_round.osquo_ext_throwawayline_hand = 'High Card'
     return ret
 end
 
-local _is_face = Card.is_face
-function Card:is_face(from_boss)
-    if self.debuff and not from_boss then return end
-    if self.config.center == G.P_CENTERS.m_osquo_ext_noble then --Noble Cards count as face cards
-        return true
+local _card_remove = Card.remove
+function Card.remove(self)
+    --Context for destroying jokers
+    if self.added_to_deck and self.ability.set == 'Joker' and not G.CONTROLLER.locks.selling_card then
+        SMODS.calculate_context({
+            osquo_ext = {
+                destroy_joker = true,
+                destroyed_joker = self
+            }
+        })
+    --Make sure overselectable cards remove their highlighted_limit increase when they are sold (or otherwise removed while highlighted, except using)
+    elseif self.ability.extra and type(self.ability.extra) == 'table' and self.ability.extra.overselect == true and self.area and table_contains(self.area.highlighted, self) then
+        self.area.config.highlighted_limit = self.area.config.highlighted_limit - self.ability.extra.limit
     end
-    return _is_face(self,from_boss)
+    return _card_remove(self)
+end
+
+--Allows consumables to overselect if specified
+local _card_highlight = Card.highlight
+function Card.highlight(self, is_highlighted)
+    self.highlighted = is_highlighted
+    if self.area and self.area == G.consumeables and self.ability.extra and type(self.ability.extra) == 'table' and self.ability.extra.overselect == true then
+        if self.highlighted then
+            self.area.config.highlighted_limit = self.area.config.highlighted_limit + self.ability.extra.limit
+        else
+            self.area.config.highlighted_limit = self.area.config.highlighted_limit - self.ability.extra.limit
+        end
+    end
+    return _card_highlight(self, is_highlighted)
 end

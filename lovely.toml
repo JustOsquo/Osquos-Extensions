@@ -81,28 +81,18 @@ payload = '''
 G.GAME.pack_choices = math.min(G.GAME.pack_choices + G.GAME.osquo_ext_pack_choice_mod, self.config.center.config.extra)
 '''
 
-
-# fixes an oversight where jokers with a unique card size would retain their card size when becoming a different joker. doesnt happen in vanilla so its understandable
-# fixed by setting jokers to the default base H and W values before checking if the new joker should have a unique size
+# Allows cards with "extra.osquo_ext_ignoreslice = true" in their config to ignore getting_sliced, allowing them to calculate when they are destroyed.
 
 [[patches]]
 [patches.pattern]
-target = '''card.lua'''
+target = '''=[SMODS _ "src/utils.lua"]'''
 match_indent = true
 position = 'after'
 pattern = '''
-    if self.params.discover and not center.discovered then
-        unlock_card(center)
-        discover_card(center)
-    end
+-- TARGET : Add extra conditions here
 '''
 payload = '''
-
-    if center.set == 'Joker' then
-        H = 2.4*47/41
-        W = 2.4*35/41
-        self.T.h = H
-        self.T.w = W
-    end
-
+if self.ability.extra and type(self.ability.extra) == 'table' and self.ability.extra.osquo_ext_ignoreslice == true then
+    is_available = (not self.debuff or ignore_debuff)
+end
 '''
