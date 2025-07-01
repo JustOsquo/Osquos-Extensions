@@ -116,7 +116,7 @@ SMODS.Joker{ --Moneyshot
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 5, y = 6},
     rarity = 2,
     cost = 5,
     config = {extra = {
@@ -326,7 +326,7 @@ SMODS.Joker{ --Cheshire Cat
 SMODS.Joker{ --Bargaining Joker
     key = 'bargainingjoker',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_bargainingjoker'},
-    blueprint_compat = true,
+    blueprint_compat = false,
     eternal_compat = false,
     atlas = 'Jokers',
     pos = {x = 0, y = 6},
@@ -352,7 +352,7 @@ SMODS.Joker{ --Bargaining Joker
         }
     end,
     calculate = function(self,card,context)
-        if context.osquo_ext and context.osquo_ext.destroy_joker and context.osquo_ext.destroyed_joker == card then
+        if context.osquo_ext and context.osquo_ext.destroy_joker and context.osquo_ext.destroyed_joker == card and not context.blueprint then
             if G.STAGE == G.STAGES.RUN and not G.screenwipe then --Otherwise you cant go to main menu lol
                 local _card = copy_card(card, nil, nil, nil, false)
                 _card:add_to_deck()
@@ -443,7 +443,7 @@ SMODS.Joker{ --Throwaway Line
         }}
     end,
     calculate = function(self,card,context)
-        if context.pre_discard then
+        if context.pre_discard and not context.blueprint then
             local text,disp_text = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
             if text == G.GAME.current_round.osquo_ext_throwawayline_hand then
                 card.ability.extra.mult = card.ability.extra.mult + (card.ability.extra.mult_ref[G.GAME.current_round.osquo_ext_throwawayline_hand] or G.GAME.hands[G.GAME.current_round.osquo_ext_throwawayline_hand].s_mult or 0)
