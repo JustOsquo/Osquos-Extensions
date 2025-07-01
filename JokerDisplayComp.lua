@@ -1,5 +1,33 @@
 local jd_def = JokerDisplay.Definitions
 
+jd_def['j_osquo_ext_moneyshot'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger_type = 'exp'}
+        }}
+    },
+    reminder_text = {
+        {text = '-$'},
+        {ref_table = 'card.ability.extra', ref_value = 'dollars', retrigger_type = 'mult'}
+    },
+    reminder_text_config = {colour = G.C.MONEY}
+}
+jd_def['j_osquo_ext_scavenger'] = {
+    extra = {{
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'odds'},
+        {text = '), '},
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'odds_2'},
+        {text = ')'}
+    }},
+    extra_config = {colour = G.C.GREEN, scale = 0.3},
+    calc_function = function(card)
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+        card.joker_display_values.odds_2 = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds_2}}
+    end
+}
 jd_def['j_osquo_ext_refundpolicy'] = {
     reminder_text = {
         {text = '('},
