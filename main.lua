@@ -188,7 +188,7 @@ SMODS.Joker{ --Shaman
         if context.before then
             if #context.full_hand == 1 and context.full_hand[1]:is_suit('Clubs') then
                 if context.full_hand[1]:get_id() ~= 11 then
-                    if pseudorandom('shaman') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                    if SMODS.pseudorandom_probability(card, pseudoseed('shaman'), 1, card:gabil('odds')) then
                         if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                             G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                             G.E_MANAGER:add_event(Event({func = (function()
@@ -273,9 +273,9 @@ SMODS.Joker{ --Scavenger
     end,
     calculate = function(self,card,context)
         if context.osquo_ext and context.osquo_ext.destroy_joker then
-            if pseudorandom('scavenger') < G.GAME.probabilities.normal / card.ability.extra.odds then
+            if SMODS.pseudorandom_probability(card, pseudoseed('scavenger'), 1, card:gabil('odds')) then
                 local newtag = 'tag_uncommon'
-                if pseudorandom('scavenger') < G.GAME.probabilities.normal / card.ability.extra.odds_2 then newtag = 'tag_rare' end
+                if SMODS.pseudorandom_probability(card, pseudoseed('scavenger'), 1, card:gabil('odds_2')) then newtag = 'tag_rare' end
                 G.E_MANAGER:add_event(Event({
                     func = (function()
                         card:juice_up()
@@ -762,7 +762,7 @@ SMODS.Joker{ --Volcano
     end,
     calculate = function(self,card,context)
         if context.setting_blind and not context.blueprint then
-            if pseudorandom('volcano') < G.GAME.probabilities.normal / card.ability.extra.odds then
+            if SMODS.pseudorandom_probability(card, pseudoseed('volcano'), 1, card:gabil('odds')) then
                 card.ability.extra.xmult = card.ability.extra.xmult + card.ability.extra.scale
                 return {
                     extra = {focus = card, message = localize{type='variable',key='a_xmult',vars={(card.ability.extra.xmult)}}}
@@ -1253,7 +1253,7 @@ SMODS.Joker{ --Ghost Joker
     end,
     calculate = function(self,card,context)
         if context.using_consumeable and context.consumeable.ability.set == 'Spectral' then
-            if pseudorandom('ghostjoker') < G.GAME.probabilities.normal / card.ability.extra.odds then
+            if SMODS.pseudorandom_probability(card, pseudoseed('ghostjoker'), 1, card:gabil('odds')) then
                 if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                     G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                     G.E_MANAGER:add_event(Event({
@@ -1395,7 +1395,7 @@ SMODS.Joker{ --Fraudulent Joker
                 xmult = card.ability.extra.givexmult
             }
         elseif context.end_of_round and context.main_eval and not context.blueprint then
-            if pseudorandom('fraudjoker') < G.GAME.probabilities.normal / card.ability.extra.odds then
+            if SMODS.pseudorandom_probability(card, pseudoseed('fraudjoker'), 1, card:gabil('odds')) then
                 G.E_MANAGER:add_event(Event({
                     func = function()
                         play_sound('tarot1')
@@ -1520,7 +1520,7 @@ SMODS.Joker{ --Ostrakon
     end,
     calculate = function(self,card,context)
         if context.end_of_round and context.main_eval then
-            if pseudorandom('ostracon') < G.GAME.probabilities.normal / card.ability.extra.odds then
+            if SMODS.pseudorandom_probability(card, pseudoseed('ostracon'), 1, card:gabil('odds')) then
                 G.E_MANAGER:add_event(Event({
                     func = (function()
                         card:juice_up()
@@ -2727,7 +2727,7 @@ SMODS.Joker{ --Stanczyk
     end,
     calculate = function(self, card, context)
         if context.setting_blind then --when selecting blind
-            if pseudorandom('bubbleuniverse') < G.GAME.probabilities.normal / card.ability.extra.odds then --1 in 9 normally
+            if SMODS.pseudorandom_probability(card, pseudoseed('bubbleuniverse'), 1, card:gabil('odds')) then --1 in 9 normally
                 local eligibleJokers = {} --defining eligible jokers
                 for i = 1, #G.jokers.cards do
                     if G.jokers.cards[i].edition then
