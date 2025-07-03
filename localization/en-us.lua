@@ -2,13 +2,33 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-X2 Mult, Lose $1
-when triggered
+Disables Boss Blind during
+final hand of round
+Destroyed after defeating
+3 Boss Blinds
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_hourofneed = {
+                name = 'Hour of Need',
+                text = {
+                    'Disables {C:attention}Boss Blind{} during',
+                    '{C:attention}final hand{} of round',
+                    '{C:red}Destroyed{} after defeating',
+                    '{C:attention}#1#{} Boss Blinds'
+                }
+            },
+            j_osquo_ext_shaman = {
+                name = 'Shaman',
+                text = {
+                    '{C:green}#1# in #2#{} chance to',
+                    'create a {C:tarot}Tarot{} card if',
+                    'played hand is a single {C:clubs}Club{}',
+                    '{C:attention}Guaranteed{} if card is a {C:attention}Jack{}'
+                }
+            },
             j_osquo_ext_moneyshot = {
                 name = 'Moneyshot',
                 text = {

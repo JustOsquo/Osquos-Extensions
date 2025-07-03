@@ -110,6 +110,117 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Hour of Need
+    key = 'hourofneed',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_hourofneed'},
+    blueprint_compat = true,
+    eternal_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 3,
+    cost = 10,
+    config = {extra = {
+        disables = 3
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card:gabil('disables')
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.hand_drawn and G.GAME.current_round.hands_left == 1 then
+            if G.GAME.blind and ((not G.GAME.blind.disabled) and (G.GAME.blind:get_type() == 'Boss')) then 
+                card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('ph_boss_disabled')})
+                G.GAME.blind:disable()
+                if card:gabil('disables') < 2 then
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            play_sound('tarot1')
+                            card.T.r = -0.2
+                            card:juice_up(0.3, 0.4)
+                            card.states.drag.is = true
+                            card.children.center.pinch.x = true
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'after',
+                                delay = 0.3,
+                                blockable = false,
+                                func = function()
+                                    G.jokers:remove_card(card)
+                                    card:remove()
+                                    card = nil
+                                    return true;
+                                end
+                            }))
+                        return true
+                        end
+                    }))
+                end
+            end
+        elseif context.end_of_round and G.GAME.blind.boss and not context.repetition and not context.individual and not context.blueprint then
+            card.ability.extra.disables = card.ability.extra.disables - 1
+            return {
+                message = self.ability.extra.disables..'',
+                colour = G.C.FILTER
+            }
+        end
+    end
+}
+
+SMODS.Joker{ --Shaman
+    key = 'shaman',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_shaman'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 6, y = 6},
+    rarity = 1,
+    cost = 5,
+    config = {extra = {
+        odds = 5
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            (G.GAME.probabilities.normal or 1),
+            card:gabil('odds')
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.before then
+            if #context.full_hand == 1 and context.full_hand[1]:is_suit('Clubs') then
+                if context.full_hand[1]:get_id() ~= 11 then
+                    if pseudorandom('shaman') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                        if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+                            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                            G.E_MANAGER:add_event(Event({func = (function()
+                                SMODS.add_card{set = 'Tarot', key_apped = 'shaman'}
+                                G.GAME.consumeable_buffer = 0
+                                return true
+                            end)}))
+                            return {
+                                message = localize('k_plus_tarot'),
+                                colour = G.C.SECONDARY_SET.Tarot,
+                            }
+                        end
+                    end
+                else
+                    if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+                        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                        G.E_MANAGER:add_event(Event({func = (function()
+                            SMODS.add_card{set = 'Tarot', key_append = 'shaman'}
+                            G.GAME.consumeable_buffer = 0
+                            return true
+                        end)}))
+                        return {
+                            message = localize('k_plus_tarot'),
+                            colour = G.C.SECONDARY_SET.Tarot,
+                        }
+                    end
+                end
+            end
+        end
+    end
+}
+
 SMODS.Joker{ --Moneyshot
     key = 'moneyshot',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_moneyshot'},
