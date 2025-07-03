@@ -180,8 +180,7 @@ SMODS.Joker{ --Shaman
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
-            (G.GAME.probabilities.normal or 1),
-            card:gabil('odds')
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds)
         }}
     end,
     calculate = function(self,card,context)
@@ -266,9 +265,8 @@ SMODS.Joker{ --Scavenger
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
-            (G.GAME.probabilities.normal or 1),
-            card.ability.extra.odds,
-            card.ability.extra.odds_2
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds),
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds_2),
         }}
     end,
     calculate = function(self,card,context)
@@ -755,8 +753,7 @@ SMODS.Joker{ --Volcano
     loc_vars = function(self,info_queue,card)
         return { vars = {
             card.ability.extra.xmult,
-            card.ability.extra.odds,
-            (G.GAME.probabilities.normal or 1),
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds),
             card.ability.extra.scale
         }}
     end,
@@ -1247,8 +1244,7 @@ SMODS.Joker{ --Ghost Joker
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
-            (G.GAME.probabilities.normal or 1),
-            card.ability.extra.odds
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds)
         }}
     end,
     calculate = function(self,card,context)
@@ -1383,8 +1379,7 @@ SMODS.Joker{ --Fraudulent Joker
     }},
     loc_vars = function(self,info_queue,card)
         return {vars = {
-            (G.GAME.probabilities.normal or 1),
-            card.ability.extra.odds,
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds),
             card.ability.extra.givexmult,
             card.ability.extra.xmulteach
         }}
@@ -1514,9 +1509,9 @@ SMODS.Joker{ --Ostrakon
         odds = 2
     }},
     loc_vars = function(self,info_queue,card)
-        return {vars = 
-            {(G.GAME.probabilities.normal or 1), card.ability.extra.odds}
-        }
+        return {vars = {}
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds)
+        }}
     end,
     calculate = function(self,card,context)
         if context.end_of_round and context.main_eval then
@@ -2723,7 +2718,9 @@ SMODS.Joker{ --Stanczyk
     cost = 20,
     config = {extra = {odds = 9}},
     loc_vars = function(self, info_queue, card)
-        return {vars = {(G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+        return {vars = {
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds)
+        }}
     end,
     calculate = function(self, card, context)
         if context.setting_blind then --when selecting blind

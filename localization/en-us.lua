@@ -42,7 +42,7 @@ return {
                     '{C:green}#1# in #2#{} chance to create an',
                     '{C:green}Uncommon{} Tag when a joker',
                     'is {C:attention}destroyed{}',
-                    '{C:green}#1# in #3#{} chance for created',
+                    '{C:green}#3# in #4#{} chance for created',
                     'Tag to instead be a {C:red}Rare{} Tag'
                 }
             },
@@ -134,7 +134,7 @@ return {
             j_osquo_ext_volcano = {
                 name = 'Volcano',
                 text = {
-                    '{C:green}#3# in #2#{} chance to',
+                    '{C:green}#2# in #3#{} chance to',
                     'gain {X:mult,C:white}X#4#{} Mult',
                     'when selecting {C:attention}Blind{}',
                     '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}',
