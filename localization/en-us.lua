@@ -2,15 +2,22 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Disables Boss Blind during
-final hand of round
-Destroyed after defeating
-3 Boss Blinds
+Earn $[y/x] when a listed probability
+of x in y succeeds (Rounded)
+(ex: 3 in 5 -> 5/3 -> $2)
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_lottery = {
+                name = 'Lottery',
+                text = {
+                    'Earn {C:money}$[y/x]{} when a listed probability',
+                    'of {C:green}x in y{} succeeds {C:inactive}(Rounded){}',
+                    '{C:inactive}(ex: {}{C:green}3 in 5{}{C:inactive} -> {C:green}5/3{} -> {}{C:money}$2{}{C:inactive}){}'
+                }
+            },
             j_osquo_ext_hourofneed = {
                 name = 'Hour of Need',
                 text = {
@@ -134,10 +141,10 @@ return {
             j_osquo_ext_volcano = {
                 name = 'Volcano',
                 text = {
-                    '{C:green}#2# in #3#{} chance to',
+                    '{C:green}#1# in #2#{} chance to',
                     'gain {X:mult,C:white}X#4#{} Mult',
                     'when selecting {C:attention}Blind{}',
-                    '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#3#{} {C:inactive}Mult){}',
                 }
             },
             j_osquo_ext_partytiem = {

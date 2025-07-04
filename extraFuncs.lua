@@ -297,3 +297,12 @@ function Card:gabil(ask, noextra)
 	local ret = ((self.ability.extra and not noextra) and self.ability.extra[ask]) or (self.ability[ask] and noextra)
 	return ret
 end
+
+function round(val)
+	if math.floor(val) == math.ceil(val) then return val end
+	if (val - math.floor(val)) < (math.ceil(val) - val) then
+		return math.floor(val)
+	else --rounds up if tied (intended)
+		return math.ceil(val)
+	end
+end

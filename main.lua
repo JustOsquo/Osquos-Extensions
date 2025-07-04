@@ -110,6 +110,36 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Lottery
+    key = 'lottery',
+    loc_txt = {set = 'Joker', loc_txt = 'j_osquo_ext_lottery'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 3,
+    cost = 9,
+    config = {extra = {
+        dollars = 1 --not used since the description is long enough already and i didnt want to pad it out with variables
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card:gabil('dollars'),
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.osquo_ext and context.osquo_ext.probability_check then
+            if context.osquo_ext.probability_succeeds == true then
+                local payout = (context.osquo_ext.probability_denominator / context.osquo_ext.probability_numerator)
+                payout = round(payout)
+                return {
+                    dollars = payout
+                }
+            end
+        end
+    end
+}
+
 SMODS.Joker{ --Hour of Need
     key = 'hourofneed',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_hourofneed'},
@@ -264,9 +294,11 @@ SMODS.Joker{ --Scavenger
         odds_2 = 5
     }},
     loc_vars = function(self,info_queue,card)
+        local a, b = SMODS.get_probability_vars(card, 1, card:gabil('odds'))
+        local c, d = SMODS.get_probability_vars(card, 1, card:gabil('odds_2'))
         return { vars = {
-            SMODS.get_probability_vars(card, 1, card.ability.extra.odds),
-            SMODS.get_probability_vars(card, 1, card.ability.extra.odds_2),
+            a, b,
+            c, d
         }}
     end,
     calculate = function(self,card,context)
@@ -751,9 +783,10 @@ SMODS.Joker{ --Volcano
         scale = 0.75
     }},
     loc_vars = function(self,info_queue,card)
+        local a, b = SMODS.get_probability_vars(card, 1, card:gabil('odds'))
         return { vars = {
+            a, b,
             card.ability.extra.xmult,
-            SMODS.get_probability_vars(card, 1, card.ability.extra.odds),
             card.ability.extra.scale
         }}
     end,
@@ -1378,8 +1411,9 @@ SMODS.Joker{ --Fraudulent Joker
         xmulteach = 0.5
     }},
     loc_vars = function(self,info_queue,card)
+        local a, b = SMODS.get_probability_vars(card, 1, card:gabil('odds'))
         return {vars = {
-            SMODS.get_probability_vars(card, 1, card.ability.extra.odds),
+            a, b,
             card.ability.extra.givexmult,
             card.ability.extra.xmulteach
         }}
@@ -1509,7 +1543,7 @@ SMODS.Joker{ --Ostrakon
         odds = 2
     }},
     loc_vars = function(self,info_queue,card)
-        return {vars = {}
+        return {vars = {
             SMODS.get_probability_vars(card, 1, card.ability.extra.odds)
         }}
     end,

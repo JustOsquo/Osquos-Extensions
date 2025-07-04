@@ -32,6 +32,8 @@ end
 local _card_remove = Card.remove
 function Card.remove(self)
     --Context for destroying jokers
+    --destroy_joker: this context
+    --destroyed_joker: joker being destroyed
     if self.added_to_deck and self.ability.set == 'Joker' and not G.CONTROLLER.locks.selling_card then
         SMODS.calculate_context({
             osquo_ext = {
@@ -58,4 +60,28 @@ function Card.highlight(self, is_highlighted)
         end
     end
     return _card_highlight(self, is_highlighted)
+end
+
+--[[
+Hook SMODS.pseudorandom_probability() to run a context calculation when a probability is run
+probability_check: This context
+probability_succeeds: Whether this probability succeeded. True if it did, false otherwise.
+probability_source: The source object of the triggered probability check.
+probability_numerator / denominator: Self-explanatory.
+
+Thanks N' for helping me understand this about hooks
+]]
+local _SMODS_pseudorandom_probability = SMODS.pseudorandom_probability
+function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator)
+    local ret = _SMODS_pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator)
+    SMODS.calculate_context({
+        osquo_ext = {
+            probability_check = true,
+            probability_succeeds = ret,
+            probability_source = trigger_obj,
+            probability_numerator = base_numerator,
+            probability_denominator = base_denominator
+        }
+    })
+    return ret
 end
