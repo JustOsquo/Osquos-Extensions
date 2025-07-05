@@ -10,6 +10,9 @@ end
 --Loading Hooks
 SMODS.load_file('hookers.lua')()
 
+--Loading UI functions
+SMODS.load_file('ui_test.lua')()
+
 --Loading JokerDisplay Compatability (if it's detected)
 if JokerDisplay then
     SMODS.load_file('JokerDisplayComp.lua')()
@@ -109,6 +112,11 @@ SMODS.Atlas{ --Eh? There's 30 G inside this... what is this?
 }
 
 --[[ ORDINARY JOKERS ]]--
+
+--SMODS.Joker{ --
+--Gains +25 Chips when a Face card is discarded
+--Resets when defeating Boss Blind
+--}
 
 SMODS.Joker{ --Lottery
     key = 'lottery',
