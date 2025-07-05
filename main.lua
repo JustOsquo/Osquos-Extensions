@@ -3237,8 +3237,8 @@ SMODS.Seal{ --Cosmic Seal
     calculate = function(self,card,context)
         if context.before and context.cardarea == G.play then
             local oldhand,oldlevel = context.scoring_name, getHandLevel(context.scoring_name)
-            SMODS.smart_level_up_hand(card,chooserandomhand({}, cosmicseal, false),false,1)
-            update_hand_text({sound = 'button', volume = 0.0, pitch = 1.1, delay = 0}, {mult = mult, chips = chips, handname = oldhand, level = oldlevel})
+            SMODS.smart_level_up_hand(card,chooserandomhand({}, 'cosmicseal', false),false,1)
+            --update_hand_text({sound = 'button', volume = 0.0, pitch = 1.1, delay = 0}, {mult = mult, chips = chips, handname = oldhand, level = oldlevel})
         end
     end
 }
