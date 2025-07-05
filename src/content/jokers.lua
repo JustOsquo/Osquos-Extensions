@@ -1,9 +1,44 @@
 --[[ ORDINARY JOKERS ]]--
 
---SMODS.Joker{ --
---Gains +25 Chips when a Face card is discarded
---Resets when defeating Boss Blind
---}
+SMODS.Joker{ --General
+    key = 'general',
+    loc_txt = {set = 'Joker', loc_txt = 'j_osquo_ext_general'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 3,
+    cost = 8,
+    config = {extra = {
+        chips = 0,
+        chipsgain = 25
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card:gabil('chips'),
+            card:gabil('chipsgain')
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.discard and not context.blueprint then
+            if context.other_card:is_face() then
+                card.ability.extra.chips = card:gabil('chips') + card:gabil('chipsgain')
+                return {
+                    message = localize('k_upgrade_ex')
+                }
+            end
+        elseif context.joker_main then
+            return {
+                chips = card:gabil('chips')
+            }
+        elseif context.end_of_round and G.GAME.blind.boss and not context.repetition and not context.individual and not context.blueprint then
+            card.ability.extra.chips = 0
+            return {
+                message = localize('osquo_ext_scalereset')
+            }
+        end
+    end
+}
 
 SMODS.Joker{ --Lottery
     key = 'lottery',

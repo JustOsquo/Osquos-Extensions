@@ -1,12 +1,5 @@
 --[[ ATLASES ]]--
 
-SMODS.Atlas { --Mod Icon (Very Cool)
-    key = 'modicon',
-    path = 'icon.png',
-    px = 32,
-    py = 32
-}
-
 SMODS.Atlas{ --defining the joker atlas
     key = 'Jokers',
     path = 'Jokers.png',

@@ -2,14 +2,26 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Earn $[y/x] when a listed probability
-of x in y succeeds (Rounded)
-(ex: 3 in 5 -> 5/3 -> $2)
+Gains +25 Chips when
+discarding a Face card
+Resets when defeating
+Boss Blind
+(Currently +250 Chips)
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_general = {
+                name = 'General',
+                text = {
+                    'Gains {C:chips}+#2#{} Chips when',
+                    'discarding a {C:attention}Face{} card',
+                    '{C:attention}Resets{} when defeating',
+                    '{C:attention}Boss Blind{}',
+                    '{C:inactive}(Currently {C:chips}+#1#{} {C:inactive}Chips){}'
+                }
+            },
             j_osquo_ext_lottery = {
                 name = 'Lottery',
                 text = {
