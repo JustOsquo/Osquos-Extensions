@@ -1,19 +1,5 @@
 --[[ ORDINARY JOKERS ]]--
 
-SMODS.Joker{ --Test
-    key = 'test',
-    loc_txt = {
-        name = 'Test',
-        text = {
-            'clicky button'
-        }
-    },
-    atlas = 'Jokers',
-    pos = {x = 0, y = 0},
-    rarity = 1,
-    cost = 1,
-}
-
 SMODS.Joker{ --General
     key = 'general',
     loc_txt = {set = 'Joker', loc_txt = 'j_osquo_ext_general'},
@@ -2764,5 +2750,53 @@ SMODS.Joker{ --Nichola
     end,
     remove_from_deck = function(self,card,from_debuff) --When destroyed
         G.hand:change_size(-card.ability.extra.current)
+    end
+}
+
+SMODS.Joker{ --Osquo
+    key = 'osquo',
+    loc_txt = {set = 'Joker', key = 'j_osquo_ext_osquo'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    perishable_compat = false,
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 4,
+    cost = 20,
+    config = {extra = {
+        again = 1,
+        scaler = 1,
+        spentrq = 100,
+        tracked = 0
+    }},
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card.ability.extra.again,
+            card.ability.extra.scaler,
+            card.ability.extra.spentrq,
+            card.ability.extra.tracked
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.repetition and context.cardarea == G.play then
+            if context.other_card:is_suit('Hearts') then
+                return {
+                    repetitions = card.ability.extra.again,
+                    message = localize('k_again_ex'),
+                    card = card
+                }
+            end
+        elseif context.osquo_ext and context.osquo_ext.money_altered and context.osquo_ext.alter < 0 and (not G.GAME.osquo_ext_using_consumeable)
+        and (G.STATE == G.STATES.SHOP or G.STATE == G.STATES.SMODS_BOOSTER_OPENED or G.STATE == G.STATES.PLAY_TAROT) then
+                local spent = context.osquo_ext.alter * -1
+                card.ability.extra.tracked = card.ability.extra.tracked + spent
+                if card.ability.extra.tracked >= card.ability.extra.spentrq then
+                    card.ability.extra.tracked = card.ability.extra.tracked - card.ability.extra.spentrq
+                    card.ability.extra.again = card.ability.extra.again + card.ability.extra.scaler
+                    return {
+                        message = localize('k_upgrade_ex')
+                    }
+                end
+        end
     end
 }

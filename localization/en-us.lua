@@ -617,7 +617,16 @@ return {
                     'added to your deck',
                     '{C:inactive}(Currently {}{C:attention}+#3#{}{C:inactive} Hand size){}'
                 }
-            }
+            },
+            j_osquo_ext_osquo = {
+                name = 'Osquo',
+                text = {
+                    'Retrigger each played {C:hearts}Hearts{} card',
+                    '{C:attention}#1#{} additional time(s)',
+                    '{C:attention}Upgrades{} by {C:attention}#2#{} for every',
+                    '{C:money}$#3#{}{C:inactive}[$#4#]{} spent in the {C:attention}shop{}'
+                }
+            },
         },
         Back = {
         },

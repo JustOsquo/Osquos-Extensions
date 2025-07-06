@@ -85,3 +85,19 @@ function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_
     })
     return ret
 end
+
+--Context for spending money
+local _ease_dollars = ease_dollars
+function ease_dollars(mod, instant)
+    local ret = _ease_dollars(mod, instant)
+    G.E_MANAGER:add_event(Event({trigger='immediate',func=function()
+        SMODS.calculate_context({
+            osquo_ext = {
+                money_altered = true,
+                alter = mod
+            }
+        })
+        return true
+    end}))
+    return ret
+end

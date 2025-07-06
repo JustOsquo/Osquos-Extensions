@@ -58,13 +58,15 @@ end
 
 local _G_FUNCS_use_card = G.FUNCS.use_card
 function G.FUNCS.use_card(e, mute, nosave)
-    local ret = _G_FUNCS_use_card(e, mute, nosave)
     local hcard = e.config.ref_table
     local harea = hcard.area
+    if hcard.ability.consumeable then G.GAME.osquo_ext_using_consumeable = true end
+    local ret = _G_FUNCS_use_card(e, mute, nosave)
     if e.config.ref_table.config.center.key == 'j_osquo_ext_test' then
         delay(0.2)
         e.config.ref_table:use_joker(harea)
     end
+    G.GAME.osquo_ext_using_consumeable = nil
     return ret
 end
 
