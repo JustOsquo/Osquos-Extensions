@@ -1,5 +1,19 @@
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Test
+    key = 'test',
+    loc_txt = {
+        name = 'Test',
+        text = {
+            'clicky button'
+        }
+    },
+    atlas = 'Jokers',
+    pos = {x = 0, y = 0},
+    rarity = 1,
+    cost = 1,
+}
+
 SMODS.Joker{ --General
     key = 'general',
     loc_txt = {set = 'Joker', loc_txt = 'j_osquo_ext_general'},
@@ -40,7 +54,7 @@ SMODS.Joker{ --General
     end
 }
 
-SMODS.Joker{ --Lottery
+SMODS.Joker{ --Lottery Ticket
     key = 'lottery',
     loc_txt = {set = 'Joker', loc_txt = 'j_osquo_ext_lottery'},
     blueprint_compat = true,

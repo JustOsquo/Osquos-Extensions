@@ -23,7 +23,7 @@ return {
                 }
             },
             j_osquo_ext_lottery = {
-                name = 'Lottery',
+                name = 'Lottery Ticket',
                 text = {
                     'Earn {C:money}$[y/x]{} when a listed probability',
                     'of {C:green}x in y{} succeeds {C:inactive}(Rounded){}',
