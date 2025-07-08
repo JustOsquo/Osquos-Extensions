@@ -853,7 +853,7 @@ SMODS.Joker{ --Hypernova
     calculate = function(self,card,context)
         if context.prescoring then
             local levels = getHandLevel(context.scoring_name)
-            if to_number(levels) > 0 then --Like stellar nova but xmult
+            if levels > to_big(0) then --Like stellar nova but xmult
                 mult = mod_mult(mult * (levels * card.ability.extra.givexmulteach + 1))
                 update_hand_text({delay = 0}, {mult = mult})
                 card_eval_status_text(context.blueprint_card or card, 'jokers', nil, percent, nil, {message = localize{type='variable',key='a_xmult',vars={(levels * card.ability.extra.givexmulteach + 1)}}, Xmult_mod = (levels * card.ability.extra.givexmulteach + 1)})
@@ -1927,8 +1927,8 @@ SMODS.Joker{ --Cabinet Joker
                 if not silent then play_sound('chips2') end
             return true end}))
         elseif context.after then
-            local checkscore = to_number((to_number(G.GAME.chips)) + (to_number(hand_chips)*(to_number(mult)))) --i love/hate talisman
-            if to_number(checkscore) < to_number(G.GAME.blind.chips) then --idk if half this to_number() bullshit is even necessary
+            local checkscore = ((G.GAME.chips) + (hand_chips*mult)) --check talisman compat
+            if checkscore < G.GAME.blind.chips then
                 return {
                     dollars = card.ability.extra.givedollar*(G.GAME.current_round.hands_played+1),
                     card = card
@@ -2018,7 +2018,7 @@ SMODS.Joker{ --Transmutation
     end,
     calculate = function(self,card,context)
         if context.joker_main then
-            local shift = (to_number(hand_chips)) or math.sqrt(hand_chips) / card.ability.extra.convperc
+            local shift = to_big(math.sqrt(hand_chips)) / to_big(card.ability.extra.convperc)
             return {
                 chips = -shift,
                 mult = shift
@@ -2144,7 +2144,7 @@ SMODS.Joker{ --Stellar Nursery
         if context.prescoring then --Context added in lovely patch
             local thishand = context.scoring_name --This poker hand
             local levels = getHandLevel(thishand, true, true) * card.ability.extra.multeach --See extraFuncs.lua
-            if to_number(levels) > 0 then
+            if levels > to_big(0) then
                 mult = mod_mult(mult + levels) --Very archaic mult-adding since the normal return{mult} doesnt work here
                 update_hand_text({delay = 0}, {mult = mult})
                 card_eval_status_text(context.blueprint_card or card, 'jokers', nil, percent, nil, {message = localize{type='variable',key='a_mult',vars={levels}}, mult_mod = levels})
@@ -2163,7 +2163,7 @@ SMODS.Joker{ --Background Check
     rarity = 2,
     cost = 5,
     config = {extra = {
-        xmulteach = 0.05,
+        xmulteach = 0.04,
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -2760,13 +2760,14 @@ SMODS.Joker{ --Osquo
     eternal_compat = true,
     perishable_compat = false,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 8, y = 6},
+    soul_pos = {x = 9, y = 6},
     rarity = 4,
     cost = 20,
     config = {extra = {
         again = 1,
         scaler = 1,
-        spentrq = 100,
+        spentrq = 200,
         tracked = 0
     }},
     loc_vars = function(self,info_queue,card)
@@ -2786,8 +2787,10 @@ SMODS.Joker{ --Osquo
                     card = card
                 }
             end
+        --[[
         elseif context.osquo_ext and context.osquo_ext.money_altered and context.osquo_ext.alter < 0 and (not G.GAME.osquo_ext_using_consumeable)
-        and (G.STATE == G.STATES.SHOP or G.STATE == G.STATES.SMODS_BOOSTER_OPENED or G.STATE == G.STATES.PLAY_TAROT) then
+        and (G.STATE == G.STATES.SHOP or G.STATE == G.STATES.SMODS_BOOSTER_OPENED or G.STATE == G.STATES.PLAY_TAROT)
+        and not context.blueprint then
                 local spent = context.osquo_ext.alter * -1
                 card.ability.extra.tracked = card.ability.extra.tracked + spent
                 if card.ability.extra.tracked >= card.ability.extra.spentrq then
@@ -2797,6 +2800,18 @@ SMODS.Joker{ --Osquo
                         message = localize('k_upgrade_ex')
                     }
                 end
+        end
+        ]]
+        elseif context.money_altered and context.amount < 0 and context.from_shop and not context.blueprint then
+            local spent = context.amount * -1
+            card.ability.extra.tracked = card.ability.extra.tracked + spent
+            if card.ability.extra.tracked >= card.ability.extra.spentrq then
+                card.ability.extra.tracked = card.ability.extra.tracked - card.ability.extra.spentrq
+                card.ability.extra.again = card.ability.extra.again + card.ability.extra.scaler
+                return {
+                    message = localize('k_upgrade_ex')
+                }
+            end
         end
     end
 }
