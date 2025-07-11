@@ -13,7 +13,7 @@ return {
     descriptions = {
         Joker = {
             j_osquo_ext_general = {
-                name = 'General',
+                name = 'Abandoned Joker',
                 text = {
                     'Gains {C:chips}+#2#{} Chips when',
                     'discarding a {C:attention}Face{} card',

@@ -1,17 +1,17 @@
 --[[ ORDINARY JOKERS ]]--
 
-SMODS.Joker{ --General
+SMODS.Joker{ --Abandoned Joker
     key = 'general',
     loc_txt = {set = 'Joker', loc_txt = 'j_osquo_ext_general'},
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 7, y = 6},
     rarity = 3,
     cost = 8,
     config = {extra = {
         chips = 0,
-        chipsgain = 25
+        chipsgain = 20
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
