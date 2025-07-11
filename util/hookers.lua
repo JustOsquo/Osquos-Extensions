@@ -34,6 +34,8 @@ function Card.remove(self)
     --Context for destroying jokers
     --destroy_joker: this context
     --destroyed_joker: joker being destroyed
+    --[[
+    --No longer necessary with context.joker_type_destroyed
     if self.added_to_deck and self.ability.set == 'Joker' and not G.CONTROLLER.locks.selling_card then
         SMODS.calculate_context({
             osquo_ext = {
@@ -41,8 +43,10 @@ function Card.remove(self)
                 destroyed_joker = self
             }
         })
+    end
+    ]]
     --Make sure overselectable cards remove their highlighted_limit increase when they are sold (or otherwise removed while highlighted, except using)
-    elseif self.ability.extra and type(self.ability.extra) == 'table' and self.ability.extra.overselect == true and self.area and table_contains(self.area.highlighted, self) then
+    if self.ability.extra and type(self.ability.extra) == 'table' and self.ability.extra.overselect == true and self.area and table_contains(self.area.highlighted, self) then
         self.area.config.highlighted_limit = self.area.config.highlighted_limit - self.ability.extra.limit
     end
     return _card_remove(self)
@@ -70,7 +74,9 @@ probability_source: The source object of the triggered probability check.
 probability_numerator / denominator: Self-explanatory.
 
 Thanks N' for helping me understand this about hooks
-]]
+
+--Not necessary anymore with context.pseudorandom_result
+
 local _SMODS_pseudorandom_probability = SMODS.pseudorandom_probability
 function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator)
     local ret = _SMODS_pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator)
@@ -85,6 +91,7 @@ function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_
     })
     return ret
 end
+]]
 
 --Context for spending money
 local _ease_dollars = ease_dollars

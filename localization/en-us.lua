@@ -624,7 +624,8 @@ return {
                     'Retrigger each played {C:hearts}Hearts{} card',
                     '{C:attention}#1#{} additional time(s)',
                     '{C:attention}Upgrades{} by {C:attention}#2#{} for every',
-                    '{C:money}$#3#{}{C:inactive}[$#4#]{} spent in the {C:attention}shop{}'
+                    '{C:money}$#3#{}{C:inactive}[$#4#]{} spent in the {C:attention}shop{}',
+                    '{s:0.8}Requirement increases each upgrade{}'
                 }
             },
         },

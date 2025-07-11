@@ -58,9 +58,9 @@ SMODS.Joker{ --Lottery Ticket
         }}
     end,
     calculate = function(self,card,context)
-        if context.osquo_ext and context.osquo_ext.probability_check then
-            if context.osquo_ext.probability_succeeds == true then
-                local payout = (context.osquo_ext.probability_denominator / context.osquo_ext.probability_numerator)
+        if context.pseudorandom_result then
+            if context.result then
+                local payout = context.denominator / context.numerator
                 payout = round(payout)
                 return {
                     dollars = payout
@@ -140,14 +140,14 @@ SMODS.Joker{ --Shaman
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
-            SMODS.get_probability_vars(card, 1, card.ability.extra.odds)
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_shaman')
         }}
     end,
     calculate = function(self,card,context)
         if context.before then
             if #context.full_hand == 1 and context.full_hand[1]:is_suit('Clubs') then
                 if context.full_hand[1]:get_id() ~= 11 then
-                    if SMODS.pseudorandom_probability(card, pseudoseed('shaman'), 1, card:gabil('odds')) then
+                    if SMODS.pseudorandom_probability(card, 'osquo_ext_shaman', 1, card:gabil('odds')) then
                         if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                             G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                             G.E_MANAGER:add_event(Event({func = (function()
@@ -224,18 +224,18 @@ SMODS.Joker{ --Scavenger
         odds_2 = 5
     }},
     loc_vars = function(self,info_queue,card)
-        local a, b = SMODS.get_probability_vars(card, 1, card:gabil('odds'))
-        local c, d = SMODS.get_probability_vars(card, 1, card:gabil('odds_2'))
+        local a, b = SMODS.get_probability_vars(card, 1, card:gabil('odds'), 'osquo_ext_scavenger_tag')
+        local c, d = SMODS.get_probability_vars(card, 1, card:gabil('odds_2'), 'osquo_ext_scavenger_rare')
         return { vars = {
             a, b,
             c, d
         }}
     end,
     calculate = function(self,card,context)
-        if context.osquo_ext and context.osquo_ext.destroy_joker then
-            if SMODS.pseudorandom_probability(card, pseudoseed('scavenger'), 1, card:gabil('odds')) then
+        if context.joker_type_destroyed then
+            if SMODS.pseudorandom_probability(card, 'osquo_ext_scavenger_tag', 1, card:gabil('odds')) then
                 local newtag = 'tag_uncommon'
-                if SMODS.pseudorandom_probability(card, pseudoseed('scavenger'), 1, card:gabil('odds_2')) then newtag = 'tag_rare' end
+                if SMODS.pseudorandom_probability(card, 'osquo_ext_scavenger_rare', 1, card:gabil('odds_2')) then newtag = 'tag_rare' end
                 G.E_MANAGER:add_event(Event({
                     func = (function()
                         card:juice_up()
@@ -423,7 +423,7 @@ SMODS.Joker{ --Bargaining Joker
         }
     end,
     calculate = function(self,card,context)
-        if context.osquo_ext and context.osquo_ext.destroy_joker and context.osquo_ext.destroyed_joker == card and not context.blueprint then
+        if context.joker_type_destroyed and context.card == card and not context.blueprint then
             if G.STAGE == G.STAGES.RUN and not G.screenwipe then --Otherwise you cant go to main menu lol
                 local _card = copy_card(card, nil, nil, nil, false)
                 _card:add_to_deck()
@@ -713,7 +713,7 @@ SMODS.Joker{ --Volcano
         scale = 0.75
     }},
     loc_vars = function(self,info_queue,card)
-        local a, b = SMODS.get_probability_vars(card, 1, card:gabil('odds'))
+        local a, b = SMODS.get_probability_vars(card, 1, card:gabil('odds'), 'osquo_ext_volcano')
         return { vars = {
             a, b,
             card.ability.extra.xmult,
@@ -722,7 +722,7 @@ SMODS.Joker{ --Volcano
     end,
     calculate = function(self,card,context)
         if context.setting_blind and not context.blueprint then
-            if SMODS.pseudorandom_probability(card, pseudoseed('volcano'), 1, card:gabil('odds')) then
+            if SMODS.pseudorandom_probability(card, 'osquo_ext_volcano', 1, card:gabil('odds')) then
                 card.ability.extra.xmult = card.ability.extra.xmult + card.ability.extra.scale
                 return {
                     extra = {focus = card, message = localize{type='variable',key='a_xmult',vars={(card.ability.extra.xmult)}}}
@@ -1207,12 +1207,12 @@ SMODS.Joker{ --Ghost Joker
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
-            SMODS.get_probability_vars(card, 1, card.ability.extra.odds)
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_ghostjoker')
         }}
     end,
     calculate = function(self,card,context)
         if context.using_consumeable and context.consumeable.ability.set == 'Spectral' then
-            if SMODS.pseudorandom_probability(card, pseudoseed('ghostjoker'), 1, card:gabil('odds')) then
+            if SMODS.pseudorandom_probability(card, 'osquo_ext_ghostjoker', 1, card:gabil('odds')) then
                 if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                     G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                     G.E_MANAGER:add_event(Event({
@@ -1341,7 +1341,7 @@ SMODS.Joker{ --Fraudulent Joker
         xmulteach = 0.5
     }},
     loc_vars = function(self,info_queue,card)
-        local a, b = SMODS.get_probability_vars(card, 1, card:gabil('odds'))
+        local a, b = SMODS.get_probability_vars(card, 1, card:gabil('odds'), 'osquo_ext_fraudjoker')
         return {vars = {
             a, b,
             card.ability.extra.givexmult,
@@ -1354,7 +1354,7 @@ SMODS.Joker{ --Fraudulent Joker
                 xmult = card.ability.extra.givexmult
             }
         elseif context.end_of_round and context.main_eval and not context.blueprint then
-            if SMODS.pseudorandom_probability(card, pseudoseed('fraudjoker'), 1, card:gabil('odds')) then
+            if SMODS.pseudorandom_probability(card, 'osquo_ext_fraudjoker', 1, card:gabil('odds')) then
                 G.E_MANAGER:add_event(Event({
                     func = function()
                         play_sound('tarot1')
@@ -1474,12 +1474,12 @@ SMODS.Joker{ --Ostrakon
     }},
     loc_vars = function(self,info_queue,card)
         return {vars = {
-            SMODS.get_probability_vars(card, 1, card.ability.extra.odds)
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_ostracon')
         }}
     end,
     calculate = function(self,card,context)
         if context.end_of_round and context.main_eval then
-            if SMODS.pseudorandom_probability(card, pseudoseed('ostracon'), 1, card:gabil('odds')) then
+            if SMODS.pseudorandom_probability(card, 'osquo_ext_ostracon', 1, card:gabil('odds')) then
                 G.E_MANAGER:add_event(Event({
                     func = (function()
                         card:juice_up()
@@ -2683,12 +2683,12 @@ SMODS.Joker{ --Stanczyk
     config = {extra = {odds = 9}},
     loc_vars = function(self, info_queue, card)
         return {vars = {
-            SMODS.get_probability_vars(card, 1, card.ability.extra.odds)
+            SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_bubbleuniverse')
         }}
     end,
     calculate = function(self, card, context)
         if context.setting_blind then --when selecting blind
-            if SMODS.pseudorandom_probability(card, pseudoseed('bubbleuniverse'), 1, card:gabil('odds')) then --1 in 9 normally
+            if SMODS.pseudorandom_probability(card, 'osquo_ext_bubbleuniverse', 1, card:gabil('odds')) then --1 in 9 normally
                 local eligibleJokers = {} --defining eligible jokers
                 for i = 1, #G.jokers.cards do
                     if G.jokers.cards[i].edition then
@@ -2767,8 +2767,9 @@ SMODS.Joker{ --Osquo
     config = {extra = {
         again = 1,
         scaler = 1,
-        spentrq = 200,
-        tracked = 0
+        spentrq = 100,
+        tracked = 0,
+        reqscale = 100
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
@@ -2787,7 +2788,6 @@ SMODS.Joker{ --Osquo
                     card = card
                 }
             end
-        --[[
         elseif context.osquo_ext and context.osquo_ext.money_altered and context.osquo_ext.alter < 0 and (not G.GAME.osquo_ext_using_consumeable)
         and (G.STATE == G.STATES.SHOP or G.STATE == G.STATES.SMODS_BOOSTER_OPENED or G.STATE == G.STATES.PLAY_TAROT)
         and not context.blueprint then
@@ -2796,22 +2796,11 @@ SMODS.Joker{ --Osquo
                 if card.ability.extra.tracked >= card.ability.extra.spentrq then
                     card.ability.extra.tracked = card.ability.extra.tracked - card.ability.extra.spentrq
                     card.ability.extra.again = card.ability.extra.again + card.ability.extra.scaler
+                    card.ability.extra.spentrq = card.ability.extra.spentrq + card.ability.extra.reqscale
                     return {
                         message = localize('k_upgrade_ex')
                     }
                 end
-        end
-        ]]
-        elseif context.money_altered and context.amount < 0 and context.from_shop and not context.blueprint then
-            local spent = context.amount * -1
-            card.ability.extra.tracked = card.ability.extra.tracked + spent
-            if card.ability.extra.tracked >= card.ability.extra.spentrq then
-                card.ability.extra.tracked = card.ability.extra.tracked - card.ability.extra.spentrq
-                card.ability.extra.again = card.ability.extra.again + card.ability.extra.scaler
-                return {
-                    message = localize('k_upgrade_ex')
-                }
-            end
         end
     end
 }
