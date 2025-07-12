@@ -46,7 +46,7 @@ SMODS.Joker{ --Lottery Ticket
     blueprint_compat = true,
     eternal_compat = true,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 0, y = 7},
     rarity = 3,
     cost = 9,
     config = {extra = {
@@ -70,13 +70,13 @@ SMODS.Joker{ --Lottery Ticket
     end
 }
 
-SMODS.Joker{ --Hour of Need
+SMODS.Joker{ --Bergentrückung
     key = 'hourofneed',
     loc_txt = {set = 'Joker', key = 'j_osquo_ext_hourofneed'},
     blueprint_compat = true,
     eternal_compat = false,
     atlas = 'Jokers',
-    pos = {x = 0, y = 0},
+    pos = {x = 1, y = 7},
     rarity = 3,
     cost = 10,
     config = {extra = {

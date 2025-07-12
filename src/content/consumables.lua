@@ -205,7 +205,7 @@ SMODS.Consumable{ --The Croesus
     key = 'croesus',
     config = {extra = {
         limit = 1,
-        sellvalue = 5,
+        sellvalue = 3,
         overselect = true
     }},
     loc_vars = function(self,info_queue,card)

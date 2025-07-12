@@ -4,7 +4,7 @@ A fun-focused and (hopefully) balanced extension to the vanilla game, aiming to 
 This is my first mod (and first real project like this), so I hope you're able to enjoy playing it as much as I did making it.
 
 # Content
-- 63 New Jokers
+- 68 New Jokers
 - 3 New Spectral Cards
 - 4 New Tarot Cards
 - 3 New Enhancements

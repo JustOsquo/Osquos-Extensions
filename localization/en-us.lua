@@ -31,7 +31,7 @@ return {
                 }
             },
             j_osquo_ext_hourofneed = {
-                name = 'Hour of Need',
+                name = 'Bergentrückung',
                 text = {
                     'Disables {C:attention}Boss Blind{} during',
                     '{C:attention}final hand{} of round',

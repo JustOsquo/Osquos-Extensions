@@ -211,9 +211,9 @@ jd_def['j_osquo_ext_uniformjoker'] = {
     },
     calc_function = function(card)
         local cards = {}
-        for i = 1, #G.play.cards do
-            local rank = G.play.cards[i].base.id
-            local suit = G.play.cards[i].base.suit
+        for i = 1, #G.hand.highlighted do
+            local rank = G.hand.highlighted[i].base.id or 'NA'
+            local suit = G.hand.highlighted[i].base.suit or 'NA'
             if not table_contains(cards, rank..suit) then
                 cards[#cards+1] = rank..suit
             end
