@@ -2,13 +2,58 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-X2 Mult, Lose $1
-when triggered
+X0.75 Mult for each
+Joker card over 5
+(Currently X1.75 Mult)
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_walledcity = {
+                name = 'Walled City',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult for each',
+                    '{C:attention}Joker{} card over {C:attention}#3#{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#2#{} {C:inactive}Mult){}'
+                }
+            },
+            j_osquo_ext_general = {
+                name = 'Abandoned Joker',
+                text = {
+                    'Gains {C:chips}+#2#{} Chips when',
+                    'discarding a {C:attention}Face{} card',
+                    '{C:attention}Resets{} when defeating',
+                    '{C:attention}Boss Blind{}',
+                    '{C:inactive}(Currently {C:chips}+#1#{} {C:inactive}Chips){}'
+                }
+            },
+            j_osquo_ext_lottery = {
+                name = 'Lottery Ticket',
+                text = {
+                    'Earn {C:money}$[y/x]{} when a listed probability',
+                    'of {C:green}x in y{} succeeds {C:inactive}(Rounded){}',
+                    '{C:inactive}(ex: {}{C:green}3 in 5{}{C:inactive} -> {C:green}5/3{} -> {}{C:money}$2{}{C:inactive}){}'
+                }
+            },
+            j_osquo_ext_hourofneed = {
+                name = 'Bergentrückung',
+                text = {
+                    'Disables {C:attention}Boss Blind{} during',
+                    '{C:attention}final hand{} of round',
+                    '{C:red}Destroyed{} after defeating',
+                    '{C:attention}#1#{} Boss Blinds'
+                }
+            },
+            j_osquo_ext_shaman = {
+                name = 'Shaman',
+                text = {
+                    '{C:green}#1# in #2#{} chance to',
+                    'create a {C:tarot}Tarot{} card if',
+                    'played hand is a single {C:clubs}Club{}',
+                    '{C:attention}Guaranteed{} if card is a {C:attention}Jack{}'
+                }
+            },
             j_osquo_ext_moneyshot = {
                 name = 'Moneyshot',
                 text = {
@@ -22,7 +67,7 @@ return {
                     '{C:green}#1# in #2#{} chance to create an',
                     '{C:green}Uncommon{} Tag when a joker',
                     'is {C:attention}destroyed{}',
-                    '{C:green}#1# in #3#{} chance for created',
+                    '{C:green}#3# in #4#{} chance for created',
                     'Tag to instead be a {C:red}Rare{} Tag'
                 }
             },
@@ -114,10 +159,10 @@ return {
             j_osquo_ext_volcano = {
                 name = 'Volcano',
                 text = {
-                    '{C:green}#3# in #2#{} chance to',
+                    '{C:green}#1# in #2#{} chance to',
                     'gain {X:mult,C:white}X#4#{} Mult',
                     'when selecting {C:attention}Blind{}',
-                    '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult){}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#3#{} {C:inactive}Mult){}',
                 }
             },
             j_osquo_ext_partytiem = {
@@ -578,7 +623,17 @@ return {
                     'added to your deck',
                     '{C:inactive}(Currently {}{C:attention}+#3#{}{C:inactive} Hand size){}'
                 }
-            }
+            },
+            j_osquo_ext_osquo = {
+                name = 'Osquo',
+                text = {
+                    'Retrigger each played {C:hearts}Hearts{} card',
+                    '{C:attention}#1#{} additional time(s)',
+                    '{C:attention}Upgrades{} by {C:attention}#2#{} for every',
+                    '{C:money}$#3#{}{C:inactive}[$#4#]{} spent in the {C:attention}shop{}',
+                    '{s:0.8}Requirement increases each upgrade{}'
+                }
+            },
         },
         Back = {
         },

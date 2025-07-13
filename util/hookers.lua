@@ -32,6 +32,10 @@ end
 local _card_remove = Card.remove
 function Card.remove(self)
     --Context for destroying jokers
+    --destroy_joker: this context
+    --destroyed_joker: joker being destroyed
+    --[[
+    --No longer necessary with context.joker_type_destroyed
     if self.added_to_deck and self.ability.set == 'Joker' and not G.CONTROLLER.locks.selling_card then
         SMODS.calculate_context({
             osquo_ext = {
@@ -39,8 +43,10 @@ function Card.remove(self)
                 destroyed_joker = self
             }
         })
+    end
+    ]]
     --Make sure overselectable cards remove their highlighted_limit increase when they are sold (or otherwise removed while highlighted, except using)
-    elseif self.ability.extra and type(self.ability.extra) == 'table' and self.ability.extra.overselect == true and self.area and table_contains(self.area.highlighted, self) then
+    if self.ability.extra and type(self.ability.extra) == 'table' and self.ability.extra.overselect == true and self.area and table_contains(self.area.highlighted, self) then
         self.area.config.highlighted_limit = self.area.config.highlighted_limit - self.ability.extra.limit
     end
     return _card_remove(self)
@@ -58,4 +64,47 @@ function Card.highlight(self, is_highlighted)
         end
     end
     return _card_highlight(self, is_highlighted)
+end
+
+--[[
+Hook SMODS.pseudorandom_probability() to run a context calculation when a probability is run
+probability_check: This context
+probability_succeeds: Whether this probability succeeded. True if it did, false otherwise.
+probability_source: The source object of the triggered probability check.
+probability_numerator / denominator: Self-explanatory.
+
+Thanks N' for helping me understand this about hooks
+
+--Not necessary anymore with context.pseudorandom_result
+
+local _SMODS_pseudorandom_probability = SMODS.pseudorandom_probability
+function SMODS.pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator)
+    local ret = _SMODS_pseudorandom_probability(trigger_obj, seed, base_numerator, base_denominator)
+    SMODS.calculate_context({
+        osquo_ext = {
+            probability_check = true,
+            probability_succeeds = ret,
+            probability_source = trigger_obj,
+            probability_numerator = base_numerator,
+            probability_denominator = base_denominator
+        }
+    })
+    return ret
+end
+]]
+
+--Context for spending money
+local _ease_dollars = ease_dollars
+function ease_dollars(mod, instant)
+    local ret = _ease_dollars(mod, instant)
+    G.E_MANAGER:add_event(Event({trigger='immediate',func=function()
+        SMODS.calculate_context({
+            osquo_ext = {
+                money_altered = true,
+                alter = mod
+            }
+        })
+        return true
+    end}))
+    return ret
 end

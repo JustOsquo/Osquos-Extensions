@@ -1,5 +1,52 @@
 local jd_def = JokerDisplay.Definitions
 
+jd_def['j_osquo_ext_walledcity'] = {
+    text = {
+        {border_nodes = {
+            {text = 'X'},
+            {ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger_type = 'exp'}
+        }}
+    }
+}
+jd_def['j_osquo_ext_general'] = {
+    text = {
+        {text = '+'},
+        {ref_table = 'card.ability.extra', ref_value = 'chips', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.CHIPS}
+}
+jd_def['j_osquo_ext_shaman'] = {
+    text = {
+        {text = '+'},
+        {ref_table = 'card.joker_display_values', ref_value = 'count', retrigger_type = 'mult'}
+    },
+    text_config = {colour = G.C.SECONDARY_SET.Tarot},
+    extra = {{
+        {text = '('},
+        {ref_table = 'card.joker_display_values', ref_value = 'odds' },
+        {text = ')'}
+    }},
+    extra_config = {colour = G.C.GREEN, scale = 0.3},
+    calc_function = function(card)
+        local count = 0
+        local guaranteed = nil
+        local text, _, _ = JokerDisplay.evaluate_hand()
+        if text ~= 'Unknown' and #G.hand.highlighted == 1 then
+            if G.hand.highlighted[1]:is_suit('Clubs') then
+                if G.hand.highlighted[1]:get_id() == 11 then
+                    count = 1
+                    guaranteed = 'Guaranteed'
+                else
+                    count = 1
+                end
+            end
+        end
+        card.joker_display_values.count = count
+        local numerator,denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osmmmquo_ext_shaman')
+        if guaranteed then card.joker_display_values.odds = guaranteed
+        else card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {numerator,denominator}} end
+    end
+}
 jd_def['j_osquo_ext_moneyshot'] = {
     text = {
         {border_nodes = {
@@ -24,8 +71,10 @@ jd_def['j_osquo_ext_scavenger'] = {
     }},
     extra_config = {colour = G.C.GREEN, scale = 0.3},
     calc_function = function(card)
-        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
-        card.joker_display_values.odds_2 = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds_2}}
+        local num1,den1 = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_scavenger_tag')
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {num1,den1}}
+        local num2,den2 = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_scavenger_rare')
+        card.joker_display_values.odds_2 = localize{type = 'variable', key = 'jdis_odds', vars = {num2,den2}}
     end
 }
 jd_def['j_osquo_ext_refundpolicy'] = {
@@ -155,7 +204,8 @@ jd_def['j_osquo_ext_volcano'] = {
         }}
     },
     calc_function = function(card)
-        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+        local numerator,denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_volcano')
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {numerator,denominator}}
     end
 
 }
@@ -211,9 +261,9 @@ jd_def['j_osquo_ext_uniformjoker'] = {
     },
     calc_function = function(card)
         local cards = {}
-        for i = 1, #G.play.cards do
-            local rank = G.play.cards[i].base.id
-            local suit = G.play.cards[i].base.suit
+        for i = 1, #G.hand.highlighted do
+            local rank = G.hand.highlighted[i].base.id or 'NA'
+            local suit = G.hand.highlighted[i].base.suit or 'NA'
             if not table_contains(cards, rank..suit) then
                 cards[#cards+1] = rank..suit
             end
@@ -329,7 +379,8 @@ jd_def['j_osquo_ext_ghostjoker'] = {
     }},
     extra_config = {colour = G.C.GREEN, scale = 0.3},
     calc_function = function(card)
-        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+        local numerator,denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_ghostjoker')
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {numerator,denominator}}
     end
 }
 jd_def['j_osquo_ext_pickyjoker'] = {
@@ -396,7 +447,8 @@ jd_def['j_osquo_ext_fraudjoker'] = {
         }}
     },
     calc_function = function(card)
-        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+        local numerator,denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_fraudjoker')
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {numerator,denominator}}
     end
 }
 jd_def['j_osquo_ext_corruptjoker'] = {
@@ -415,7 +467,8 @@ jd_def['j_osquo_ext_ostracon'] = {
     }},
     extra_config = {colour = G.C.GREEN, scale = 0.3},
     calc_function = function(card)
-        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+        local numerator,denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_ostracon')
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {numerator,denominator}}
     end
 }
 jd_def['j_osquo_ext_grandfinale'] = {
@@ -742,6 +795,21 @@ jd_def['j_osquo_ext_bubbleuniverse'] = {
     }},
     extra_config = {colour = G.C.GREEN, scale = 0.3},
     calc_function = function(card)
-        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {(G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds}}
+        local numerator,denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'osquo_ext_bubbleuniverse')
+        card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {numerator,denominator}}
+    end
+}
+jd_def['j_osquo_ext_osquo'] = {
+    extra = {{
+        {text = '$', colour = G.C.MONEY},
+        {ref_table = 'card.ability.extra', ref_value = 'tracked', colour = G.C.MONEY},
+        {text = '/', colour = G.C.INACTIVE},
+        {text = '$', colour = G.C.MONEY},
+        {ref_table = 'card.ability.extra', ref_value = 'spentrq', colour = G.C.MONEY}
+    }},
+    retrigger_function = function(playing_card, scoring_hand, held_in_hand, joker_card)
+        if held_in_hand then return 0 end
+        return playing_card:is_suit('Hearts') and
+            joker_card.ability.extra.again * JokerDisplay.calculate_joker_triggers(joker_card) or 0
     end
 }
