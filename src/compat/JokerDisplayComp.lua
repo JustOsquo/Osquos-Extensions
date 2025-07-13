@@ -799,3 +799,17 @@ jd_def['j_osquo_ext_bubbleuniverse'] = {
         card.joker_display_values.odds = localize{type = 'variable', key = 'jdis_odds', vars = {numerator,denominator}}
     end
 }
+jd_def['j_osquo_ext_osquo'] = {
+    extra = {{
+        {text = '$', colour = G.C.MONEY},
+        {ref_table = 'card.ability.extra', ref_value = 'tracked', colour = G.C.MONEY},
+        {text = '/', colour = G.C.INACTIVE},
+        {text = '$', colour = G.C.MONEY},
+        {ref_table = 'card.ability.extra', ref_value = 'spentrq', colour = G.C.MONEY}
+    }},
+    retrigger_function = function(playing_card, scoring_hand, held_in_hand, joker_card)
+        if held_in_hand then return 0 end
+        return playing_card:is_suit('Hearts') and
+            joker_card.ability.again * JokerDisplay.calculate_joker_triggers(joker_card) or 0
+    end
+}
