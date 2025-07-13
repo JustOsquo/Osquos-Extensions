@@ -1,5 +1,47 @@
 --[[ ORDINARY JOKERS ]]--
 
+SMODS.Joker{ --Walled City
+    key = 'walledcity',
+    loc_txt = {set = 'Joker', loc_txt = 'j_osquo_ext_walledcity'},
+    blueprint_compat = true,
+    eternal_compat = true,
+    atlas = 'Jokers',
+    pos = {x = 2, y = 7},
+    rarity = 3,
+    cost = 5,
+    config = {extra = {
+        xmulteach = 1,
+        xmult = 1,
+        req = 5,
+    }},
+    set_ability = function(self,card,initial,delay_sprites)
+        card.ability.extra.req = G.GAME.starting_params.joker_slots or 5
+    end,
+    loc_vars = function(self,info_queue,card)
+        return { vars = {
+            card:gabil('xmulteach'),
+            card:gabil('xmult'),
+            card:gabil('req')
+        }}
+    end,
+    calculate = function(self,card,context)
+        if context.joker_main then
+            return {
+                xmult = card.ability.extra.xmult
+            }
+        end
+    end,
+    update = function(self,card,context)
+        if G.jokers and G.jokers.cards then
+            local count = #G.jokers.cards - card.ability.extra.req
+            card.ability.extra.xmult = (card.ability.extra.xmulteach * count) + 1
+            if card.ability.extra.xmult < 1 then card.ability.extra.xmult = 1 end
+        else
+            card.ability.extra.xmult = 1
+        end
+    end
+}
+
 SMODS.Joker{ --Abandoned Joker
     key = 'general',
     loc_txt = {set = 'Joker', loc_txt = 'j_osquo_ext_general'},
@@ -338,7 +380,7 @@ SMODS.Joker{ --Virtual Singer
     atlas = 'Jokers',
     pos = {x = 1, y = 6},
     rarity = 2,
-    cost = 5,
+    cost = 6,
     config = {extra = {
         count = 0,
         per = 3
@@ -949,16 +991,6 @@ SMODS.Joker{ --Hungry Hungry Joker
             return {
                 extra = {focus = card, message = localize{type='variable',key='a_mult',vars={(card.ability.extra.multnow)}}, colour = G.C.MULT}
             }
-        --[[ why doesnt this work
-        elseif context.destroy_card then
-            if context.destroy_card == card.ability.extra.deathmark then
-                card.ability.extra.deathmark = 0
-                return {
-                    remove = true,
-                    extra = {focus = card, message = localize{type='variable',key='a_mult',vars={(card.ability.extra.multnow)}}, colour = G.C.MULT}
-                }
-            end
-        ]]
         elseif context.joker_main then
             return {
                 mult = card.ability.extra.multnow
@@ -993,23 +1025,7 @@ SMODS.Joker{ --Cheerleader Joker
             return {
                 chips = card.ability.extra.chipsnow
             }
-        --[[ old version
-        elseif context.individual and context.cardarea == G.play then
-            if context.other_card == context.scoring_hand[1] then
-                card.ability.extra.chipsnow = card.ability.extra.chipsnow + card.ability.extra.chipsgain
-                return {
-                    extra = {focus = card, message = localize('k_upgrade_ex'), colour = G.C.attention}
-                }
-            end
-        ]]
-        --[[ doesnt work bruh
-        elseif context.repetition and context.cardarea == G.play then
-            card.ability.extra.chipsnow = card.ability.extra.chipsnow + card.ability.extra.chipsgain
-            return {
-                extra = {focus = card, message = localize('k_upgrade_ex'), colour = G.C.attention}
-            }
-        --]]
-        elseif context.individual and context.cardarea == G.play then
+        elseif context.individual and context.cardarea == G.play and not context.blueprint then
             if not context.other_card.retrigger_check_cheerleaderjoker then
                 local _other_card = context.other_card -- because context.other_card doesnt exist in events
                 card.ability.extra.testtable[#card.ability.extra.testtable+1] = _other_card
@@ -1025,7 +1041,7 @@ SMODS.Joker{ --Cheerleader Joker
                     extra = {focus = card, message = localize('k_upgrade_ex'), colour = G.C.attention}
                 }
             end
-        elseif context.after then --noticed some weird shenanigans, hope this fixes it but its really weird and hard to test
+        elseif context.after and not context.blueprint then --noticed some weird shenanigans, hope this fixes it but its really weird and hard to test
             for i = 1, #card.ability.extra.testtable do
                 card.ability.extra.testtable[i].retrigger_check_cheerleaderjoker = nil
             end
@@ -1875,20 +1891,6 @@ SMODS.Joker{ --Ritualist
                     card = card
                 }
             end
-
-        --[[ Too OP for deckfixing, maybe rework?
-
-        elseif context.destroy_card and not context.blueprint then
-            if table_contains(card.ability.extra.die, context.destroy_card) then
-                if card.ability.extra.ritflag == false then --only once per hand
-                    SMODS.calculate_effect({message = localize('osquo_ext_sacrificed'), colour = G.C.RED}, card)
-                    card.ability.extra.ritflag = true
-                end
-                return {
-                    remove = true,
-                }
-            end
-        ]]
         end
     end
 } --I HATE CODING THIS MFING JOKER MAN
@@ -2013,12 +2015,12 @@ SMODS.Joker{ --Transmutation
     }},
     loc_vars = function(self,info_queue,card)
         return { vars = {
-            card.ability.extra.convperc*100 --convert to percentage for loc_var
+            card.ability.extra.convperc*100 --convert to percentage for loc_vars
         }}
     end,
     calculate = function(self,card,context)
         if context.joker_main then
-            local shift = to_big(math.sqrt(hand_chips)) / to_big(card.ability.extra.convperc)
+            local shift = to_big(hand_chips) * to_big(card.ability.extra.convperc)
             return {
                 chips = -shift,
                 mult = shift
@@ -2165,6 +2167,7 @@ SMODS.Joker{ --Background Check
     config = {extra = {
         xmulteach = 0.04,
     }},
+    pixel_size = {h = 95 / 1.05},
     loc_vars = function(self,info_queue,card)
         return { vars = {
             card.ability.extra.xmulteach,

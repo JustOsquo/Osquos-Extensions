@@ -2,16 +2,22 @@
 --[[ ========== These localizations should be self-explanatory ========== ]]--
 
 --[[
-Gains +25 Chips when
-discarding a Face card
-Resets when defeating
-Boss Blind
-(Currently +250 Chips)
+X0.75 Mult for each
+Joker card over 5
+(Currently X1.75 Mult)
 ]]
 
 return {
     descriptions = {
         Joker = {
+            j_osquo_ext_walledcity = {
+                name = 'Walled City',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult for each',
+                    '{C:attention}Joker{} card over {C:attention}#3#{}',
+                    '{C:inactive}(Currently {X:mult,C:white}X#2#{} {C:inactive}Mult){}'
+                }
+            },
             j_osquo_ext_general = {
                 name = 'Abandoned Joker',
                 text = {
