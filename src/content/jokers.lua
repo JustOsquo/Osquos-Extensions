@@ -161,7 +161,7 @@ SMODS.Joker{ --Bergentrückung
         elseif context.end_of_round and G.GAME.blind.boss and not context.repetition and not context.individual and not context.blueprint then
             card.ability.extra.disables = card.ability.extra.disables - 1
             return {
-                message = self.ability.extra.disables..'',
+                message = card.ability.extra.disables..'',
                 colour = G.C.FILTER
             }
         end
