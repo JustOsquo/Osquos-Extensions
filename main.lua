@@ -20,7 +20,7 @@ to_number = to_number or function(x) return x end
 SMODS.load_file('util/hookers.lua')()
 
 --Load UI functions
-SMODS.load_file('src/ui/ui_test.lua')()
+--SMODS.load_file('src/ui/ui_test.lua')()
 
 --Load Utilities
 SMODS.load_file('util/animateObject.lua')()
