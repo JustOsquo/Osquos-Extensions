@@ -1463,8 +1463,10 @@ SMODS.Joker{ --Joker-in-the-dell
     cost = 6,
     config = {extra = {}},
     calculate = function(self,card,context)
-        local eval = function() return G.GAME.current_round.hands_played == 0 end
-        juice_card_until(card, eval, true)
+        if context.first_hand_drawn and not context.blueprint then
+            local eval = function() return G.GAME.current_round.hands_played == 0 and not G.RESET_JIGGLES end
+            juice_card_until(card, eval, true)
+        end
         if context.destroy_card and context.full_hand[5] and G.GAME.current_round.hands_played == 0 and not context.blueprint then
             if context.destroy_card == context.full_hand[5] then
                 return {
@@ -1605,8 +1607,10 @@ SMODS.Joker{ --Bounty Hunter
             end
         end
         if context.end_of_round and not context.blueprint then card.ability.extra.potential = false end
-        local eval = function(card) return card.ability.extra.potential == true end
-        juice_card_until(card, eval, true)
+        if context.hand_drawn then
+            local eval = function(card) return card.ability.extra.potential == true and not G.RESET_JIGGLES end
+            juice_card_until(card, eval, true)
+        end
         if context.destroy_card and not context.blueprint then
             if #context.full_hand == 1 then
                 if context.destroy_card:get_id() == G.GAME.current_round.osquo_ext_bountyhunter_card.id and context.destroy_card:is_suit(G.GAME.current_round.osquo_ext_bountyhunter_card.suit) then
@@ -1835,8 +1839,10 @@ SMODS.Joker{ --Cryptic Joker
     cost = 6,
     config = { extra = {}},
     calculate = function(self,card,context)
-        local eval = function() return G.GAME.current_round.hands_played == 0 end
-        juice_card_until(card, eval, true)
+        if context.first_hand_drawn then
+            local eval = function() return G.GAME.current_round.hands_played == 0 and not G.RESET_JIGGLES end
+            juice_card_until(card, eval, true)
+        end
         if context.after and G.GAME.current_round.hands_played == 0 then
             for k, v in ipairs(context.full_hand) do
                 local rngsuit = pseudorandom_element(SMODS.Suits, pseudoseed('crypticjoker')).key --This shit is also haunted man. Wtf
@@ -2641,8 +2647,10 @@ SMODS.Joker{ --Reaper
     cost = 8,
     config = { extra = {}},
     calculate = function(self, card, context)
-        local eval = function() return G.GAME.current_round.hands_played == 0 end
-        juice_card_until(card, eval, true)
+        if context.first_hand_drawn then
+            local eval = function() return G.GAME.current_round.hands_played == 0 and not G.RESET_JIGGLES end
+            juice_card_until(card, eval, true)
+        end
         local handlist = G.hand.cards --shorthand
         if context.before and G.GAME.current_round.hands_played == 0 and not context.blueprint then --Before scoring, only if it's not been used already
             if #handlist >= 2 then
