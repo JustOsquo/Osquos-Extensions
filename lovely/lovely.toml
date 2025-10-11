@@ -25,7 +25,7 @@ end
 target = '''=[SMODS _ "src/utils.lua"]'''
 match_indent = true
 pattern = '''
-SMODS.calculation_keys = {
+SMODS.scoring_parameter_keys = {
 '''
 position = "after"
 payload = '''
