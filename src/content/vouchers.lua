@@ -33,6 +33,7 @@ SMODS.Voucher{ --Booster Glutton
         }}
     end,
     redeem = function(self,card)
-        G.GAME.osquo_ext_pack_choice_mod = G.GAME.osquo_ext_pack_choice_mod + 1
+        G.GAME.modifiers.booster_choice_mod = G.GAME.modifiers.booster_choice_mod or 0
+        G.GAME.modifiers.booster_choice_mod = G.GAME.modifiers.booster_choice_mod + 1
     end
 }
