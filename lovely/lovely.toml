@@ -61,13 +61,11 @@ elseif eval_type == 'osquo_ext_rscore' then
 [[patches]]
 [patches.pattern]
 target = '''=[SMODS _ "src/game_object.lua"]'''
-match_indent = true
 position = 'at'
-pattern = '''
-vars = { cfg.choose, cfg.extra },
-'''
+match_indent = true
+pattern = '''vars = { math.min(cfg.choose + (G.GAME.modifiers.booster_choice_mod or 0), math.max(1, cfg.extra + (G.GAME.modifiers.booster_size_mod or 0))), math.max(1, cfg.extra + (G.GAME.modifiers.booster_size_mod or 0)) },'''
 payload = '''
-vars = { math.min(cfg.choose + G.GAME.osquo_ext_pack_choice_mod, cfg.extra), cfg.extra },
+vars = { math.min(cfg.choose + (G.GAME.modifiers.booster_choice_mod or 0) + (G.GAME.osquo_ext_pack_choice_mod or 0), math.max(1, cfg.extra + (G.GAME.modifiers.booster_size_mod or 0))), math.max(1, cfg.extra + (G.GAME.modifiers.booster_size_mod or 0)) },
 '''
 
 [[patches]]
@@ -76,9 +74,9 @@ target = 'card.lua'
 match_indent = true
 position = 'after'
 pattern = '''
-G.GAME.pack_choices = self.ability.choose or self.config.center.config.choose or 1'''
+G.GAME.pack_choices = math.min((self.ability.choose or self.config.center.config.choose or 1) + (G.GAME.modifiers.booster_choice_mod or 0), self.ability.extra and math.max(1, self.ability.extra + (G.GAME.modifiers.booster_size_mod or 0)) or self.config.center.extra and math.max(1, self.config.center.extra + (G.GAME.modifiers.booster_size_mod or 0)) or 1)'''
 payload = '''
-G.GAME.pack_choices = math.min(G.GAME.pack_choices + G.GAME.osquo_ext_pack_choice_mod, self.config.center.config.extra)
+G.GAME.pack_choices = math.min(G.GAME.pack_choices + (G.GAME.osquo_ext_pack_choice_mod or 0), self.config.center.config.extra)
 '''
 
 # Allows cards with "extra.osquo_ext_ignoreslice = true" in their config to ignore getting_sliced, allowing them to calculate when they are destroyed.
